@@ -26,7 +26,20 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@models/*": ["src/app/models/*"],
+      "@services/*": ["src/app/services/*"],
+      "@pipes/*": ["src/app/pipes/*"],
+      "@components/*": ["src/app/components/*"],
+      "@store/*": ["src/app/store/*"],
+      "@classes/*": ["src/app/common/classes/*"],
+      "@errors/*": ["src/app/common/errors/*"],
+      "@constants/*": ["src/app/common/constants/*"],
+      "@generics/*": ["src/app/common/generics/*"],
+      "@guards/*": ["src/app/guards/*"],
+      "@selectors/app": ["src/app/store/app/app.selectors"],
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes, PreloadAllModules } from '@angular/router'
 
 const routes: Routes = [
   {
@@ -15,7 +15,7 @@ const routes: Routes = [
     pathMatch: 'full',
     redirectTo: 'home'
   }
-];
+]
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
