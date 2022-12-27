@@ -1,0 +1,66 @@
+/* Ionic Variables and Theming. */
+/* This is just a placeholder file For more info, please see: */
+/* https://ionicframework.com/docs/theming/basics */
+
+/* To quickly generate your own theme, check out the color generator */
+/* https://ionicframework.com/docs/theming/color-generator */
+
+:root {
+	--ion-color-primary: #c8bcd7;
+	--ion-color-primary-rgb: 200,188,215;
+	--ion-color-primary-contrast: #000000;
+	--ion-color-primary-contrast-rgb: 0,0,0;
+	--ion-color-primary-shade: #b0a5bd;
+	--ion-color-primary-tint: #cec3db;
+
+	--ion-color-secondary: #8bcce9;
+	--ion-color-secondary-rgb: 139,204,233;
+	--ion-color-secondary-contrast: #000000;
+	--ion-color-secondary-contrast-rgb: 0,0,0;
+	--ion-color-secondary-shade: #7ab4cd;
+	--ion-color-secondary-tint: #97d1eb;
+
+	--ion-color-tertiary: #9e95ab;
+	--ion-color-tertiary-rgb: 158,149,171;
+	--ion-color-tertiary-contrast: #000000;
+	--ion-color-tertiary-contrast-rgb: 0,0,0;
+	--ion-color-tertiary-shade: #8b8396;
+	--ion-color-tertiary-tint: #a8a0b3;
+
+	--ion-color-success: #beddc4;
+	--ion-color-success-rgb: 190,221,196;
+	--ion-color-success-contrast: #000000;
+	--ion-color-success-contrast-rgb: 0,0,0;
+	--ion-color-success-shade: #a7c2ac;
+	--ion-color-success-tint: #c5e0ca;
+
+	--ion-color-warning: #f5f29c;
+	--ion-color-warning-rgb: 245,242,156;
+	--ion-color-warning-contrast: #000000;
+	--ion-color-warning-contrast-rgb: 0,0,0;
+	--ion-color-warning-shade: #d8d589;
+	--ion-color-warning-tint: #f6f3a6;
+
+	--ion-color-danger: #f0b1b9;
+	--ion-color-danger-rgb: 240,177,185;
+	--ion-color-danger-contrast: #000000;
+	--ion-color-danger-contrast-rgb: 0,0,0;
+	--ion-color-danger-shade: #d39ca3;
+	--ion-color-danger-tint: #f2b9c0;
+
+	--ion-color-medium: #92949c;
+	--ion-color-medium-rgb: 146,148,156;
+	--ion-color-medium-contrast: #000000;
+	--ion-color-medium-contrast-rgb: 0,0,0;
+	--ion-color-medium-shade: #808289;
+	--ion-color-medium-tint: #9d9fa6;
+
+	--ion-color-light: #f4f5f8;
+	--ion-color-light-rgb: 244,245,248;
+	--ion-color-light-contrast: #000000;
+	--ion-color-light-contrast-rgb: 0,0,0;
+	--ion-color-light-shade: #d7d8da;
+	--ion-color-light-tint: #f5f6f9;
+
+  --ion-font-family: 'Work Sans', sans-serif
+}

@@ -1,0 +1,98 @@
+{
+  "root": true,
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "tsconfig.json",
+          "e2e/tsconfig.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "plugin:@angular-eslint/ng-cli-compat",
+        "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:@ngrx/all-requiring-type-checking",
+        "standard"
+      ],
+      "rules": {
+        "@angular-eslint/component-class-suffix": [
+          "error",
+          {
+            "suffixes": [
+              "Page",
+              "Component"
+            ]
+          }
+        ],
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "eva",
+            "style": "kebab-case"
+          }
+        ],
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "eva",
+            "style": "camelCase"
+          }
+        ],
+        "@typescript-eslint/member-delimiter-style": "off",
+        "@typescript-eslint/semi": "off",
+        "@typescript-eslint/no-underscore-dangle": "off",
+        "@typescript-eslint/no-empty-interface": "off",
+        "curly": "off",
+        "no-useless-constructor": "off",
+        "@ngrx/prefer-effect-callback-in-block-statement": "off",
+        "@typescript-eslint/explicit-function-return-type": "error",
+        "@typescript-eslint/explicit-member-accessibility": "error",
+        "space-before-function-paren": ["error", "never"],
+        "require-await": "error",
+        "no-underscore-dangle": "off",
+        "no-empty-function": [
+          "error",
+          {
+            "allow": ["constructors"]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "*.spec.ts"
+      ],
+      "rules": {
+        "no-undef": "off",
+        "no-empty-function": "off"
+      }
+    },
+    {
+      "files": [
+        "*.selectors.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off"
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended"
+      ],
+      "rules": {}
+    }
+  ]
+}
