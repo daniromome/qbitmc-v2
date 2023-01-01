@@ -1,0 +1,9 @@
+.auth-container {
+  display: grid;
+  place-content: center;
+  height: 100%;
+}
+
+.logo {
+  width: clamp(20rem, 35rem, 30vw);
+}

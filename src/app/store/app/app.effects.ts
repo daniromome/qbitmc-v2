@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
-import { catchError, map, of, from } from 'rxjs'
+import { catchError, map, of, from, EMPTY } from 'rxjs'
 import { AppActions } from '@store/app'
 import { switchMap } from 'rxjs/operators'
 import { NavController, AlertController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { PreferencesService } from '@services/preferences'
+import { ApplicationActions } from '@store/application'
 
 @Injectable()
 export class AppEffects {
@@ -18,7 +19,7 @@ export class AppEffects {
   public autoLogin$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.autoLogin),
     switchMap(() => this.auth.getSession()),
-    map(session => AppActions.loginMiddleware({ session }))
+    map(session => AppActions.autoLoginMiddleware({ session }))
   ))
 
   public loginMiddleware$ = createEffect(() => this.actions$.pipe(
@@ -29,7 +30,18 @@ export class AppEffects {
       return this.auth.getProfile(action.session.user)
     }),
     map(profile => AppActions.loginSuccess({ profile })),
-    catchError(() => of(AppActions.loginFailure))
+    catchError(error => of(AppActions.loginFailure({ error })))
+  ))
+
+  public autologinMiddleware$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.autoLoginMiddleware),
+    switchMap(action => {
+      if (!action.session) throw new Error()
+      this.preferences.delete('redirected')
+      return this.auth.getProfile(action.session.user)
+    }),
+    map(profile => AppActions.loginSuccess({ profile })),
+    catchError(error => of(AppActions.autologinFailure({ error })))
   ))
 
   public loginFailure$ = createEffect(() => this.actions$.pipe(
@@ -53,7 +65,38 @@ export class AppEffects {
   public logout$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.logout),
     switchMap(() => this.auth.signOut()),
-    switchMap(() => from(this.nav.navigateRoot('/home')))
+    switchMap(() => from(this.nav.navigateRoot('/tabs/home')))
+  ), { dispatch: false })
+
+  public loginSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.loginSuccess),
+    switchMap(() => {
+      const url = this.router.url.split('/')
+      url.pop()
+      return this.router.url === '/tabs/home' ? EMPTY : from(this.nav.navigateBack(url))
+    })
+  ), { dispatch: false })
+
+  public applicationSubmit$ = createEffect(() => this.actions$.pipe(
+    ofType(ApplicationActions.submit),
+    map(action => AppActions.submittedApplication({ application: action.application }))
+  ))
+
+  public applicationSubmitFailure$ = createEffect(() => this.actions$.pipe(
+    ofType(ApplicationActions.submitFailure),
+    switchMap(() => from(this.alert.create({
+      header: $localize`:@@errorTitle:Error`,
+      message: $localize`There was an error while submitting your application,
+      you'll be logged out in order to circunvent this issue. Please try again.`,
+      buttons: ['OK']
+    }))),
+    switchMap(alert => from(alert.present())),
+    map(() => AppActions.logout())
+  ))
+
+  public submittedApplication$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.submittedApplication),
+    switchMap(() => from(this.nav.navigateForward('/tabs/join/status')))
   ), { dispatch: false })
 
   public constructor(
@@ -61,6 +104,7 @@ export class AppEffects {
     private readonly auth: AuthService,
     private readonly nav: NavController,
     private readonly alert: AlertController,
+    private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly preferences: PreferencesService
   ) {}

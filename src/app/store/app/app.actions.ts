@@ -1,3 +1,4 @@
+import { Application } from '@models/application'
 import { Profile } from '@models/profile'
 import { createAction, props } from '@ngrx/store'
 import { Session } from '@supabase/supabase-js'
@@ -10,6 +11,11 @@ export const autoLogin = createAction(
   '[App] Auto Login'
 )
 
+export const autoLoginMiddleware = createAction(
+  '[App] Auto Login Middleware',
+  props<{ session: Session | null }>()
+)
+
 export const loginMiddleware = createAction(
   '[App] Login Middleware',
   props<{ session: Session | null }>()
@@ -20,6 +26,11 @@ export const loginSuccess = createAction(
   props<{ profile: Profile }>()
 )
 
+export const autologinFailure = createAction(
+  '[App] Auto Login Failure',
+  props<{ error: Error }>()
+)
+
 export const loginFailure = createAction(
   '[App] Login Failure',
   props<{ error: Error }>()
@@ -27,4 +38,9 @@ export const loginFailure = createAction(
 
 export const logout = createAction(
   '[App] Logout'
+)
+
+export const submittedApplication = createAction(
+  '[App] Submitted Application',
+  props<{ application: Application }>()
 )

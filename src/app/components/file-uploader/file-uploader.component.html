@@ -1,0 +1,19 @@
+<div
+  class="dropzone"
+  qbitDropzone
+  (hovered)="toggleHover($event)"
+  (dropped)="onDrop($event)"
+  [class.hovering]="isHovering"
+  *ngIf="desktop; else mobile"
+  >
+  <ion-icon aria-hidden="false" aria-label="Drop file icon" name="download"></ion-icon>
+  <p>{{ label }}</p>
+</div>
+
+<ng-template #mobile>
+  <input type="file" class="file-input" (change)="onFilesSelected($event)" #fileInput multiple/>
+  <ion-button color="secondary" (click)="fileInput.click()" expand="block">
+    <ion-icon name="cloud-upload" slot="start"></ion-icon>
+    <span i18n>Upload Images</span>
+  </ion-button>
+</ng-template>

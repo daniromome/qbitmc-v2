@@ -5,4 +5,5 @@ export interface Profile {
   picture: string
   uuid?: string
   roles: Roles
+  approved?: boolean
 }

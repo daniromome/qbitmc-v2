@@ -10,7 +10,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { EffectsModule } from '@ngrx/effects'
 import { HttpClientModule } from '@angular/common/http'
 import { RouteReuseStrategy } from '@angular/router'
-import { AppStoreModule } from '@store/app/app-store.module'
+import { AppStoreModule } from '@store/app'
 
 @NgModule({
   declarations: [

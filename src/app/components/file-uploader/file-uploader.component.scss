@@ -1,0 +1,11 @@
+.dropzone {
+  display: grid;
+  place-items: center;
+  border: 0.5px dashed var(--ion-color-secondary);
+  border-radius: 5px;
+  padding: 1em .75em;
+}
+
+.file-input {
+  display: none;
+}

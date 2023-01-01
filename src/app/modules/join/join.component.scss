@@ -1,0 +1,44 @@
+ion-avatar {
+  position: absolute;
+  --border-radius: 0.25rem;
+  &.md {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  &.ios {
+    top: 1.25rem;
+    right: 1.25rem;
+  }
+}
+
+.form-container {
+  ion-item:nth-last-child(1) {
+    margin-bottom: 0.625rem;
+  }
+}
+
+ion-col {
+  &.md .card-margin {
+    margin-inline: 0.625rem;
+  }
+
+  &.ios .card-margin {
+    margin-inline: 1rem;
+  }
+}
+
+.delete-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  --padding-start: 0.125rem;
+  --padding-end: 0.125rem;
+  --border-radius: 0.625rem;
+}
+
+.image-container {
+  display: grid;
+  place-items: center;
+  height: 100%;
+}

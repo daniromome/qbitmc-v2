@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, Component, EnvironmentInjector, OnInit } from 
 import { AuthService } from '@services/auth'
 import { Store } from '@ngrx/store'
 import { AppActions } from '@store/app'
-import { PreferencesService } from './services/preferences/preferences.service';
-import { lastValueFrom } from 'rxjs';
+import { PreferencesService } from './services/preferences/preferences.service'
+import { lastValueFrom } from 'rxjs'
+import { NavController } from '@ionic/angular'
 
 @Component({
   selector: 'qbit-app',
@@ -16,29 +17,22 @@ export class AppComponent implements OnInit {
     public readonly environmentInjector: EnvironmentInjector,
     private readonly auth: AuthService,
     private readonly store: Store,
-    private readonly preferences: PreferencesService
+    private readonly preferences: PreferencesService,
+    private readonly nav: NavController
   ) {
 
   }
 
   public async ngOnInit(): Promise<void> {
-    await this.autoLogin()
-    this.auth.changes((event, session) => {
-      switch (event) {
-        case 'SIGNED_IN':
-          this.store.dispatch(AppActions.loginMiddleware({ session }))
-          break
-        case 'SIGNED_OUT':
-          this.store.dispatch(AppActions.logout())
-          break
-        default:
-          break
-      }
-    })
-  }
-
-  public async autoLogin(): Promise<void> {
-    const redirected = await lastValueFrom(this.preferences.get('redirected')) === 'true'
+    const redirected = await lastValueFrom(this.preferences.get('redirected'))
     if (!redirected) this.store.dispatch(AppActions.autoLogin())
+    else {
+      const { data: { subscription } } = this.auth.changes((event, session) => {
+        if (event !== 'SIGNED_IN') return
+        this.store.dispatch(AppActions.loginMiddleware({ session }))
+        subscription.unsubscribe()
+      })
+      this.nav.navigateForward(redirected)
+    }
   }
 }

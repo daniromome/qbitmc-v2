@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+ion-item {
+  --highlight-color-valid: var(--ion-color-dark);
+}
+
+:host(.tab-selected) {
+  color: var(--ion-color-dark);
+}

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, EnvironmentInjector } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
 
@@ -15,6 +15,15 @@ export class TabsComponent {
       icon: 'home',
       label: $localize`Home`,
       path: 'home'
+    },
+    {
+      icon: 'people',
+      label: $localize`Join`,
+      path: 'join'
     }
   ]
+
+  public constructor(
+    public readonly environmentInjector: EnvironmentInjector
+  ) {}
 }

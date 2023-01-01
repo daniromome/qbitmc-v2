@@ -47,7 +47,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "eva",
+            "prefix": "qbit",
             "style": "camelCase"
           }
         ],

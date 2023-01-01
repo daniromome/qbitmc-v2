@@ -1,7 +1,7 @@
-<ion-tabs>
+<ion-tabs [environmentInjector]="environmentInjector">
   <ion-tab-bar slot="bottom">
     <ion-tab-button *ngFor="let tab of tabs" [tab]="tab.path">
-      <ion-icon [md]="tab.icon + '-sharp'" [ios]="tab.icon + '-outline'"></ion-icon>
+      <ion-icon [name]="tab.icon"></ion-icon>
       <ion-label>{{ tab.label }}</ion-label>
     </ion-tab-button>
   </ion-tab-bar>

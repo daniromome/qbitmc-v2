@@ -5,6 +5,7 @@ import { Observable, from, map } from 'rxjs'
 import { SupabaseService } from '@services/supabase'
 import { PreferencesService } from '@services/preferences'
 import { switchMap } from 'rxjs/operators'
+import { Router } from '@angular/router'
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,19 @@ import { switchMap } from 'rxjs/operators'
 export class AuthService {
   public constructor(
     private readonly supabase: SupabaseService,
-    private readonly preferences: PreferencesService
+    private readonly preferences: PreferencesService,
+    private readonly router: Router
   ) {}
 
   public signIn(): Observable<OAuthResponse> {
-    return this.preferences.set('redirected', 'true').pipe(
+    const url = this.router.url.split('/')
+    url.pop()
+    return this.preferences.set('redirected', url.join('/')).pipe(
       switchMap(() => from(this.supabase.client.auth.signInWithOAuth({
-        provider: 'discord'
+        provider: 'discord',
+        options: {
+          scopes: 'guilds.join'
+        }
       })))
     )
   }

@@ -38,6 +38,7 @@
       "@constants/*": ["src/app/common/constants/*"],
       "@generics/*": ["src/app/common/generics/*"],
       "@guards/*": ["src/app/guards/*"],
+      "@directives/*": ["src/app/directives/*"],
       "@selectors/app": ["src/app/store/app/app.selectors"],
     }
   },
