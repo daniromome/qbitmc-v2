@@ -116,7 +116,10 @@ export class JoinComponent implements OnInit, OnDestroy {
     await loader.present()
     await (async(): Promise<void> => {
       const response = await Promise.all(
-        files.map(f => this.supabase.storage.from(this.bucket).upload(`${this.profile}/${crypto.randomUUID()}`, f))
+        files.map(f => this.supabase.storage.from(this.bucket).upload(
+          `${this.profile}/${crypto.randomUUID()}.${f.name.split('.').at(-1)}`,
+          f
+        ))
       )
       const errors = response.filter(r => r.error)
       if (errors.length > 0) throw errors.length
