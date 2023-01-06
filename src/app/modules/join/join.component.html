@@ -18,7 +18,7 @@
           </ion-avatar>
           <ion-card-header class="ion-card-avatar-header">
             <ion-card-title i18n>Hi!</ion-card-title>
-            <ion-card-subtitle>Tell us about yourself</ion-card-subtitle>
+            <ion-card-subtitle i18n>Tell us about yourself</ion-card-subtitle>
           </ion-card-header>
           <ion-card-content [formGroup]="form" class="ion-no-padding form-container">
             <ion-item lines="full">
@@ -72,7 +72,7 @@
               ></qbit-note>
             </ion-item>
             <ion-item counter="true" lines="full">
-              <ion-label position="floating" i18n>Experiences <ion-text color="danger">*</ion-text></ion-label>
+              <ion-label position="floating" i18n>Experiences<ion-text color="danger">*</ion-text></ion-label>
               <ion-textarea formControlName="experience" maxlength="300" autoGrow></ion-textarea>
               <qbit-note
                 #experience
@@ -88,25 +88,43 @@
         <ion-card>
           <ion-card-header>
             <ion-card-title i18n>Media</ion-card-title>
-            <ion-card-subtitle i18n>Upload pictures of minecraft buildings you've done in the past (Maximum of 5)</ion-card-subtitle>
+            <ion-card-subtitle>
+              <ion-text i18n>
+                Upload pictures of minecraft buildings you've done in the past.
+              </ion-text>
+              <ion-text
+                *ngIf="filesSizeExceedsLimit$ | async"
+                [color]="(filesSizeWithinLimit$ | async) ? '': 'danger'"
+                i18n
+              >File size limit exceeded {{ filesSize$ | async | bytes }} / 7.5 MiB.</ion-text>
+            </ion-card-subtitle>
           </ion-card-header>
           <ion-card-content class="ion-no-padding">
             <ion-grid>
               <ng-container *ngIf="files$ | async as files; else noFilesUploaded">
                 <ion-row>
-                  <ion-col *ngFor="let file of files" size="12" size-sm="6" size-md="4" size-lg="2.4">
-                    <ion-button size="small" color="danger" class="delete-image" (click)="deleteImage(file.name, files)">
-                      <ion-icon name="close" slot="icon-only"></ion-icon>
-                    </ion-button>
+                  <ion-col *ngFor="let file of files" size="12" size-md="6" size-xl="4">
                     <div class="image-container">
                       <img [src]="file.file">
+                      <ion-button size="small" color="danger" class="delete-button" (click)="deleteImage(file.name, files)">
+                        <ion-icon name="close" slot="icon-only"></ion-icon>
+                      </ion-button>
+                      <div class="image-container-description">
+                        <ion-chip color="medium">{{ file.size | bytes }}</ion-chip>
+                      </div>
                     </div>
                   </ion-col>
+                  <ion-col>
+                    <qbit-file-uploader
+                      *ngIf="filesSizeWithinLimit$ | async"
+                      type="image"
+                      (droppedFiles)="droppedFiles($event)">
+                    </qbit-file-uploader>
+                  </ion-col>
                 </ion-row>
-                <qbit-file-uploader *ngIf="5 - files.length as max" type="image" [max]="max" (droppedFiles)="droppedFiles($event)"></qbit-file-uploader>
               </ng-container>
               <ng-template #noFilesUploaded>
-                <qbit-file-uploader type="image" [max]="5" (droppedFiles)="droppedFiles($event)"></qbit-file-uploader>
+                <qbit-file-uploader type="image" (droppedFiles)="droppedFiles($event)"></qbit-file-uploader>
               </ng-template>
             </ion-grid>
           </ion-card-content>
@@ -123,13 +141,13 @@
               <ion-label class="ion-text-wrap"><p>{{ rule }}</p></ion-label>
             </ion-item>
             <ion-item lines="none" [color]="form.controls.rules.value ? 'secondary' : ''">
-              <ion-label class="ion-text-wrap">I've read the rules and I will do my best to follow them</ion-label>
+              <ion-label class="ion-text-wrap" i18n>I've read the rules and I will do my best to follow them</ion-label>
               <ion-checkbox color="light" [formControl]="form.controls.rules"></ion-checkbox>
             </ion-item>
           </ion-card-content>
         </ion-card>
         <div class="card-margin">
-          <ion-button expand="block" color="secondary" [disabled]="form.invalid" (click)="submit()">Submit</ion-button>
+          <ion-button expand="block" color="secondary" [disabled]="(filesSizeExceedsLimit$ | async) || form.invalid" (click)="submit()" i18n>Submit</ion-button>
         </div>
       </ion-col>
     </ion-row>

@@ -13,7 +13,7 @@ import { switchMap } from 'rxjs/operators'
   styleUrls: ['./file-uploader.component.scss']
 })
 export class FileUploaderComponent {
-  @Input() public max = 5
+  @Input() public max = 0
   @Input() public label = $localize`Drag and drop ${this.max === 1 ? 'a file' : 'files'} to upload`
   @Input() public type?: 'image' | 'any' = 'any'
   @Output() public droppedFiles: EventEmitter<File[]> = new EventEmitter()
@@ -37,8 +37,14 @@ export class FileUploaderComponent {
     if (files) this.onDrop(files)
   }
 
+  public openPicker(input: HTMLInputElement): void {
+    setTimeout(() => {
+      input.click()
+    }, 1)
+  }
+
   public onDrop(files: FileList): void {
-    if (files.length > this.max) {
+    if (this.max && files.length > this.max) {
       from(this.alert.create({
         header: $localize`:@@errorTitle:Error`,
         message: $localize`You can upload a maximum of ${this.max} file(s) at a time`

@@ -26,19 +26,36 @@ ion-col {
   &.ios .card-margin {
     margin-inline: 1rem;
   }
+
+  .card-margin {
+    ion-button {
+      margin-inline: 0px;
+    }
+  }
 }
 
-.delete-image {
-  position: absolute;
-  top: 0;
-  right: 0;
-  --padding-start: 0.125rem;
-  --padding-end: 0.125rem;
-  --border-radius: 0.625rem;
-}
 
 .image-container {
   display: grid;
   place-items: center;
   height: 100%;
+  .delete-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    margin: 0;
+    --padding-start: 0.125rem;
+    --padding-end: 0.125rem;
+    --border-radius: 0.5rem;
+  }
+  img {
+    border-radius: 0.5rem;
+  }
+  &-description {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0 0 0.5rem 0.5rem;
+  }
 }

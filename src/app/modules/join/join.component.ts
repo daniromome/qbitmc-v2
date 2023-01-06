@@ -16,15 +16,26 @@ import { debounceTime, switchMap } from 'rxjs/operators'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
 import { PreferencesService } from '@services/preferences'
 import { ApplicationActions, ApplicationStoreModule } from '@store/application'
+import { BytesPipe } from '@pipes/bytes'
+import { MAX_UPLOAD_SIZE } from '@constants/index'
 
 interface ApplicationForm extends FormFrom<Omit<Application, 'uuid'>> {}
 
-interface SupabaseFile { name: string, file: SafeUrl }
+interface SupabaseFile { name: string, file: SafeUrl, size: number }
 
 @Component({
   selector: 'qbit-join',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, IonicModule, NoteComponent, FileUploaderComponent, ApplicationStoreModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    IonicModule,
+    NoteComponent,
+    FileUploaderComponent,
+    ApplicationStoreModule,
+    BytesPipe
+  ],
   templateUrl: './join.component.html',
   styleUrls: ['./join.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -43,6 +54,9 @@ export class JoinComponent implements OnInit, OnDestroy {
   public readonly form: FormGroup<ApplicationForm>
   public readonly avatar$: Observable<string>
   public readonly files$: Observable<SupabaseFile[]>
+  public readonly filesSize$: Observable<number>
+  public readonly filesSizeWithinLimit$: Observable<boolean>
+  public readonly filesSizeExceedsLimit$: Observable<boolean>
   private readonly uuid$: Observable<string>
   private readonly _files: BehaviorSubject<SupabaseFile[]>
   private readonly bucket: string
@@ -80,6 +94,15 @@ export class JoinComponent implements OnInit, OnDestroy {
     )
     this._files = new BehaviorSubject<SupabaseFile[]>([])
     this.files$ = this._files.asObservable()
+    this.filesSize$ = this.files$.pipe(
+      map(files => files?.reduce((accumulator, value) => accumulator + value.size, 0) ?? 0)
+    )
+    this.filesSizeWithinLimit$ = this.filesSize$.pipe(
+      map(size => size <= MAX_UPLOAD_SIZE)
+    )
+    this.filesSizeExceedsLimit$ = this.filesSizeWithinLimit$.pipe(
+      map(bool => !bool)
+    )
     this.bucket = 'applications'
     this.sub = this.form.valueChanges.pipe(
       switchMap(value => this.preferences.set('application', JSON.stringify(value)))
@@ -154,8 +177,9 @@ export class JoinComponent implements OnInit, OnDestroy {
     const loader = await this.loading.create()
     await loader.present()
     await (async(): Promise<void> => {
-      const files = await firstValueFrom(this.files$)
+      const [files, withinLimit] = await Promise.all([await firstValueFrom(this.files$), await firstValueFrom(this.filesSizeWithinLimit$)])
       if (files.length === 0) throw new Error($localize`You need to attach at least one image`)
+      if (!withinLimit) throw new Error($localize`The maximum upload size is 7.5MiB`)
       const form = this.form.getRawValue()
       const uuid = await firstValueFrom(this.uuid$)
       this.store.dispatch(ApplicationActions.submit({ application: { ...form, uuid } }))
@@ -175,7 +199,8 @@ export class JoinComponent implements OnInit, OnDestroy {
     )
     this._files.next(response.filter(blob => blob.data && !blob.error).map((blob, i) => {
       const url = URL.createObjectURL(blob.data as Blob)
-      return { name: files.data[i].name, file: this.sanitizer.bypassSecurityTrustUrl(url) }
+      // eslint-disable-next-line dot-notation
+      return { name: files.data[i].name, file: this.sanitizer.bypassSecurityTrustUrl(url), size: files.data[i].metadata['size'] }
     }))
   }
 }

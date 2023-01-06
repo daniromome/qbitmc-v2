@@ -68,6 +68,8 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  --ion-border-color: #c8c7cc
 }
 
 @media (prefers-color-scheme: dark) {
@@ -169,6 +171,8 @@
     --ion-item-background: #1c1c1d;
 
     --ion-card-background: #1c1c1d;
+
+    --ion-border-color: var(--ion-color-step-250)
   }
 
   .md body {
@@ -207,5 +211,7 @@
     --ion-tab-bar-background: #1f1f1f;
 
     --ion-card-background: #1e1e1e;
+
+    --ion-border-color: var(--ion-color-step-250)
   }
 }
