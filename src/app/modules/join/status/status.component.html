@@ -1,1 +1,11 @@
-<p>status works!</p>
+<div class="status-container" *ngIf="user$ | async as user">
+  <img [src]="avatar$ | async" class="status-container-image">
+  <ion-text class="ion-text-center" i18n>
+    Hey {{ user.nickname }} have received your request to join QbitMC.
+    You will receive a message from our chatbot in discord
+    when we either approve or reject your application.
+  </ion-text>
+  <ion-text class="ion-text-center" i18n>
+
+  </ion-text>
+</div>

@@ -27,9 +27,9 @@ export class AppEffects {
     switchMap(action => {
       if (!action.session) throw new Error()
       this.preferences.delete('redirected')
-      return this.auth.getProfile(action.session.user)
+      return this.auth.getUser(action.session.user)
     }),
-    map(profile => AppActions.loginSuccess({ profile })),
+    map(user => AppActions.loginSuccess({ user })),
     catchError(error => of(AppActions.loginFailure({ error })))
   ))
 
@@ -38,9 +38,9 @@ export class AppEffects {
     switchMap(action => {
       if (!action.session) throw new Error()
       this.preferences.delete('redirected')
-      return this.auth.getProfile(action.session.user)
+      return this.auth.getUser(action.session.user)
     }),
-    map(profile => AppActions.loginSuccess({ profile })),
+    map(user => AppActions.loginSuccess({ user })),
     catchError(error => of(AppActions.autologinFailure({ error })))
   ))
 

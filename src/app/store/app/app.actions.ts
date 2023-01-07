@@ -1,5 +1,5 @@
 import { Application } from '@models/application'
-import { Profile } from '@models/profile'
+import { User } from '@models/user'
 import { createAction, props } from '@ngrx/store'
 import { Session } from '@supabase/supabase-js'
 
@@ -23,7 +23,7 @@ export const loginMiddleware = createAction(
 
 export const loginSuccess = createAction(
   '[App] Login Success',
-  props<{ profile: Profile }>()
+  props<{ user: User }>()
 )
 
 export const autologinFailure = createAction(

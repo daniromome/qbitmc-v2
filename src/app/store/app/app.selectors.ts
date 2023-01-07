@@ -3,19 +3,19 @@ import { appFeatureKey, AppState } from './app.reducer'
 
 export const selectAppState = createFeatureSelector<AppState>(appFeatureKey)
 
-export const selectProfile = createSelector(
+export const selectUser = createSelector(
   selectAppState,
-  (state) => state.profile
+  (state) => state.user
 )
 
 export const selectIsSignedIn = createSelector(
-  selectProfile,
+  selectUser,
   (user) => !!user
 )
 
-export const selectProfileId = createSelector(
-  selectProfile,
-  (profile) => profile?.id
+export const selectUserId = createSelector(
+  selectUser,
+  (user) => user?.id
 )
 
 export const selectToken = createSelector(

@@ -19,7 +19,8 @@ export class MinecraftService {
     return this.http.get<MinecraftProfile>(`https://api.mojang.com/users/profiles/minecraft/${username}`)
   }
 
-  public getAvatar(uuid: string): string {
-    return `https://crafatar.com/avatars/${uuid}?overlay=true`
+  public getAvatar(uuid: string, type: 'avatar' | 'head' | 'body' = 'avatar'): string {
+    const segments = type === 'avatar' ? ['avatars'] : ['renders', type]
+    return `https://crafatar.com/${segments.join('/')}/${uuid}?overlay=true`
   }
 }

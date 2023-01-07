@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { CanActivate, Router, UrlTree } from '@angular/router'
 import { Store } from '@ngrx/store'
-import { selectProfile } from '@store/app/app.selectors'
+import { selectUser } from '@store/app/app.selectors'
 import { map, Observable } from 'rxjs'
 
 @Injectable({
@@ -14,8 +14,8 @@ export class ApplyGuard implements CanActivate {
   ) {}
 
   public canActivate(): Observable<boolean | UrlTree> {
-    return this.store.select(selectProfile).pipe(
-      map(profile => profile?.uuid),
+    return this.store.select(selectUser).pipe(
+      map(user => user?.minecraft.uuid),
       map(uuid => !uuid || this.router.createUrlTree(['tabs', 'join', 'status']))
     )
   }

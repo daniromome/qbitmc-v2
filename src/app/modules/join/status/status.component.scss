@@ -1,0 +1,10 @@
+.status-container {
+  height: 100%;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  &-image {
+    max-height: 10rem;
+    border-radius: 0.5rem;
+  }
+}

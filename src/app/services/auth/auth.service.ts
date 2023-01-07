@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
-import { Profile } from '@models/profile'
-import { AuthChangeEvent, AuthError, OAuthResponse, Session, Subscription, User } from '@supabase/supabase-js'
+import { User } from '@models/user'
+import { AuthChangeEvent, AuthError, OAuthResponse, Session, Subscription, User as SupabaseUser } from '@supabase/supabase-js'
 import { Observable, from, map } from 'rxjs'
 import { SupabaseService } from '@services/supabase'
 import { PreferencesService } from '@services/preferences'
@@ -38,7 +38,7 @@ export class AuthService {
     return this.supabase.client.auth.onAuthStateChange(callback)
   }
 
-  public getProfile(user: User): Observable<Profile> {
+  public getUser(user: SupabaseUser): Observable<User> {
     return from(this.supabase.client.from('users').select('*').eq('id', user.id).single()).pipe(
       map(response => {
         if (response.error) throw response.error

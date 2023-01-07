@@ -11,7 +11,7 @@ import { NoteComponent } from '@components/note'
 import { FileUploaderComponent } from '@components/file-uploader'
 import { SupabaseService } from '@services/supabase'
 import { Store } from '@ngrx/store'
-import { selectProfileId } from '@selectors/app'
+import { selectUserId } from '@selectors/app'
 import { debounceTime, switchMap } from 'rxjs/operators'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
 import { PreferencesService } from '@services/preferences'
@@ -112,7 +112,7 @@ export class JoinComponent implements OnInit, OnDestroy {
   public async ngOnInit(): Promise<void> {
     const applicationString = await firstValueFrom(this.preferences.get('application'))
     const application = applicationString ? JSON.parse(applicationString) : undefined
-    this.profile = (await firstValueFrom(this.store.select(selectProfileId).pipe(filter(p => !!p)))) as string
+    this.profile = (await firstValueFrom(this.store.select(selectUserId).pipe(filter(p => !!p)))) as string
     if (application?.profile === this.profile) {
       this.form.setValue(application)
       Object.keys(this.form.controls).forEach(k => {
