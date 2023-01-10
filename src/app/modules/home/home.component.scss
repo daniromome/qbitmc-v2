@@ -1,0 +1,13 @@
+@use 'src/theme/mixins.scss' as mixins;
+
+$background: url('https://i.imgur.com/hKNKXLW.png') no-repeat center center;
+@include mixins.background-image($background);
+
+.full-screen {
+  display: grid;
+  place-items: center;
+  height: 87vh;
+  * {
+    height: 100%;
+  }
+}

@@ -1,0 +1,36 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title i18n="@@profile">Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-no-padding">
+      <ion-col size="0" size-md="2" size-lg="3" size-xl="4"></ion-col>
+      <ion-col>
+        <ion-card *ngIf="user$ | async as user">
+          <ion-avatar>
+            <img [src]="avatar$ | async">
+          </ion-avatar>
+          <ion-card-header>
+            <ion-card-title>{{ user.minecraft.ign }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content class="ion-no-padding">
+            <ion-item class="transparent" lines="none">
+              <ion-label i18n>Roles</ion-label>
+              <ion-chip *ngFor="let role of user.roles" [color]="role.role | roleColor">
+                <ion-label>{{ role.role | role }}</ion-label>
+              </ion-chip>
+            </ion-item>
+            <ion-item (click)="logout()" color="danger" button>
+              <ion-icon name="log-out" slot="start"></ion-icon>
+              <ion-label i18n>Logout</ion-label>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="0" size-md="2" size-lg="3" size-xl="4"></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+

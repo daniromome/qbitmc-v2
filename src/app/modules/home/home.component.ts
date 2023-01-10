@@ -14,10 +14,5 @@ import { IonicModule } from '@ionic/angular'
 })
 export class HomeComponent {
   public constructor(
-    private readonly store: Store
   ) {}
-
-  public logout(): void {
-    this.store.dispatch(AppActions.logout())
-  }
 }

@@ -46,6 +46,11 @@ const routes: Routes = [
         canActivate: [QbitorGuard]
       },
       {
+        path: 'profile',
+        loadComponent: () => import('./modules/profile/profile.component').then(c => c.ProfileComponent),
+        canActivate: [QbitorGuard]
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'home'
