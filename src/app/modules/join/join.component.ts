@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Va
 import { IonicModule, LoadingController, AlertController } from '@ionic/angular'
 import { FormFrom } from '../../common/types/forms'
 import { Application } from '@models/application'
-import { Observable, map, firstValueFrom, filter, BehaviorSubject, Subscription } from 'rxjs'
+import { Observable, map, firstValueFrom, filter, BehaviorSubject, Subscription, lastValueFrom } from 'rxjs'
 import { MinecraftService } from '@services/minecraft'
 import { REGEXP } from '@constants/regexp'
 import { NoteComponent } from '@components/note'
@@ -179,7 +179,7 @@ export class JoinComponent implements OnInit, OnDestroy {
       if (files.length === 0) throw new Error($localize`You need to attach at least one image`)
       if (!withinLimit) throw new Error($localize`The maximum upload size is 7.5MiB`)
       const form = this.form.getRawValue()
-      const uuid = await firstValueFrom(this.uuid$)
+      const uuid = await lastValueFrom(this.mc.getUUID(form.ign).pipe(map(p => p.id)))
       this.store.dispatch(ApplicationActions.submit({ application: { ...form, uuid } }))
     })()
       .catch((error) => this.alert.create({

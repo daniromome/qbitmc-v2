@@ -3,7 +3,7 @@ import { AuthService } from '@services/auth'
 import { Store } from '@ngrx/store'
 import { AppActions } from '@store/app'
 import { PreferencesService } from './services/preferences/preferences.service'
-import { lastValueFrom } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
 import { NavController } from '@ionic/angular'
 
 @Component({
@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
   }
 
   public async ngOnInit(): Promise<void> {
-    const redirected = await lastValueFrom(this.preferences.get('redirected'))
+    const redirected = await firstValueFrom(this.preferences.get('redirected'))
     if (!redirected) this.store.dispatch(AppActions.autoLogin())
     else {
       const { data: { subscription } } = this.auth.changes((event, session) => {
