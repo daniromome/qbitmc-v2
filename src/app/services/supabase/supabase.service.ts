@@ -19,6 +19,10 @@ export class SupabaseService {
     return this.client.storage
   }
 
+  public mc(username: string) {
+    return from(this.client.functions.invoke('mc', { body: { username } }))
+  }
+
   public joinGuild(token: string) {
     return from(this.client.functions.invoke('join-guild', { body: { token } }))
   }

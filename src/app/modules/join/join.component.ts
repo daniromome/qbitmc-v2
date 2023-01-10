@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, isDevMode, OnDestroy, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
 import { IonicModule, LoadingController, AlertController } from '@ionic/angular'
 import { FormFrom } from '../../common/types/forms'
 import { Application } from '@models/application'
-import { Observable, map, scheduled, asapScheduler, firstValueFrom, filter, BehaviorSubject, Subscription } from 'rxjs'
+import { Observable, map, firstValueFrom, filter, BehaviorSubject, Subscription } from 'rxjs'
 import { MinecraftService } from '@services/minecraft'
 import { REGEXP } from '@constants/regexp'
 import { NoteComponent } from '@components/note'
@@ -82,13 +82,11 @@ export class JoinComponent implements OnInit, OnDestroy {
       reasons: this.fb.control('', [Validators.required]),
       rules: this.fb.control(false, [Validators.requiredTrue])
     })
-    this.uuid$ = isDevMode()
-      ? scheduled(['77655fb282e7493f839c22870f3fcec9'], asapScheduler)
-      : this.form.controls.ign.valueChanges.pipe(
-        debounceTime(300),
-        switchMap(ign => this.mc.getUUID(ign)),
-        map(minecraftProfile => minecraftProfile.id)
-      )
+    this.uuid$ = this.form.controls.ign.valueChanges.pipe(
+      debounceTime(300),
+      switchMap(ign => this.mc.getUUID(ign)),
+      map(minecraftProfile => minecraftProfile.id)
+    )
     this.avatar$ = this.uuid$.pipe(
       map(uuid => this.mc.getAvatar(uuid))
     )

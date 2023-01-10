@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Observable } from 'rxjs'
+import { Observable, map } from 'rxjs'
+import { SupabaseService } from '@services/supabase'
 
 interface MinecraftProfile {
   id: string,
@@ -12,11 +12,13 @@ interface MinecraftProfile {
 })
 export class MinecraftService {
   public constructor(
-    private readonly http: HttpClient
+    private readonly supabase: SupabaseService
   ) { }
 
   public getUUID(username: string): Observable<MinecraftProfile> {
-    return this.http.get<MinecraftProfile>(`https://api.mojang.com/users/profiles/minecraft/${username}`)
+    return this.supabase.mc(username).pipe(
+      map(({ data }) => data)
+    )
   }
 
   public getAvatar(uuid: string, type: 'avatar' | 'head' | 'body' = 'avatar'): string {
