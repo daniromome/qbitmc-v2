@@ -68,7 +68,9 @@
           {
             "allow": ["constructors"]
           }
-        ]
+        ],
+        "dot-notation": "off",
+        "@typescript-eslint/dot-notation": "off"
       }
     },
     {

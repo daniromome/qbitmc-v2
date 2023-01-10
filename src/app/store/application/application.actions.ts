@@ -8,7 +8,7 @@ export const submit = createAction(
 
 export const submitSuccess = createAction(
   '[Application] Submit Success',
-  props<{ application: Application, token: string }>()
+  props<{ application: Required<Application>, token: string }>()
 )
 
 export const submitFailure = createAction(

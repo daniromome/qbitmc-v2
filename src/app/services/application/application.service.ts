@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Application } from '@models/application'
 import { SupabaseService } from '@services/supabase'
-import { PostgrestResponse } from '@supabase/supabase-js'
-import { from, Observable } from 'rxjs'
+import { from, Observable, map } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +11,13 @@ export class ApplicationService {
     private readonly supabase: SupabaseService
   ) { }
 
-  public submit(application: Application): Observable<PostgrestResponse<undefined>> {
-    return from(this.supabase.client.from('applications').insert(application))
+  public submit(application: Application): Observable<Required<Application>> {
+    return from(this.supabase.client.from('applications').insert(application).select().single()).pipe(
+      map(({ data, error }) => {
+        if (error) throw error
+        if (!data) throw new Error('Not Found')
+        return data as Required<Application>
+      })
+    )
   }
 }

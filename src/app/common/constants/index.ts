@@ -1,1 +1,2 @@
-export const MAX_UPLOAD_SIZE = 7864320
+export const MAX_UPLOAD_SIZE = 7_864_320
+export const TWENTY_FOUR_HOURS = 86_400_000

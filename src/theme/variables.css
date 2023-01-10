@@ -171,6 +171,7 @@
     --ion-item-background: #1c1c1d;
 
     --ion-card-background: #1c1c1d;
+    --ion-card-background-rgb: 28,28,29;
 
     --ion-border-color: var(--ion-color-step-250)
   }
@@ -211,6 +212,7 @@
     --ion-tab-bar-background: #1f1f1f;
 
     --ion-card-background: #1e1e1e;
+    --ion-card-background-rgb: 30,30,30;
 
     --ion-border-color: var(--ion-color-step-250)
   }

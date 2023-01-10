@@ -42,5 +42,5 @@ export const logout = createAction(
 
 export const submittedApplication = createAction(
   '[App] Submitted Application',
-  props<{ application: Application }>()
+  props<{ application: Required<Application> }>()
 )

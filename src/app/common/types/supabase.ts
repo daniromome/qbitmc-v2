@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 export type Json =
   | string
   | number
@@ -12,54 +11,66 @@ export interface Database {
     Tables: {
       applications: {
         Row: {
-          id: string
-          created_at: string | null
-          profile: string
-          nickname: string
           age: number
-          uuid: string
-          reasons: string
-          experience: string
-          rules: boolean
           approved: boolean | null
+          created_at: string | null
+          discord: string | null
+          experience: string
+          id: string
+          ign: string
+          message: string | null
+          nickname: string
+          profile: string
+          reasons: string
+          rules: boolean
+          uuid: string
         }
         Insert: {
-          id?: string
-          created_at?: string | null
-          profile: string
-          nickname: string
           age: number
-          uuid: string
-          reasons: string
-          experience: string
-          rules: boolean
           approved?: boolean | null
+          created_at?: string | null
+          discord?: string | null
+          experience: string
+          id?: string
+          ign: string
+          message?: string | null
+          nickname: string
+          profile: string
+          reasons: string
+          rules: boolean
+          uuid: string
         }
         Update: {
-          id?: string
-          created_at?: string | null
-          profile?: string
-          nickname?: string
           age?: number
-          uuid?: string
-          reasons?: string
-          experience?: string
-          rules?: boolean
           approved?: boolean | null
+          created_at?: string | null
+          discord?: string | null
+          experience?: string
+          id?: string
+          ign?: string
+          message?: string | null
+          nickname?: string
+          profile?: string
+          reasons?: string
+          rules?: boolean
+          uuid?: string
         }
       }
       profiles: {
         Row: {
+          email: string | null
           id: string
           name: string | null
           picture: string | null
         }
         Insert: {
+          email?: string | null
           id: string
           name?: string | null
           picture?: string | null
         }
         Update: {
+          email?: string | null
           id?: string
           name?: string | null
           picture?: string | null
@@ -69,37 +80,57 @@ export interface Database {
         Row: {
           id: string
           name: string
+          price: string | null
           weight: number
         }
         Insert: {
           id?: string
           name: string
+          price?: string | null
           weight: number
         }
         Update: {
           id?: string
           name?: string
+          price?: string | null
           weight?: number
+        }
+      }
+      stripe: {
+        Row: {
+          customer: string
+          id: string
+          profile: string
+        }
+        Insert: {
+          customer: string
+          id?: string
+          profile: string
+        }
+        Update: {
+          customer?: string
+          id?: string
+          profile?: string
         }
       }
       user_roles: {
         Row: {
+          expires: string | null
           id: string
           profile: string
           role: string
-          expires: string | null
         }
         Insert: {
+          expires?: string | null
           id?: string
           profile: string
           role: string
-          expires?: string | null
         }
         Update: {
+          expires?: string | null
           id?: string
           profile?: string
           role?: string
-          expires?: string | null
         }
       }
     }
@@ -112,11 +143,10 @@ export interface Database {
       }
       users: {
         Row: {
+          application: Json | null
           id: string | null
-          name: string | null
-          picture: string | null
-          uuid: string | null
-          approved: boolean | null
+          minecraft: Json | null
+          nickname: string | null
           roles: Json[] | null
         }
       }

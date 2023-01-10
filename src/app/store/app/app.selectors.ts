@@ -22,3 +22,13 @@ export const selectToken = createSelector(
   selectAppState,
   (state) => state.token
 )
+
+export const selectJWT = createSelector(
+  selectAppState,
+  (state) => state.jwt || ''
+)
+
+export const selectIsSupporter = createSelector(
+  selectAppState,
+  (state) => !!state.user?.roles.some(r => r.role === 'supporter')
+)

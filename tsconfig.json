@@ -40,6 +40,8 @@
       "@guards/*": ["src/app/guards/*"],
       "@directives/*": ["src/app/directives/*"],
       "@selectors/app": ["src/app/store/app/app.selectors"],
+      "@selectors/application": ["src/app/store/application/application.selectors"],
+      "@selectors/shop": ["src/app/store/shop/shop.selectors"]
     }
   },
   "angularCompilerOptions": {

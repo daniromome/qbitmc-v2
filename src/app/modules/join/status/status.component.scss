@@ -3,8 +3,9 @@
   display: grid;
   align-content: center;
   justify-items: center;
+  gap: 1rem;
   &-image {
-    max-height: 10rem;
+    max-height: 5rem;
     border-radius: 0.5rem;
   }
 }

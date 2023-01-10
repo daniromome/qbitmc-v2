@@ -1,11 +1,43 @@
 <div class="status-container" *ngIf="user$ | async as user">
-  <img [src]="avatar$ | async" class="status-container-image">
-  <ion-text class="ion-text-center" i18n>
-    Hey {{ user.nickname }} have received your request to join QbitMC.
-    You will receive a message from our chatbot in discord
-    when we either approve or reject your application.
-  </ion-text>
-  <ion-text class="ion-text-center" i18n>
-
-  </ion-text>
+  <ion-card>
+    <ion-avatar *ngIf="avatar$ | async as avatar">
+      <img [src]="avatar">
+    </ion-avatar>
+    <ion-card-header class="ion-card-avatar-header">
+      <ion-card-title i18n>Hey {{ user.nickname }},</ion-card-title>
+      <ion-card-subtitle i18n *ngIf="user.application.approved || user.application.approved === null; else subtitle">We received your request</ion-card-subtitle>
+      <ng-template #subtitle>
+        <ion-card-subtitle i18n>Your application was <ion-text color="danger">rejected</ion-text></ion-card-subtitle>
+      </ng-template>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text class="ion-text-center" i18n *ngIf="user.application.approved || user.application.approved === null; else rejected">
+        You will receive a message from our chatbot in discord when we either
+        approve or reject your application. If it's been more than 24 hours and
+        you have yet to receive a response, the following button will activate
+        so you can ask for the status of your application on our discord server.
+      </ion-text>
+      <ng-template #rejected>
+        <ion-text class="ion-text-center" i18n>
+          We're sorry for the inconveniences but we have determined that you were
+          not a good fit for our community. If you think there has been a mistake
+          you can always reach out to us privately. Best regards.
+        </ion-text>
+      </ng-template>
+    </ion-card-content>
+    <ion-item
+      *ngIf="user.application.approved || user.application.approved === null"
+      href="https://discord.com/channels/917132788753371157/917132788753371159"
+      target="_blank"
+      rel="noreferrer"
+      color="secondary"
+      [disabled]="disabled$ | async"
+      lines="none"
+    >
+      <ion-icon name="logo-discord" slot="start"></ion-icon>
+      <ion-label i18n>
+        Contact us!
+      </ion-label>
+    </ion-item>
+  </ion-card>
 </div>

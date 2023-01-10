@@ -15,8 +15,8 @@ export class AppliedGuard implements CanActivate {
 
   public canActivate(): Observable<boolean | UrlTree> {
     return this.store.select(selectUser).pipe(
-      map(user => user?.minecraft.uuid || undefined),
-      map(uuid => !!uuid || this.router.createUrlTree(['tabs', 'join']))
+      map(user => [user?.minecraft.uuid, user?.application.approved]),
+      map(([uuid, approved]) => (!!uuid && !approved) || this.router.createUrlTree(['tabs', 'join']))
     )
   }
 }

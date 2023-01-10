@@ -7,6 +7,7 @@ import { Observable, map } from 'rxjs'
 import { User } from '@models/user'
 import { selectUser } from '@selectors/app'
 import { MinecraftService } from '@services/minecraft'
+import { TWENTY_FOUR_HOURS } from '@constants/index'
 
 @Component({
   selector: 'qbit-status',
@@ -19,6 +20,7 @@ import { MinecraftService } from '@services/minecraft'
 export class StatusComponent {
   public readonly user$: Observable<User | undefined>
   public readonly avatar$: Observable<string>
+  public readonly disabled$: Observable<boolean>
 
   public constructor(
     private readonly store: Store,
@@ -27,6 +29,12 @@ export class StatusComponent {
     this.user$ = this.store.select(selectUser)
     this.avatar$ = this.user$.pipe(
       map(user => user?.minecraft.uuid ? this.mc.getAvatar(user.minecraft.uuid) : '')
+    )
+    this.disabled$ = this.user$.pipe(
+      map(user => user?.application.createdAt
+        ? (Date.now() - new Date(user?.application.createdAt).valueOf()) < TWENTY_FOUR_HOURS
+        : true
+      )
     )
   }
 }

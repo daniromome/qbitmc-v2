@@ -53,8 +53,8 @@ export class AppEffects {
       if (error[0] && typeof error[0] === 'string') error[0] = error[0].replaceAll('_', ' ').toLocaleUpperCase()
       return from(
         this.alert.create({
-          header: error[0] || $localize`Unexpected Error`,
-          message: error[1] || $localize`Please contact an administrator if this issue persists`
+          header: error[0] || $localize`:@@unexpectedError:Unexpected Error`,
+          message: error[1] || $localize`:@@contactAdmin:Please contact an administrator if this issue persists`
         })
       ).pipe(
         switchMap(alert => from(alert.present()))
@@ -78,7 +78,7 @@ export class AppEffects {
   ), { dispatch: false })
 
   public applicationSubmit$ = createEffect(() => this.actions$.pipe(
-    ofType(ApplicationActions.submit),
+    ofType(ApplicationActions.submitSuccess),
     map(action => AppActions.submittedApplication({ application: action.application }))
   ))
 

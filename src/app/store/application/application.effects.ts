@@ -16,10 +16,7 @@ export class ApplicationEffects {
     mergeMap(([action, token]) => {
       if (!token) return of(ApplicationActions.submitFailure({ error: new Error('No provider token found') }))
       return this.application.submit(action.application).pipe(
-        map(response => {
-          if (response.error) throw response.error
-          return ApplicationActions.submitSuccess({ application: action.application, token })
-        })
+        map(response => ApplicationActions.submitSuccess({ application: response, token }))
       )
     }),
     catchError(error => of(ApplicationActions.submitFailure({ error })))

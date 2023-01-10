@@ -1,4 +1,4 @@
-export type Role = 'qbitor' | 'mod' | 'qbitor+' | 'admin'
+export type Role = 'qbitor' | 'mod' | 'supporter' | 'admin' | 'guest'
 
 export type Roles = {
   role: Role,

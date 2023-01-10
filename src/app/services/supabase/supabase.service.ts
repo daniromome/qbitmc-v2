@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Injectable } from '@angular/core'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { Database } from 'src/app/common/types/supabase'
@@ -18,9 +19,7 @@ export class SupabaseService {
     return this.client.storage
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   public joinGuild(token: string) {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     return from(this.client.functions.invoke('join-guild', { body: { token } }))
   }
 }

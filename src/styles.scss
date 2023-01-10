@@ -3,6 +3,19 @@ ion-item {
   --highlight-color-valid: var(--ion-color-dark);
 }
 
-:host(.tab-selected) {
-  color: var(--ion-color-dark);
+ion-card {
+  ion-avatar {
+    background-color: var(--ion-color-secondary);
+    position: absolute;
+    --border-radius: 0.25rem;
+    &.md {
+      top: 1rem;
+      right: 1rem;
+    }
+
+    &.ios {
+      top: 1.25rem;
+      right: 1.25rem;
+    }
+  }
 }
