@@ -1,3 +1,4 @@
+import { Role } from '@models/role'
 import { createSelector, createFeatureSelector } from '@ngrx/store'
 import { appFeatureKey, AppState } from './app.reducer'
 
@@ -28,7 +29,7 @@ export const selectJWT = createSelector(
   (state) => state.jwt || ''
 )
 
-export const selectIsSupporter = createSelector(
+export const selectIsRole = (role: Role) => createSelector(
   selectAppState,
-  (state) => !!state.user?.roles.some(r => r.role === 'supporter')
+  (state) => !!state.user?.roles.some(r => r.role === role)
 )

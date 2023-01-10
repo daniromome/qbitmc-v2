@@ -1,4 +1,4 @@
-import { selectIsSupporter } from '@selectors/app'
+import { selectIsRole } from '@selectors/app'
 import { ShopStoreModule } from '../../store/shop/shop.module'
 import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
@@ -23,7 +23,7 @@ export class ShopComponent implements OnInit {
   public constructor(
     private readonly store: Store
   ) {
-    this.isSupporter$ = this.store.select(selectIsSupporter)
+    this.isSupporter$ = this.store.select(selectIsRole('supporter'))
   }
 
   public ngOnInit(): void {

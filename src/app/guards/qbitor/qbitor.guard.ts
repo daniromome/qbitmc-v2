@@ -1,15 +1,21 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core'
+import { CanActivate, UrlTree, Router } from '@angular/router'
+import { Observable, map } from 'rxjs'
+import { Store } from '@ngrx/store'
+import { selectIsRole } from '@selectors/app'
 
 @Injectable({
   providedIn: 'root'
 })
 export class QbitorGuard implements CanActivate {
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return true;
+  public constructor(
+    private readonly store: Store,
+    private readonly router: Router
+  ) {}
+
+  public canActivate(): Observable<boolean | UrlTree> {
+    return this.store.select(selectIsRole('qbitor')).pipe(
+      map(is => is || this.router.createUrlTree(['/tabs/home']))
+    )
   }
-  
 }

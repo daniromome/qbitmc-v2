@@ -35,6 +35,12 @@ export class TabsComponent {
       label: $localize`:@@shop:Shop`,
       path: 'shop',
       role: 'qbitor'
+    },
+    {
+      icon: 'compass',
+      label: $localize`:@@map:Map`,
+      path: 'map',
+      role: 'qbitor'
     }
   ]
 

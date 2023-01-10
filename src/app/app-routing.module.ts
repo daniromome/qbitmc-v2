@@ -4,6 +4,7 @@ import { AppliedGuard } from '@guards/applied'
 import { ApplyGuard } from '@guards/apply'
 import { AuthGuard } from '@guards/auth'
 import { AuthenticatedGuard } from '@guards/authenticated'
+import { QbitorGuard } from '@guards/qbitor'
 
 const routes: Routes = [
   {
@@ -36,7 +37,13 @@ const routes: Routes = [
       },
       {
         path: 'shop',
-        loadComponent: () => import('./modules/shop/shop.component').then(c => c.ShopComponent)
+        loadComponent: () => import('./modules/shop/shop.component').then(c => c.ShopComponent),
+        canActivate: [QbitorGuard]
+      },
+      {
+        path: 'map',
+        loadComponent: () => import('./modules/map/map.component').then(c => c.MapComponent),
+        canActivate: [QbitorGuard]
       },
       {
         path: '',
