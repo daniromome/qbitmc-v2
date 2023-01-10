@@ -24,7 +24,8 @@ export class AuthService {
       switchMap(() => from(this.supabase.client.auth.signInWithOAuth({
         provider: 'discord',
         options: {
-          scopes: 'guilds.join'
+          scopes: 'guilds.join',
+          redirectTo: 'https://qbitmc.daniromo.me'
         }
       })))
     )
