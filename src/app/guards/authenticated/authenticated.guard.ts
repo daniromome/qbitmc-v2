@@ -14,11 +14,8 @@ export class AuthenticatedGuard implements CanActivate {
   ) {}
 
   public canActivate(_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
-    const route = state.url.split('/')
-    route.shift()
-    route.pop()
     return this.store.select(selectIsSignedIn).pipe(
-      map(isSignedIn => !isSignedIn || this.router.createUrlTree(route))
+      map(isSignedIn => !isSignedIn || this.router.createUrlTree(['/tabs/home']))
     )
   }
 }
