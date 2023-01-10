@@ -15,7 +15,7 @@
       "prefix": "qbit",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser-esbuild",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/qbitmc",
             "index": "src/index.html",
