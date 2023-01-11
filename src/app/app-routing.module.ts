@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core'
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router'
 import { AppliedGuard } from '@guards/applied'
 import { ApplyGuard } from '@guards/apply'
-import { AuthGuard } from '@guards/auth'
 import { AuthenticatedGuard } from '@guards/authenticated'
 import { QbitorGuard } from '@guards/qbitor'
 
@@ -19,19 +18,14 @@ const routes: Routes = [
         path: 'join',
         children: [
           {
-            path: 'auth',
-            loadComponent: () => import('./modules/auth/auth.component').then(c => c.AuthComponent),
-            canActivate: [AuthenticatedGuard]
-          },
-          {
             path: '',
             loadComponent: () => import('./modules/join/join.component').then(c => c.JoinComponent),
-            canActivate: [AuthGuard, ApplyGuard]
+            canActivate: [ApplyGuard]
           },
           {
             path: 'status',
             loadComponent: () => import('./modules/join/status/status.component').then(c => c.StatusComponent),
-            canActivate: [AuthGuard, AppliedGuard]
+            canActivate: [AppliedGuard]
           }
         ]
       },
@@ -64,7 +58,8 @@ const routes: Routes = [
   },
   {
     path: 'auth',
-    loadComponent: () => import('./modules/auth/auth.component').then(c => c.AuthComponent)
+    loadComponent: () => import('./modules/auth/auth.component').then(c => c.AuthComponent),
+    canActivate: [AuthenticatedGuard]
   }
 ]
 

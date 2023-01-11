@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router'
+import { CanActivate, Router, UrlTree } from '@angular/router'
 import { Store } from '@ngrx/store'
 import { Observable, map } from 'rxjs'
 import { selectIsSignedIn } from '@selectors/app'
@@ -13,9 +13,9 @@ export class AuthGuard implements CanActivate {
     private readonly router: Router
   ) {}
 
-  public canActivate(_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
+  public canActivate(): Observable<boolean | UrlTree> {
     return this.store.select(selectIsSignedIn).pipe(
-      map(isSignedIn => isSignedIn || this.router.createUrlTree(['/tabs/join/auth']))
+      map(isSignedIn => isSignedIn || this.router.createUrlTree(['auth']))
     )
   }
 }

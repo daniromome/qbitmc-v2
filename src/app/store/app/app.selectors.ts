@@ -14,9 +14,19 @@ export const selectIsSignedIn = createSelector(
   (user) => !!user
 )
 
+export const selectPendingApproval = createSelector(
+  selectAppState,
+  (state) => !!state.user?.minecraft.uuid && !state.user?.application.approved
+)
+
 export const selectUserId = createSelector(
   selectUser,
   (user) => user?.id
+)
+
+export const selectApplied = createSelector(
+  selectAppState,
+  (state) => !!state.user?.application.createdAt
 )
 
 export const selectToken = createSelector(

@@ -15,7 +15,7 @@ export class QbitorGuard implements CanActivate {
 
   public canActivate(): Observable<boolean | UrlTree> {
     return this.store.select(selectIsRole('qbitor')).pipe(
-      map(is => is || this.router.createUrlTree(['/tabs/home']))
+      map(is => is || this.router.createUrlTree(['tabs', 'home']))
     )
   }
 }
