@@ -3,9 +3,8 @@ import { Injectable } from '@angular/core'
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects'
 import { catchError, map, of, from, zip } from 'rxjs'
 import { ShopActions } from '@store/shop'
-import { first, switchMap, tap } from 'rxjs/operators'
+import { switchMap, tap } from 'rxjs/operators'
 import { AlertController } from '@ionic/angular'
-import { Browser } from '@capacitor/browser'
 import { StripeService } from '@services/stripe'
 import { Store } from '@ngrx/store'
 import { SpinnerService } from '@services/spinner'
@@ -45,7 +44,7 @@ export class ShopEffects {
 
   public checkoutSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.checkoutSuccess),
-    switchMap(({ url }) => from(Browser.open({ url })).pipe(first())),
+    tap(({ url }) => window.open(url, '_blank')),
     switchMap(() => this.spinner.stop())
   ), { dispatch: false })
 
@@ -65,7 +64,7 @@ export class ShopEffects {
 
   public portalSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.portalSuccess),
-    switchMap(({ url }) => from(Browser.open({ url })).pipe(first())),
+    tap(({ url }) => window.open(url, '_blank')),
     switchMap(() => this.spinner.stop())
   ), { dispatch: false })
 
