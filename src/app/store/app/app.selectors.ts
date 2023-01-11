@@ -25,8 +25,8 @@ export const selectUserId = createSelector(
 )
 
 export const selectApplied = createSelector(
-  selectAppState,
-  (state) => !!state.user?.application.createdAt
+  selectUser,
+  (user) => !!user?.application.createdAt
 )
 
 export const selectToken = createSelector(

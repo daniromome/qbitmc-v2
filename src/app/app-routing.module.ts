@@ -4,6 +4,7 @@ import { AppliedGuard } from '@guards/applied'
 import { ApplyGuard } from '@guards/apply'
 import { AuthenticatedGuard } from '@guards/authenticated'
 import { QbitorGuard } from '@guards/qbitor'
+import { AuthGuard } from '@guards/auth'
 
 const routes: Routes = [
   {
@@ -16,6 +17,7 @@ const routes: Routes = [
       },
       {
         path: 'join',
+        canActivate: [AuthGuard],
         children: [
           {
             path: '',
