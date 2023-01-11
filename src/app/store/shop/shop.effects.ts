@@ -44,7 +44,7 @@ export class ShopEffects {
 
   public checkoutSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.checkoutSuccess),
-    tap(({ url }) => window.open(url, '_blank')),
+    tap(({ url }) => window.open(url, '_self')),
     switchMap(() => this.spinner.stop())
   ), { dispatch: false })
 
@@ -64,7 +64,7 @@ export class ShopEffects {
 
   public portalSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.portalSuccess),
-    tap(({ url }) => window.open(url, '_blank')),
+    tap(({ url }) => window.open(url, '_self')),
     switchMap(() => this.spinner.stop())
   ), { dispatch: false })
 
