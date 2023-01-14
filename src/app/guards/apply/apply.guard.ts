@@ -15,7 +15,7 @@ export class ApplyGuard implements CanActivate {
 
   public canActivate(): Observable<boolean | UrlTree> {
     return this.store.select(selectApplied).pipe(
-      map(applied => applied || this.router.createUrlTree(['tabs', 'join', 'status']))
+      map(applied => !applied || this.router.createUrlTree(['tabs', 'join', 'status']))
     )
   }
 }
