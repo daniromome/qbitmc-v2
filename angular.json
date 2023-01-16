@@ -71,7 +71,8 @@
                 "input": "src/theme/variables.css"
               }
             ],
-            "scripts": []
+            "scripts": [],
+            "localize": true
           },
           "configurations": {
             "production": {
@@ -173,6 +174,14 @@
               "src/**/*.ts",
               "src/**/*.html"
             ]
+          }
+        }
+      },
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "es": {
+            "translation": "src/locale/messages.es.json"
           }
         }
       }
