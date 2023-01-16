@@ -14,7 +14,7 @@ import { switchMap } from 'rxjs/operators'
 })
 export class FileUploaderComponent {
   @Input() public max = 0
-  @Input() public label = $localize`Drag and drop ${this.max === 1 ? $localize`a file` : $localize`files`} to upload`
+  @Input() public label = $localize`Drag and drop file(s) to upload`
   @Input() public type?: 'image' | 'any' = 'any'
   @Output() public droppedFiles: EventEmitter<File[]> = new EventEmitter()
   public isHovering = false

@@ -2,9 +2,7 @@
   "locale": "es",
   "translations": {
     "6059669835870904232": "Subir imágenes",
-    "5614835386506024532": "Arrastra {$PH} para subir",
-    "5036879491838555242": "un archivo",
-    "6889473896134264260": "archivos",
+    "8537466625040630602": "Arrastra aquí archivo(s) para subir",
     "errorTitle": "Error",
     "2816197485057270276": "Solo puedes subir un maximo de {$PH} archivo(s) a la vez",
     "5515851724202512329": "El tipo de archivo \"{$PH}\" no está permitido. Intenta subirlo en formato \"{$PH_1}\"",

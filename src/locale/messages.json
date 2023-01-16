@@ -2,9 +2,7 @@
   "locale": "en-US",
   "translations": {
     "6059669835870904232": "Upload Images",
-    "5614835386506024532": "Drag and drop {$PH} to upload",
-    "5036879491838555242": "a file",
-    "6889473896134264260": "files",
+    "8537466625040630602": "Drag and drop file(s) to upload",
     "errorTitle": "Error",
     "2816197485057270276": "You can upload a maximum of {$PH} file(s) at a time",
     "5515851724202512329": "The type of file \"{$PH}\" is not allowed. Try uploading it in the following format \"{$PH_1}\"",
