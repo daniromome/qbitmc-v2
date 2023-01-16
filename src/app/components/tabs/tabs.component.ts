@@ -26,7 +26,7 @@ export class TabsComponent {
   private readonly tabs: Tab[] = [
     {
       icon: 'home',
-      label: $localize`Home`,
+      label: $localize`:@@home:Home`,
       path: 'home',
       role: 'guest'
     },
