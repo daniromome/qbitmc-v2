@@ -6,7 +6,7 @@
     "start": "ng serve",
     "start:ios": "ionic capacitor run ios -l --external",
     "start:android": "ionic capacitor run android -l --host=192.168.0.51",
-    "build": "node secrets.mjs && ng build --localize && mv dist/qbitmc/es/* dist/qbitmc/",
+    "build": "node secrets.mjs && ng build --localize && cp src/_redirects dist/qbitmc/",
     "build:watch": "ng build --watch --configuration development",
     "sync": "npm run sync:android & npm run sync:ios",
     "sync:android": "cap sync android",
