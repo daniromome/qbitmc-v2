@@ -11,3 +11,7 @@ $background: url('https://i.imgur.com/hKNKXLW.png') no-repeat center center;
     height: 100%;
   }
 }
+
+ion-select::part(icon) {
+  opacity: 0;
+}

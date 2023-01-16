@@ -70,8 +70,7 @@
                 "input": "src/theme/variables.css"
               }
             ],
-            "scripts": [],
-            "localize": true
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -177,7 +176,7 @@
         }
       },
       "i18n": {
-        "sourceLocale": "en-US",
+        "sourceLocale": "en",
         "locales": {
           "es": {
             "translation": "src/locale/messages.es.json"

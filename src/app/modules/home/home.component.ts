@@ -1,8 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { Store } from '@ngrx/store'
-import { AppActions } from '@store/app'
-import { IonicModule } from '@ionic/angular'
+import { IonicModule, SelectCustomEvent } from '@ionic/angular'
+import { LocaleService } from '@services/locale'
 
 @Component({
   selector: 'qbit-home',
@@ -13,6 +12,16 @@ import { IonicModule } from '@ionic/angular'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
+  public readonly locale: string
+
   public constructor(
-  ) {}
+    private readonly localeService: LocaleService
+  ) {
+    this.locale = localeService.locale
+  }
+
+  public changeLocale(ev: Event): void {
+    const event = ev as SelectCustomEvent
+    this.localeService.navigateToLocale(event.detail.value)
+  }
 }

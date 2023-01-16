@@ -1,6 +1,10 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>QbitMC</ion-title>
+    <ion-select interface="popover" [value]="locale" slot="end" (ionChange)="changeLocale($event)">
+      <ion-select-option value="es">ES</ion-select-option>
+      <ion-select-option value="en">EN</ion-select-option>
+    </ion-select>
   </ion-toolbar>
 </ion-header>
 <ion-content>

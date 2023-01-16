@@ -1,7 +1,11 @@
-import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, rm } from 'node:fs/promises'
 
 async function createEnv() {
-  await mkdir('src/environments')
+  try {
+    await mkdir('src/environments')
+  } catch (error) {
+    if (error.code === 'EEXIST') await rm('src/environments', { recursive: true })
+  }
   await writeFile('src/environments/environment.ts', `export const environment = ${JSON.stringify(process.env)}`)
 }
 
