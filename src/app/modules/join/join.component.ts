@@ -46,7 +46,7 @@ export class JoinComponent implements OnInit, OnDestroy {
     $localize`Take care of the environment in the server (not leaving floating trees, when chopping trees down placing saplings on the
     area and repairing creeper holes)`,
     $localize`Have common sense. We trust your ability to make a good judgement about the actions you take and know you're capable of
-    identifying what's good from what its not.`,
+    identifying what's good from what its not`,
     $localize`Avoid any kind of political arguments that may be controversial or hurtful toward other people, at least within out community
     chats and the minecraft server`
   ]
