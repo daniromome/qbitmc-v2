@@ -3,7 +3,7 @@
     <ion-title i18n="@@profile">Profile</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content class="background">
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-no-padding">
       <ion-col size="0" size-md="2" size-lg="3" size-xl="4"></ion-col>
@@ -22,7 +22,7 @@
                 <ion-label>{{ role.role | role }}</ion-label>
               </ion-chip>
             </ion-item>
-            <ion-item (click)="logout()" color="danger" button>
+            <ion-item (click)="logout()" color="danger" button class="last-card-item">
               <ion-icon name="log-out" slot="start"></ion-icon>
               <ion-label i18n>Logout</ion-label>
             </ion-item>

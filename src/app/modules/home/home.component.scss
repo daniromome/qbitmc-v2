@@ -3,15 +3,44 @@
 $background: url('https://i.imgur.com/hKNKXLW.png') no-repeat center center;
 @include mixins.background-image($background);
 
-.full-screen {
+ion-select::part(icon) {
+  opacity: 0;
+}
+
+.center-items-container {
   display: grid;
   place-items: center;
-  height: 87vh;
-  * {
-    height: 100%;
+}
+
+ion-text {
+  &.description {
+    color: white;
+    margin: 0 1rem;
+    font-size: 1.15rem;
+  }
+  &.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+
+    &.ios {
+      font-size: 1.75rem;
+    }
   }
 }
 
-ion-select::part(icon) {
-  opacity: 0;
+.leaderboards-container {
+  @include mixins.xl {
+    overflow-y: auto;
+    height: 95%;
+    ion-col:first-of-type {
+      padding-top: 0;
+    }
+  }
+}
+
+.full-height {
+  @include mixins.xl {
+    height: 100%;
+  }
 }

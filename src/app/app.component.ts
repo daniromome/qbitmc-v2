@@ -34,5 +34,6 @@ export class AppComponent implements OnInit {
       })
       this.nav.navigateForward(redirected)
     }
+    this.store.dispatch(AppActions.getLeaderboards())
   }
 }

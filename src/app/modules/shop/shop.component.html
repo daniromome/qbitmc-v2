@@ -3,7 +3,7 @@
     <ion-title i18n="@@shop">Shop</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content [scrollY]="false">
+<ion-content [scrollY]="false" class="background">
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-no-padding">
       <ion-col size="0" size-md="2" size-lg="3" size-xl="4"></ion-col>
@@ -20,7 +20,7 @@
             <ion-item lines="none" class="transparent"><ion-text class="ion-text-wrap"><h2>{{ product.description }}</h2></ion-text></ion-item>
             <ion-item *ngIf="isSupporter$ | async; else subscribe" (click)="subscription(true, product.price.id)" color="secondary" lines="none" button i18n>Manage Subscription</ion-item>
             <ng-template #subscribe>
-              <ion-item (click)="subscription(false, product.price.id)" color="secondary" lines="none" button i18n>Subscribe</ion-item>
+              <ion-item (click)="subscription(false, product.price.id)" color="secondary" lines="none" button class="last-card-item" i18n>Subscribe</ion-item>
             </ng-template>
           </ion-card-content>
         </ion-card>

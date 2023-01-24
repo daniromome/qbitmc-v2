@@ -7,8 +7,35 @@
     </ion-select>
   </ion-toolbar>
 </ion-header>
-<ion-content>
-  <div class="full-screen">
-    <img src="assets/logo.svg">
-  </div>
+<ion-content class="background">
+  <ion-grid class="full-height">
+    <ion-row class="full-height">
+      <ion-col size="12" size-md="6" size-xl="4" class="center-items-container">
+        <img src="assets/logo.svg">
+      </ion-col>
+      <ion-col size="12" size-md="6" size-xl="4" class="center-items-container">
+        <ion-text i18n class="description">
+          Founded in 2015 our community qbitmc has focused on bringing a vanilla experiences to its members
+          with a technical & aesthetic turn. Inspired on the hermitcraft server each and one of us have our
+          own base and get involved into trust-based trading on the shopping district of the server. We also
+          come together every now and then to collaborate on big community projects such as automated farms
+          and buildings
+        </ion-text>
+      </ion-col>
+      <ion-col class="full-height">
+        <ion-grid class="full-height">
+          <ion-row>
+            <ion-col class="center-items-container">
+              <ion-text class="section-title secondary-text" i18n>Leaderboards</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row class="leaderboards-container">
+            <ion-col *ngFor="let leaderboard of leaderboards$ | async" size="12" size-md="6" size-xl="12">
+              <qbit-leaderboard [leaderboard]="leaderboard[1]" [stat]="leaderboard[0]"></qbit-leaderboard>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

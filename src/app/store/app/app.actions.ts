@@ -2,6 +2,7 @@ import { Application } from '@models/application'
 import { User } from '@models/user'
 import { createAction, props } from '@ngrx/store'
 import { Session } from '@supabase/supabase-js'
+import { Leaderboards } from '@models/leaderboards'
 
 export const login = createAction(
   '[App] Login'
@@ -43,4 +44,16 @@ export const logout = createAction(
 export const submittedApplication = createAction(
   '[App] Submitted Application',
   props<{ application: Required<Application> }>()
+)
+
+export const getLeaderboards = createAction(
+  '[App] Get Leaderboards'
+)
+export const getLeaderboardsSuccess = createAction(
+  '[App] Get Leaderboards Success',
+  props<{ leaderboards: Leaderboards }>()
+)
+export const getLeaderboardsFailure = createAction(
+  '[App] Get Leaderboards Failure',
+  props<{ error: Error }>()
 )

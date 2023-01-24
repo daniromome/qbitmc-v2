@@ -10,6 +10,8 @@ export class RolePipe implements PipeTransform {
     switch (role) {
       case 'supporter':
         return 'qbitor+'
+      case 'guest':
+        return $localize`:@@guest:guest`
       default:
         return role
     }

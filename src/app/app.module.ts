@@ -11,6 +11,7 @@ import { EffectsModule } from '@ngrx/effects'
 import { HttpClientModule } from '@angular/common/http'
 import { RouteReuseStrategy } from '@angular/router'
 import { AppStoreModule } from '@store/app'
+import { DecimalPipe } from '@angular/common'
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { AppStoreModule } from '@store/app'
     AppStoreModule
   ],
   providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    DecimalPipe
   ],
   bootstrap: [AppComponent]
 })

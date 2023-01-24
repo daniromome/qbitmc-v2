@@ -70,7 +70,8 @@
           }
         ],
         "dot-notation": "off",
-        "@typescript-eslint/dot-notation": "off"
+        "@typescript-eslint/dot-notation": "off",
+        "accessor-pairs": "off"
       }
     },
     {

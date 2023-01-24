@@ -3,11 +3,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { catchError, map, of, from, EMPTY } from 'rxjs'
 import { AppActions } from '@store/app'
 import { switchMap } from 'rxjs/operators'
-import { NavController, AlertController } from '@ionic/angular'
+import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
 import { ActivatedRoute, Router } from '@angular/router'
 import { PreferencesService } from '@services/preferences'
 import { ApplicationActions } from '@store/application'
+import { QbitmcService } from '@services/qbitmc'
 
 @Injectable()
 export class AppEffects {
@@ -99,6 +100,22 @@ export class AppEffects {
     switchMap(() => from(this.nav.navigateForward('/tabs/join/status')))
   ), { dispatch: false })
 
+  public getLeaderboards$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.getLeaderboards),
+    switchMap(() => this.qbitmc.leaderboards()),
+    map(leaderboards => AppActions.getLeaderboardsSuccess({ leaderboards })),
+    catchError(error => of(AppActions.getLeaderboardsFailure({ error })))
+  ))
+
+  public getLeaderboardsFailure$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.getLeaderboardsFailure),
+    switchMap(() => from(this.toast.create({
+      message: $localize`There was an error loading leaderboards, please try again later`,
+      buttons: ['OK'],
+      duration: 3000
+    })).pipe(switchMap(toast => from(toast.present()))))
+  ), { dispatch: false })
+
   public constructor(
     private readonly actions$: Actions,
     private readonly auth: AuthService,
@@ -106,6 +123,8 @@ export class AppEffects {
     private readonly alert: AlertController,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly preferences: PreferencesService
+    private readonly preferences: PreferencesService,
+    private readonly qbitmc: QbitmcService,
+    private readonly toast: ToastController
   ) {}
 }

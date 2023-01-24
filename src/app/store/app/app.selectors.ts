@@ -43,3 +43,8 @@ export const selectIsRole = (role: Role) => createSelector(
   selectAppState,
   (state) => !!state.user?.roles.some(r => r.role === role)
 )
+
+export const selectLeaderboards = createSelector(
+  selectAppState,
+  (state) => state.leaderboards ? Object.entries(state.leaderboards) : []
+)

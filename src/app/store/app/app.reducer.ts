@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store'
 import { User } from '@models/user'
 import { AppActions } from '@store/app'
+import { Leaderboards } from '@models/leaderboards'
 
 export const appFeatureKey = 'app'
 
@@ -8,6 +9,7 @@ export interface AppState {
   user?: User
   token?: string
   jwt?: string
+  leaderboards?: Leaderboards
 }
 
 export const initialState: AppState = {
@@ -35,5 +37,6 @@ export const reducer = createReducer(
       minecraft: { ign: action.application.ign, uuid: action.application.uuid },
       nickname: action.application.nickname
     }
-  }))
+  })),
+  on(AppActions.getLeaderboardsSuccess, (state, action): AppState => ({ ...state, leaderboards: action.leaderboards }))
 )

@@ -1,6 +1,38 @@
+$xs: 0px;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+
+@mixin xs {
+  @media (min-width: #{$xs}) and (max-width: #{$sm - 1px}) {
+    @content;
+  }
+}
+@mixin sm {
+  @media (min-width: #{$sm}) and (max-width: #{$md - 1px}) {
+    @content;
+  }
+}
+@mixin md {
+  @media (min-width: #{$md}) and (max-width: #{$lg - 1px}) {
+    @content;
+  }
+}
+@mixin lg {
+  @media (min-width: #{$lg}) and (max-width: #{$xl - 1px}) {
+    @content;
+  }
+}
+@mixin xl {
+  @media (min-width: #{$xl}) {
+    @content;
+  }
+}
+
 @mixin background-image($background) {
-  ion-content {
-    --background: transparent;
+  ion-content.background {
+    --background: rgba(0,0,0,0.4);
     position: relative;
     &::before {
       content: '';
