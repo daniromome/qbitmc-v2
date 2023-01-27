@@ -23,6 +23,6 @@ export class LocaleService {
   }
 
   public navigateToLocale(locale: Locale): void {
-    window.open(`${environment.URL}/${locale}`, '_self')
+    window.open(`${environment.SITE_URL}/${locale}`, '_self')
   }
 }
