@@ -6,7 +6,6 @@ ion-item {
 ion-card > ion-avatar {
   background-color: var(--ion-color-secondary);
   position: absolute;
-  --border-radius: 0.25rem;
   &.md {
     top: 1rem;
     right: 1rem;
@@ -24,6 +23,23 @@ iframe {
 }
 
 ion-card {
+  ion-avatar {
+    --border-radius: 0.25rem;
+  }
+  ion-item {
+    &.ios {
+      &::part(native) {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+      }
+    }
+    &.md {
+      &::part(native) {
+        padding-top: 0.6rem;
+        padding-bottom: 0.6rem;
+      }
+    }
+  }
   backdrop-filter: blur(1rem);
   -webkit-backdrop-filter: blur(1rem);
   background-color: rgba(var(--ion-card-background-rgb, 255,255,255), 0.75);

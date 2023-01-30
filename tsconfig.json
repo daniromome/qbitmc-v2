@@ -37,6 +37,7 @@
       "@errors/*": ["src/app/common/errors/*"],
       "@constants/*": ["src/app/common/constants/*"],
       "@generics/*": ["src/app/common/generics/*"],
+      "@functions/*": ["src/app/common/functions/*"],
       "@guards/*": ["src/app/guards/*"],
       "@directives/*": ["src/app/directives/*"],
       "@selectors/app": ["src/app/store/app/app.selectors"],

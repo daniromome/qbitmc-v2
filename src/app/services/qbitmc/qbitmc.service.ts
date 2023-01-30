@@ -6,6 +6,7 @@ import { Leaderboards, LeaderboardRecord } from '@models/leaderboards'
 import { SupabaseService } from '@services/supabase'
 import { mergeMap } from 'rxjs/operators'
 import { MinecraftService } from '@services/minecraft'
+import { MinecraftProfile } from '@models/minecraft-profile'
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,18 @@ export class QbitmcService {
           return recordsCopy as unknown as Leaderboards
         }))
       )
+    )
+  }
+
+  public supporters(): Observable<MinecraftProfile[]> {
+    return from(this.supabase.client
+      .from('supporters')
+      .select('*')
+    ).pipe(
+      map(response => {
+        if (response.error) throw response.error
+        else return response.data.map(d => ({ ...d, avatar: this.mc.getAvatar(d.id) }))
+      })
     )
   }
 }

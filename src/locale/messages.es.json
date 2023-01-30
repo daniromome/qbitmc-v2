@@ -15,8 +15,9 @@
     "profile": "Perfil",
     "8307140841776883735": "Unirse",
     "8620169252605615308": " Identifícate con Discord ",
-    "2728816764897880742": " Fundada en 2015 nuestra comunidad qbitmc se ha centrado en brindar una experiencia vanilla a sus jugadores con un enfoque técnico y estético. Inspirados por el servidor de Hermitcraft, cada uno de los jugadores tenemos nuestra propia base y participamos en trueques a base de confíanza en el distrito mercantil del servidor, así mismo, colaboramos todos juntos en proyectos grandes como granjas automáticas y construcciones ",
     "7343825081473730379": "Leaderboards",
+    "7217756648427967816": "Donadores",
+    "2728816764897880742": " Fundada en 2015 nuestra comunidad qbitmc se ha centrado en brindar una experiencia vanilla a sus jugadores con un enfoque técnico y estético. Inspirados por el servidor de Hermitcraft, cada uno de los jugadores tenemos nuestra propia base y participamos en trueques a base de confíanza en el distrito mercantil del servidor, así mismo, colaboramos todos juntos en proyectos grandes como granjas automáticas y construcciones ",
     "join": "Unirse a QbitMC",
     "765296891797858248": "¡Hola!",
     "4560390834536785049": "Cuéntanos a cerca de tí",
@@ -69,6 +70,7 @@
     "unexpectedError": "Error Inesperado",
     "contactAdmin": "Porfavor contacta a un administrador si este error persiste",
     "8766655238072293697": "Hubo un error al envíar tu aplicación, cerraremos tu sesión para remediarlo. Porfavor intenta de nuevo.",
-    "6668505899176604459": "Ha habido un error al cargar las leaderboards, porfavor intenta de nuevo más tarde"
+    "6668505899176604459": "Ha habido un error al cargar las leaderboards, porfavor intenta de nuevo más tarde",
+    "3225372250282818278": "Ha habido un error al cargar la lista de donadores, porfavor intenta de nuevo más tarde"
   }
 }

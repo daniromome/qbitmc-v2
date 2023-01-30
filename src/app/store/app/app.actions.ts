@@ -3,6 +3,7 @@ import { User } from '@models/user'
 import { createAction, props } from '@ngrx/store'
 import { Session } from '@supabase/supabase-js'
 import { Leaderboards } from '@models/leaderboards'
+import { MinecraftProfile } from '@models/minecraft-profile'
 
 export const login = createAction(
   '[App] Login'
@@ -55,5 +56,17 @@ export const getLeaderboardsSuccess = createAction(
 )
 export const getLeaderboardsFailure = createAction(
   '[App] Get Leaderboards Failure',
+  props<{ error: Error }>()
+)
+
+export const getSupporters = createAction(
+  '[App] Get Supporters'
+)
+export const getSupportersSuccess = createAction(
+  '[App] Get Supporters Success',
+  props<{ supporters: MinecraftProfile[] }>()
+)
+export const getSupportersFailure = createAction(
+  '[App] Get Supporters Failure',
   props<{ error: Error }>()
 )

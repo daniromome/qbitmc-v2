@@ -1,7 +1,3 @@
-ion-avatar {
-  --border-radius: 0.25rem;
-}
-
 ion-select {
   position: absolute;
   &.md {
@@ -16,22 +12,7 @@ ion-select {
 }
 
 ion-item {
-  &.ios {
-    &:first-of-type::part(native) {
-      padding-top: 0;
-    }
-    &::part(native) {
-      padding-top: 1rem;
-      padding-bottom: 1rem;
-    }
-  }
-  &.md {
-    &:first-of-type::part(native) {
-      padding-top: 0;
-    }
-    &::part(native) {
-      padding-top: 0.6rem;
-      padding-bottom: 0.6rem;
-    }
+  &:first-of-type::part(native) {
+    padding-top: 0;
   }
 }

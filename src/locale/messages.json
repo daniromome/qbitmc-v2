@@ -15,8 +15,9 @@
     "profile": "Profile",
     "8307140841776883735": "Join",
     "8620169252605615308": " Login with Discord ",
-    "2728816764897880742": " Founded in 2015 our community qbitmc has focused on bringing a vanilla experiences to its members with a technical & aesthetic turn. Inspired on the hermitcraft server each and one of us have our own base and get involved into trust-based trading on the shopping district of the server. We also come together every now and then to collaborate on big community projects such as automated farms and buildings ",
     "7343825081473730379": "Leaderboards",
+    "7217756648427967816": "Supporters",
+    "2728816764897880742": " Founded in 2015 our community qbitmc has focused on bringing a vanilla experiences to its members with a technical & aesthetic turn. Inspired on the hermitcraft server each and one of us have our own base and get involved into trust-based trading on the shopping district of the server. We also come together every now and then to collaborate on big community projects such as automated farms and buildings ",
     "join": "Join QbitMC",
     "765296891797858248": "Hi!",
     "4560390834536785049": "Tell us about yourself",
@@ -69,6 +70,7 @@
     "unexpectedError": "Unexpected Error",
     "contactAdmin": "Please contact an administrator if this issue persists",
     "8766655238072293697": "There was an error while submitting your application,\n      you'll be logged out in order to circunvent this issue. Please try again.",
-    "6668505899176604459": "There was an error loading leaderboards, please try again later"
+    "6668505899176604459": "There was an error loading leaderboards, please try again later",
+    "3225372250282818278": "There was an error loading supporters list, please try again later"
   }
 }

@@ -116,6 +116,22 @@ export class AppEffects {
     })).pipe(switchMap(toast => from(toast.present()))))
   ), { dispatch: false })
 
+  public getSupporters$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.getSupporters),
+    switchMap(() => this.qbitmc.supporters()),
+    map(supporters => AppActions.getSupportersSuccess({ supporters })),
+    catchError(error => of(AppActions.getSupportersFailure({ error })))
+  ))
+
+  public getSupportersFailure$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.getSupportersFailure),
+    switchMap(() => from(this.toast.create({
+      message: $localize`There was an error loading supporters list, please try again later`,
+      buttons: ['OK'],
+      duration: 3000
+    })).pipe(switchMap(toast => from(toast.present()))))
+  ), { dispatch: false })
+
   public constructor(
     private readonly actions$: Actions,
     private readonly auth: AuthService,

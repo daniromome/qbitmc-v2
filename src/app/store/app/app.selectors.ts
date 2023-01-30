@@ -1,3 +1,5 @@
+import { shuffle } from '@functions/shuffle'
+import { MinecraftProfile } from '@models/minecraft-profile'
 import { Role } from '@models/role'
 import { createSelector, createFeatureSelector } from '@ngrx/store'
 import { appFeatureKey, AppState } from './app.reducer'
@@ -47,4 +49,9 @@ export const selectIsRole = (role: Role) => createSelector(
 export const selectLeaderboards = createSelector(
   selectAppState,
   (state) => state.leaderboards ? Object.entries(state.leaderboards) : []
+)
+
+export const selectSupporters = createSelector(
+  selectAppState,
+  (state) => shuffle<MinecraftProfile>(state.supporters)
 )
