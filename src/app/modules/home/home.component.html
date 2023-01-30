@@ -54,7 +54,7 @@
         <ion-card>
           <ion-card-content class="ion-no-padding">
             <ng-container *ngFor="let supporter of supporters$ | async; last as last">
-              <ion-item [lines]="last ? 'none' : 'full'" class="transparent">
+              <ion-item [lines]="last ? 'none' : 'full'" class="transparent padding">
                 <ion-avatar slot="start">
                   <img [src]="supporter.avatar">
                 </ion-avatar>

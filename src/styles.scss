@@ -26,7 +26,7 @@ ion-card {
   ion-avatar {
     --border-radius: 0.25rem;
   }
-  ion-item {
+  ion-item.padding {
     &.ios {
       &::part(native) {
         padding-top: 1rem;

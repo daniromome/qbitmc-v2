@@ -10,7 +10,7 @@
   </ion-card-header>
   <ion-card-content class="ion-no-padding">
     <ng-container *ngFor="let record of leaderboard; last as last">
-      <ion-item [lines]="last ? 'none' : 'full'" class="transparent">
+      <ion-item [lines]="last ? 'none' : 'full'" class="transparent padding">
         <ion-avatar slot="start">
           <img [src]="record.avatar">
         </ion-avatar>
