@@ -18,6 +18,7 @@ export interface Database {
           experience: string
           id: string
           ign: string
+          locale: string
           message: string | null
           nickname: string
           profile: string
@@ -33,6 +34,7 @@ export interface Database {
           experience: string
           id?: string
           ign: string
+          locale?: string
           message?: string | null
           nickname: string
           profile: string
@@ -48,6 +50,7 @@ export interface Database {
           experience?: string
           id?: string
           ign?: string
+          locale?: string
           message?: string | null
           nickname?: string
           profile?: string
@@ -78,21 +81,21 @@ export interface Database {
       }
       roles: {
         Row: {
+          discord: string | null
           id: string
           name: string
-          price: string | null
           weight: number
         }
         Insert: {
+          discord?: string | null
           id?: string
           name: string
-          price?: string | null
           weight: number
         }
         Update: {
+          discord?: string | null
           id?: string
           name?: string
-          price?: string | null
           weight?: number
         }
       }
@@ -135,15 +138,43 @@ export interface Database {
       }
     }
     Views: {
+      discord_profiles: {
+        Row: {
+          id: string | null
+          ign: string | null
+          name: string | null
+        }
+      }
       max_permission_level: {
         Row: {
           profile: string | null
           weight: number | null
         }
       }
+      minecraft_profiles: {
+        Row: {
+          id: string | null
+          name: string | null
+        }
+        Insert: {
+          id?: string | null
+          name?: string | null
+        }
+        Update: {
+          id?: string | null
+          name?: string | null
+        }
+      }
+      supporters: {
+        Row: {
+          id: string | null
+          name: string | null
+        }
+      }
       users: {
         Row: {
           application: Json | null
+          discord: Json | null
           id: string | null
           minecraft: Json | null
           nickname: string | null
@@ -155,6 +186,9 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
       [_ in never]: never
     }
   }
