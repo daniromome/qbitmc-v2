@@ -7,11 +7,6 @@ ion-select::part(icon) {
   opacity: 0;
 }
 
-.center-items-container {
-  display: grid;
-  place-items: center;
-}
-
 ion-text {
   &.description {
     color: white;
@@ -21,8 +16,6 @@ ion-text {
   &.section-title {
     font-size: 1.25rem;
     font-weight: 700;
-    margin-bottom: 15px;
-
     &.ios {
       font-size: 1.75rem;
     }
@@ -43,8 +36,4 @@ ion-text {
   @include mixins.xl {
     height: 100%;
   }
-}
-
-.full-width {
-  width: 100%;
 }

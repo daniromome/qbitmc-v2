@@ -26,20 +26,6 @@ ion-card {
   ion-avatar {
     --border-radius: 0.25rem;
   }
-  ion-item.padding {
-    &.ios {
-      &::part(native) {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-      }
-    }
-    &.md {
-      &::part(native) {
-        padding-top: 0.6rem;
-        padding-bottom: 0.6rem;
-      }
-    }
-  }
   backdrop-filter: blur(1rem);
   -webkit-backdrop-filter: blur(1rem);
   background-color: rgba(var(--ion-card-background-rgb, 255,255,255), 0.75);
@@ -60,4 +46,13 @@ ion-popover::part(arrow) {
   background: var(--ion-color-secondary);
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.center-items-container {
+  display: grid;
+  place-items: center;
+}
+
+.full-width {
+  width: 100%;
 }

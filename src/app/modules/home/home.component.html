@@ -25,14 +25,14 @@
       </ion-col>
       <ion-col class="full-height">
         <ng-container *ngIf="(isDesktop$ | async) === false" [ngTemplateOutlet]="supportersList"></ng-container>
-        <ion-grid class="full-height">
+        <ion-grid class="full-height" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
           <ion-row>
-            <ion-col class="center-items-container">
+            <ion-col class="center-items-container" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
               <ion-text class="section-title secondary-text" i18n>Leaderboards</ion-text>
             </ion-col>
           </ion-row>
           <ion-row class="leaderboards-container">
-            <ion-col *ngFor="let leaderboard of leaderboards$ | async" size="12" size-md="6" size-xl="12">
+            <ion-col *ngFor="let leaderboard of leaderboards$ | async" size="12" size-md="6" size-xl="12" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
               <qbit-leaderboard [leaderboard]="leaderboard[1]" [stat]="leaderboard[0]"></qbit-leaderboard>
             </ion-col>
           </ion-row>
@@ -43,14 +43,14 @@
 </ion-content>
 
 <ng-template #supportersList>
-  <ion-grid class="full-height full-width">
-    <ion-row>
-      <ion-col class="center-items-container">
+  <ion-grid class="full-height full-width" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
+    <ion-row [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
+      <ion-col class="center-items-container" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
         <ion-text class="section-title secondary-text" i18n>Supporters</ion-text>
       </ion-col>
     </ion-row>
-    <ion-row class="leaderboards-container">
-      <ion-col size="12">
+    <ion-row class="leaderboards-container" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
+      <ion-col size="12" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
         <ion-card>
           <ion-card-content class="ion-no-padding">
             <ng-container *ngFor="let supporter of supporters$ | async; last as last">

@@ -4,11 +4,11 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="background">
-  <ion-grid class="ion-no-padding">
-    <ion-row class="ion-no-padding">
+  <ion-grid>
+    <ion-row>
       <ion-col size="0" size-md="2" size-lg="3" size-xl="4"></ion-col>
-      <ion-col>
-        <ion-card *ngIf="user$ | async as user">
+      <ion-col class="center-items-container">
+        <ion-card *ngIf="user$ | async as user" class="full-width">
           <ion-avatar>
             <img [src]="avatar$ | async">
           </ion-avatar>
@@ -22,7 +22,7 @@
                 <ion-label>{{ role.role | role }}</ion-label>
               </ion-chip>
             </ion-item>
-            <ion-item (click)="logout()" color="danger" button class="last-card-item">
+            <ion-item (click)="logout()" color="danger" button>
               <ion-icon name="log-out" slot="start"></ion-icon>
               <ion-label i18n>Logout</ion-label>
             </ion-item>
