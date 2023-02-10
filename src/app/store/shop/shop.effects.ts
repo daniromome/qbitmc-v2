@@ -25,9 +25,11 @@ export class ShopEffects {
 
   public getProductsFailure$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.getProductsFailure),
+    switchMap(() => this.spinner.stop()),
     switchMap(() => from(this.alert.create({
       header: $localize`:@@unexpectedError:Unexpected Error`,
-      message: $localize`:@@contactAdmin:Please contact an administrator if this issue persists`
+      message: $localize`:@@contactAdmin:Please contact an administrator if this issue persists`,
+      buttons: ['OK']
     })).pipe(
       switchMap(alert => from(alert.present()))
     ))
