@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, EnvironmentInjector, OnInit } from 
 import { AuthService } from '@services/auth'
 import { Store } from '@ngrx/store'
 import { AppActions } from '@store/app'
-import { PreferencesService } from './services/preferences/preferences.service'
 import { firstValueFrom } from 'rxjs'
 import { NavController } from '@ionic/angular'
 
@@ -17,14 +16,13 @@ export class AppComponent implements OnInit {
     public readonly environmentInjector: EnvironmentInjector,
     private readonly auth: AuthService,
     private readonly store: Store,
-    private readonly preferences: PreferencesService,
     private readonly nav: NavController
   ) {
 
   }
 
-  public async ngOnInit(): Promise<void> {
-    const redirected = await firstValueFrom(this.preferences.get('redirected'))
+  public ngOnInit(): void {
+    const redirected = localStorage.getItem('redirected')
     if (!redirected) this.store.dispatch(AppActions.autoLogin())
     else {
       const { data: { subscription } } = this.auth.changes((event, session) => {

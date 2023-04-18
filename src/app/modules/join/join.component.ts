@@ -14,7 +14,6 @@ import { Store } from '@ngrx/store'
 import { selectUserId } from '@selectors/app'
 import { debounceTime, switchMap } from 'rxjs/operators'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
-import { PreferencesService } from '@services/preferences'
 import { ApplicationActions, ApplicationStoreModule } from '@store/application'
 import { BytesPipe } from '@pipes/bytes'
 import { MAX_UPLOAD_SIZE } from '@constants/index'
@@ -70,8 +69,7 @@ export class JoinComponent implements OnInit, OnDestroy {
     private readonly store: Store,
     private readonly sanitizer: DomSanitizer,
     private readonly loading: LoadingController,
-    private readonly alert: AlertController,
-    private readonly preferences: PreferencesService
+    private readonly alert: AlertController
   ) {
     this.form = this.fb.group({
       profile: this.fb.control(''),
@@ -102,13 +100,13 @@ export class JoinComponent implements OnInit, OnDestroy {
       map(bool => !bool)
     )
     this.bucket = 'applications'
-    this.sub = this.form.valueChanges.pipe(
-      switchMap(value => this.preferences.set('application', JSON.stringify(value)))
-    ).subscribe()
+    this.sub = this.form.valueChanges.subscribe(value => {
+      localStorage.setItem('application', JSON.stringify(value))
+    })
   }
 
   public async ngOnInit(): Promise<void> {
-    const applicationString = await firstValueFrom(this.preferences.get('application'))
+    const applicationString = localStorage.getItem('application')
     const application = applicationString ? JSON.parse(applicationString) : undefined
     this.profile = (await firstValueFrom(this.store.select(selectUserId).pipe(filter(p => !!p)))) as string
     if (application?.profile === this.profile) {

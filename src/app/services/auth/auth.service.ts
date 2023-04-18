@@ -3,8 +3,6 @@ import { User } from '@models/user'
 import { AuthChangeEvent, AuthError, OAuthResponse, Session, Subscription, User as SupabaseUser } from '@supabase/supabase-js'
 import { Observable, from, map } from 'rxjs'
 import { SupabaseService } from '@services/supabase'
-import { PreferencesService } from '@services/preferences'
-import { switchMap } from 'rxjs/operators'
 import { Router } from '@angular/router'
 
 @Injectable({
@@ -13,22 +11,20 @@ import { Router } from '@angular/router'
 export class AuthService {
   public constructor(
     private readonly supabase: SupabaseService,
-    private readonly preferences: PreferencesService,
     private readonly router: Router
   ) {}
 
   public signIn(): Observable<OAuthResponse> {
     const url = this.router.url.split('/')
     url.pop()
-    return this.preferences.set('redirected', url.join('/')).pipe(
-      switchMap(() => from(this.supabase.client.auth.signInWithOAuth({
-        provider: 'discord',
-        options: {
-          scopes: 'guilds.join',
-          redirectTo: 'https://qbitmc.daniromo.me'
-        }
-      })))
-    )
+    localStorage.setItem('redirected', url.join('/'))
+    return from(this.supabase.client.auth.signInWithOAuth({
+      provider: 'discord',
+      options: {
+        scopes: 'guilds.join',
+        redirectTo: 'https://qbitmc.daniromo.me'
+      }
+    }))
   }
 
   public signOut(): Observable<{ error: AuthError | null }> {

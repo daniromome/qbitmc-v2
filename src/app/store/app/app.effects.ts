@@ -6,7 +6,6 @@ import { switchMap } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
 import { ActivatedRoute, Router } from '@angular/router'
-import { PreferencesService } from '@services/preferences'
 import { ApplicationActions } from '@store/application'
 import { QbitmcService } from '@services/qbitmc'
 
@@ -27,7 +26,7 @@ export class AppEffects {
     ofType(AppActions.loginMiddleware),
     switchMap(action => {
       if (!action.session) throw new Error()
-      this.preferences.delete('redirected')
+      localStorage.removeItem('redirected')
       return this.auth.getUser(action.session.user)
     }),
     map(user => AppActions.loginSuccess({ user })),
@@ -38,7 +37,7 @@ export class AppEffects {
     ofType(AppActions.autoLoginMiddleware),
     switchMap(action => {
       if (!action.session) throw new Error()
-      this.preferences.delete('redirected')
+      localStorage.removeItem('redirected')
       return this.auth.getUser(action.session.user)
     }),
     map(user => AppActions.loginSuccess({ user })),
@@ -139,7 +138,6 @@ export class AppEffects {
     private readonly alert: AlertController,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly preferences: PreferencesService,
     private readonly qbitmc: QbitmcService,
     private readonly toast: ToastController
   ) {}
