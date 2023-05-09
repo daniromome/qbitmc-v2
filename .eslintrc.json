@@ -60,13 +60,18 @@
         "@ngrx/prefer-effect-callback-in-block-statement": "off",
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/explicit-member-accessibility": "error",
-        "space-before-function-paren": ["error", "never"],
+        "space-before-function-paren": [
+          "error",
+          "never"
+        ],
         "require-await": "error",
         "no-underscore-dangle": "off",
         "no-empty-function": [
           "error",
           {
-            "allow": ["constructors"]
+            "allow": [
+              "constructors"
+            ]
           }
         ],
         "dot-notation": "off",

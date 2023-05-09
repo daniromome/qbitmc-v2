@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { CanActivate, Router, UrlTree } from '@angular/router'
+import { Router, UrlTree } from '@angular/router'
 import { Store } from '@ngrx/store'
 import { selectIsSignedIn } from '@store/app/app.selectors'
 import { map, Observable } from 'rxjs'
@@ -7,7 +7,7 @@ import { map, Observable } from 'rxjs'
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticatedGuard implements CanActivate {
+export class AuthenticatedGuard  {
   public constructor(
     private readonly store: Store,
     private readonly router: Router
