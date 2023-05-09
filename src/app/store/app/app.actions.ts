@@ -1,16 +1,16 @@
 import { Application } from '@models/application'
-import { User } from '@models/user'
+import { Profile } from '@models/profile'
 import { createAction, props } from '@ngrx/store'
 import { Session } from '@supabase/supabase-js'
 import { Leaderboards } from '@models/leaderboards'
 import { MinecraftProfile } from '@models/minecraft-profile'
 
-export const login = createAction(
-  '[App] Login'
+export const initialize = createAction(
+  '[App] Initialize Application'
 )
 
-export const autoLogin = createAction(
-  '[App] Auto Login'
+export const login = createAction(
+  '[App] Login'
 )
 
 export const autoLoginMiddleware = createAction(
@@ -18,23 +18,17 @@ export const autoLoginMiddleware = createAction(
   props<{ session: Session | null }>()
 )
 
-export const loginMiddleware = createAction(
-  '[App] Login Middleware',
-  props<{ session: Session | null }>()
+export const getProfile = createAction(
+  '[App] Get Profile'
 )
 
-export const loginSuccess = createAction(
-  '[App] Login Success',
-  props<{ user: User }>()
+export const getProfileSuccess = createAction(
+  '[App] Get Profile Success',
+  props<{ profile: Profile }>()
 )
 
-export const autologinFailure = createAction(
-  '[App] Auto Login Failure',
-  props<{ error: Error }>()
-)
-
-export const loginFailure = createAction(
-  '[App] Login Failure',
+export const getProfileFailure = createAction(
+  '[App] Get Profile Failure',
   props<{ error: Error }>()
 )
 

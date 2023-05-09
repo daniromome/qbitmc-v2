@@ -4,7 +4,7 @@ import { IonicModule } from '@ionic/angular'
 import { Store } from '@ngrx/store'
 import { AppActions } from '@store/app'
 import { Observable, map } from 'rxjs'
-import { User } from '@models/user'
+import { Profile } from '@models/profile'
 import { selectUser } from '@selectors/app'
 import { MinecraftService } from '@services/minecraft'
 import { RolePipe } from '@pipes/role'
@@ -18,7 +18,7 @@ import { RoleColorPipe } from '@pipes/role-color'
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
-  public user$: Observable<User | undefined>
+  public user$: Observable<Profile | undefined>
   public avatar$: Observable<string>
 
   public constructor(
@@ -26,7 +26,7 @@ export class ProfileComponent {
     private readonly mc: MinecraftService
   ) {
     this.user$ = this.store.select(selectUser)
-    this.avatar$ = this.user$.pipe(map(u => u ? this.mc.getAvatar(u?.minecraft.uuid) : ''))
+    this.avatar$ = this.user$.pipe(map(u => u ? this.mc.getAvatar(u?.minecraft.id) : ''))
   }
 
   public logout(): void {

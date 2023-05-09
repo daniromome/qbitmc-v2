@@ -12,10 +12,10 @@
     <ng-container *ngFor="let record of leaderboard; last as last">
       <ion-item [lines]="last ? 'none' : 'full'" class="transparent padding">
         <ion-avatar slot="start">
-          <img [src]="record.avatar">
+          <img [src]="record.player | avatar">
         </ion-avatar>
-        <ion-label>{{ record.name }}</ion-label>
-        <ion-chip color="tertiary" slot="end">{{ isPlaytime ? (record.count | ticks : control?.value) : (record.count | number) }}</ion-chip>
+        <ion-label>{{ record.ign }}</ion-label>
+        <ion-chip color="tertiary" slot="end">{{ isPlaytime ? (record.value | ticks : control?.value) : (record.value | number) }}</ion-chip>
       </ion-item>
     </ng-container>
   </ion-card-content>

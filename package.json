@@ -6,7 +6,7 @@
     "start": "ng serve",
     "start:ios": "ionic capacitor run ios -l --external",
     "start:android": "ionic capacitor run android -l --host=192.168.0.51",
-    "build": "node secrets.mjs && ng build --localize && cp src/_redirects dist/qbitmc/",
+    "build": "node secrets.mjs && ng build --localize && cp src/_redirects dist/qbitmc/ && cp -r .well-known dist/qbitmc/",
     "build:watch": "ng build --watch --configuration development",
     "sync": "npm run sync:android & npm run sync:ios",
     "sync:android": "cap sync android",
@@ -37,7 +37,7 @@
     "@ngrx/store": "^15.4.0",
     "@ngrx/store-devtools": "^15.4.0",
     "@supabase/supabase-js": "^2.2.2",
-    "appwrite": "^11.0.0",
+    "angular-auth-oidc-client": "15.0.4",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

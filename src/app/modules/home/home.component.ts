@@ -2,12 +2,12 @@ import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { IonicModule, SelectCustomEvent, Platform } from '@ionic/angular'
 import { LocaleService } from '@services/locale'
-import { LeaderboardExtendedRecord } from '@models/leaderboards'
 import { Observable, map, startWith } from 'rxjs'
 import { Store } from '@ngrx/store'
 import { selectLeaderboards, selectSupporters } from '@selectors/app'
 import { LeaderboardComponent } from '@components/leaderboard'
 import { MinecraftProfile } from '@models/minecraft-profile'
+import { PlayerStatistics } from '@models/player-statistics'
 
 @Component({
   selector: 'qbit-home',
@@ -20,7 +20,7 @@ import { MinecraftProfile } from '@models/minecraft-profile'
 export class HomeComponent {
   public readonly isDesktop$: Observable<boolean>
   public readonly locale: string
-  public readonly leaderboards$: Observable<[string, LeaderboardExtendedRecord[]][]>
+  public readonly leaderboards$: Observable<[string, PlayerStatistics[]][]>
   public readonly supporters$: Observable<MinecraftProfile[]>
 
   public constructor(

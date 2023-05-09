@@ -8,7 +8,7 @@ export const selectAppState = createFeatureSelector<AppState>(appFeatureKey)
 
 export const selectUser = createSelector(
   selectAppState,
-  (state) => state.user
+  (state) => state.profile
 )
 
 export const selectIsSignedIn = createSelector(
@@ -18,7 +18,7 @@ export const selectIsSignedIn = createSelector(
 
 export const selectPendingApproval = createSelector(
   selectAppState,
-  (state) => !!state.user?.minecraft.uuid && !state.user?.application.approved
+  (state) => !!state.profile?.minecraft.id && !state.profile?.application?.approved
 )
 
 export const selectUserId = createSelector(
@@ -28,22 +28,12 @@ export const selectUserId = createSelector(
 
 export const selectApplied = createSelector(
   selectUser,
-  (user) => !!user?.application.createdAt
-)
-
-export const selectToken = createSelector(
-  selectAppState,
-  (state) => state.token
-)
-
-export const selectJWT = createSelector(
-  selectAppState,
-  (state) => state.jwt || ''
+  (user) => !!user?.application?.createdAt
 )
 
 export const selectIsRole = (role: Role) => createSelector(
   selectAppState,
-  (state) => !!state.user?.roles.some(r => r.role === role)
+  (state) => !!state.profile?.roles.some(r => r === role)
 )
 
 export const selectLeaderboards = createSelector(

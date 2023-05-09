@@ -1,0 +1,39 @@
+Política de privacidad
+
+En QbitMC, estamos comprometidos a proteger su privacidad. Esta Política de privacidad explica cómo recopilamos, usamos y protegemos la información sobre usted.
+
+Información que recopilamos
+
+Si se registra en nuestro sitio web usando Discord, se recopilará la información de su perfil y su correo electrónico.
+
+Recopilamos la información que nos proporciona cuando se suscribe a nuestros servicios, incluidos su nombre, dirección de correo electrónico e información de pago. Usamos Stripe para procesar pagos y suscripciones, y no almacenamos su información de pago en nuestros servidores.
+
+Además, podemos recopilar información automáticamente cuando usa nuestro sitio web, como su dirección IP, tipo de navegador y tipo de dispositivo. Podemos utilizar cookies y tecnologías similares para recopilar esta información.
+
+Si vincula su cuenta de Microsoft a nuestros servicios, también recopilamos el UUID y el nombre de usuario de su cuenta de Minecraft.
+
+Cómo usamos su información
+
+Utilizamos la información que recopilamos para proporcionar y mejorar nuestros servicios, comunicarnos con usted y personalizar su experiencia. También podemos utilizar su información para cumplir con obligaciones legales y para proteger nuestros derechos.
+
+Podemos compartir su información con proveedores de servicios externos que nos ayuden a proporcionar y mejorar nuestros servicios. También podemos compartir su información según lo requiera la ley o para proteger nuestros derechos.
+
+Tus derechos
+
+Tiene derecho a acceder, corregir y eliminar su información personal. También puede objetar el procesamiento de su información personal o solicitar que restrinjamos el procesamiento de su información personal. Para ejercer estos derechos, comuníquese con nosotros utilizando la información de contacto que se proporciona a continuación.
+
+Retención de datos
+
+Conservamos su información personal durante el tiempo que sea necesario para proporcionar nuestros servicios y cumplir con las obligaciones legales.
+
+Seguridad
+
+Tomamos medidas razonables para proteger su información personal del acceso, uso y divulgación no autorizados. Sin embargo, ningún método de transmisión por Internet o método de almacenamiento electrónico es completamente seguro y no podemos garantizar una seguridad absoluta.
+
+Cambios a esta Política de Privacidad
+
+Es posible que actualicemos esta Política de privacidad de vez en cuando. Si realizamos cambios significativos, se lo notificaremos por correo electrónico o mediante la publicación de un aviso en nuestro sitio web.
+
+Contáctenos
+
+Si tiene alguna pregunta o inquietud sobre esta Política de privacidad o nuestras prácticas de datos, contáctenos en contacto@daniromo.me.

@@ -12,11 +12,12 @@ import { FileUploaderComponent } from '@components/file-uploader'
 import { SupabaseService } from '@services/supabase'
 import { Store } from '@ngrx/store'
 import { selectUserId } from '@selectors/app'
-import { debounceTime, switchMap } from 'rxjs/operators'
+import { debounceTime, finalize, switchMap } from 'rxjs/operators'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
 import { ApplicationActions, ApplicationStoreModule } from '@store/application'
 import { BytesPipe } from '@pipes/bytes'
 import { MAX_UPLOAD_SIZE } from '@constants/index'
+import { EnrollmentService } from '@services/enrollment'
 
 interface ApplicationForm extends FormFrom<Omit<Application, 'uuid'>> {}
 
@@ -69,7 +70,8 @@ export class JoinComponent implements OnInit, OnDestroy {
     private readonly store: Store,
     private readonly sanitizer: DomSanitizer,
     private readonly loading: LoadingController,
-    private readonly alert: AlertController
+    private readonly alert: AlertController,
+    private readonly enrollment: EnrollmentService
   ) {
     this.form = this.fb.group({
       profile: this.fb.control(''),
@@ -133,22 +135,25 @@ export class JoinComponent implements OnInit, OnDestroy {
   public async droppedFiles(files: File[]): Promise<void> {
     const loader = await this.loading.create()
     await loader.present()
-    await (async(): Promise<void> => {
-      const response = await Promise.all(
-        files.map(f => this.supabase.storage.from(this.bucket).upload(
-          `${this.profile}/${crypto.randomUUID()}.${f.name.split('.').at(-1)}`,
-          f
-        ))
-      )
-      const errors = response.filter(r => r.error)
-      if (errors.length > 0) throw errors.length
-      await this.getFiles()
-    })()
-      .catch(error => this.alert.create({
-        header: $localize`:@@errorTitle:Error`,
-        message: $localize`There was an error uploading ${error} of your files`
-      }).then(alert => alert.present()))
-      .finally(() => this.loading.dismiss())
+    this.enrollment.uploadMedia(files).pipe(
+      finalize(() => this.loading.dismiss())
+    ).subscribe(r => console.log(r))
+    // await (async(): Promise<void> => {
+    //   const response = await Promise.all(
+    //     files.map(f => this.supabase.storage.from(this.bucket).upload(
+    //       `${this.profile}/${crypto.randomUUID()}.${f.name.split('.').at(-1)}`,
+    //       f
+    //     ))
+    //   )
+    //   const errors = response.filter(r => r.error)
+    //   if (errors.length > 0) throw errors.length
+    //   await this.getFiles()
+    // })()
+    //   .catch(error => this.alert.create({
+    //     header: $localize`:@@errorTitle:Error`,
+    //     message: $localize`There was an error uploading ${error} of your files`
+    //   }).then(alert => alert.present()))
+    //   .finally(() => this.loading.dismiss())
   }
 
   public async deleteImage(name: string, files: SupabaseFile[]): Promise<void> {

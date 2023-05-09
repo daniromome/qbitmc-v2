@@ -13,13 +13,13 @@
             <img [src]="avatar$ | async">
           </ion-avatar>
           <ion-card-header>
-            <ion-card-title>{{ user.minecraft.ign }}</ion-card-title>
+            <ion-card-title>{{ user.minecraft.name }}</ion-card-title>
           </ion-card-header>
           <ion-card-content class="ion-no-padding">
             <ion-item class="transparent" lines="none">
               <ion-label i18n>Roles</ion-label>
-              <ion-chip *ngFor="let role of user.roles" [color]="role.role | roleColor">
-                <ion-label>{{ role.role | role }}</ion-label>
+              <ion-chip *ngFor="let role of user.roles" [color]="role | roleColor">
+                <ion-label>{{ role | role }}</ion-label>
               </ion-chip>
             </ion-item>
             <ion-item (click)="logout()" color="danger" button>

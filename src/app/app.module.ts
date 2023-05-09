@@ -8,10 +8,12 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular'
 import { StoreModule } from '@ngrx/store'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { EffectsModule } from '@ngrx/effects'
-import { HttpClientModule } from '@angular/common/http'
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
 import { RouteReuseStrategy } from '@angular/router'
 import { AppStoreModule } from '@store/app'
 import { DecimalPipe } from '@angular/common'
+import { AuthConfigModule } from './auth/auth-config.module'
+import { AuthInterceptor } from 'angular-auth-oidc-client'
 
 @NgModule({
   declarations: [
@@ -25,10 +27,12 @@ import { DecimalPipe } from '@angular/common'
     StoreModule.forRoot({}, { metaReducers: [logout] }),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     EffectsModule.forRoot([]),
-    AppStoreModule
+    AppStoreModule,
+    AuthConfigModule
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     DecimalPipe
   ],
   bootstrap: [AppComponent]

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, EnvironmentInjector } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
 import { Store } from '@ngrx/store'
@@ -51,13 +51,12 @@ export class TabsComponent {
   ]
 
   public constructor(
-    public readonly environmentInjector: EnvironmentInjector,
     private readonly store: Store
   ) {
     this.tabs$ = this.store.select(selectUser).pipe(
-      map(user => !user || user.roles.length === 1
+      map(user => !user || user.roles.length === 0
         ? [...this.tabs.filter(tab => tab.role === 'guest'), { icon: 'people', label: $localize`Join`, path: 'join', role: 'guest' }]
-        : this.tabs.filter(tab => user.roles.some(r => r.role === tab.role))
+        : this.tabs.filter(tab => user.roles.some(r => r === tab.role))
       )
     )
   }

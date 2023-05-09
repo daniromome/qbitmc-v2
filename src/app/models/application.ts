@@ -9,7 +9,7 @@ export interface Application {
   reasons: string
   experience: string
   rules: boolean
-  approved?: boolean | null
+  approved?: boolean | undefined
   ign: string
   discord?: string
   message?: string
