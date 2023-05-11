@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
 import { Store } from '@ngrx/store'
 import { Observable, map } from 'rxjs'
-import { selectUser } from '@selectors/app'
+import { selectProfile } from '@selectors/app'
 import { Role } from '@models/role'
 
 interface Tab {
@@ -53,7 +53,7 @@ export class TabsComponent {
   public constructor(
     private readonly store: Store
   ) {
-    this.tabs$ = this.store.select(selectUser).pipe(
+    this.tabs$ = this.store.select(selectProfile).pipe(
       map(user => !user || user.roles.length === 0
         ? [...this.tabs.filter(tab => tab.role === 'guest'), { icon: 'people', label: $localize`Join`, path: 'join', role: 'guest' }]
         : this.tabs.filter(tab => user.roles.some(r => r === tab.role))

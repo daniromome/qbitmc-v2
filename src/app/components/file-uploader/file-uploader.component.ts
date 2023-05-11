@@ -20,6 +20,7 @@ export class FileUploaderComponent {
   public isHovering = false
   public desktop: boolean
   private files: File[] = []
+  private uploaded: File[] = []
 
   public constructor(
     private readonly alert: AlertController,
@@ -44,6 +45,7 @@ export class FileUploaderComponent {
   }
 
   public onDrop(files: FileList): void {
+    this.uploaded.splice(0, this.uploaded.length)
     if (this.max && files.length > this.max) {
       from(this.alert.create({
         header: $localize`:@@errorTitle:Error`,
@@ -59,9 +61,10 @@ export class FileUploaderComponent {
         const file = files.item(i)
         if (file && this.validFileType(file)) {
           this.files.push(file)
+          this.uploaded.push(file)
         }
       }
-      if (this.files.length > 0) this.droppedFiles.emit(this.files)
+      if (this.files.length > 0) this.droppedFiles.emit(this.uploaded)
     }
   }
 

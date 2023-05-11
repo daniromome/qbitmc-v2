@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { catchError, map, of, from } from 'rxjs'
 import { AppActions } from '@store/app'
-import { filter, switchMap, tap } from 'rxjs/operators'
+import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
 import { ActivatedRoute, Router } from '@angular/router'
@@ -41,6 +41,12 @@ export class AppEffects {
     tap(() => this.oidcSecurityService.authorize())
   ), { dispatch: false })
 
+  public linkMinecraftAccount$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.linkMinecraftAccount),
+    withLatestFrom(this.oidcSecurityService.getAccessToken()),
+    switchMap(([ _action, token ]) => this.auth.linkMcAccount(token))
+  ), { dispatch: false })
+
   public logout$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.logout),
     switchMap(() => this.oidcSecurityService.logoffAndRevokeTokens()),
@@ -66,7 +72,7 @@ export class AppEffects {
 
   public submittedApplication$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.submittedApplication),
-    switchMap(() => from(this.nav.navigateForward('/tabs/join/status')))
+    switchMap(() => this.nav.navigateForward('/tabs/join/status'))
   ), { dispatch: false })
 
   public getLeaderboards$ = createEffect(() => this.actions$.pipe(
@@ -78,11 +84,12 @@ export class AppEffects {
 
   public getLeaderboardsFailure$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.getLeaderboardsFailure),
-    switchMap(() => from(this.toast.create({
+    switchMap(() => this.toast.create({
       message: $localize`There was an error loading leaderboards, please try again later`,
       buttons: ['OK'],
       duration: 3000
-    })).pipe(switchMap(toast => from(toast.present()))))
+    })),
+    switchMap(toast => toast.present())
   ), { dispatch: false })
 
   // public getSupporters$ = createEffect(() => this.actions$.pipe(
@@ -94,11 +101,12 @@ export class AppEffects {
 
   public getSupportersFailure$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.getSupportersFailure),
-    switchMap(() => from(this.toast.create({
+    switchMap(() => this.toast.create({
       message: $localize`There was an error loading supporters list, please try again later`,
       buttons: ['OK'],
       duration: 3000
-    })).pipe(switchMap(toast => from(toast.present()))))
+    })),
+    switchMap(toast => from(toast.present()))
   ), { dispatch: false })
 
   public constructor(

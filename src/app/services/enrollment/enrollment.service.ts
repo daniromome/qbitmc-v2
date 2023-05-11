@@ -1,39 +1,46 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Application } from '@models/application'
-import { SupabaseService } from '@services/supabase'
-import { from, Observable, map } from 'rxjs'
+import { EnrollmentApplication } from '@models/application'
+import { Observable } from 'rxjs'
 import { environment } from 'src/environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class EnrollmentService {
-  private readonly url: URL
+  private readonly url: string
 
   public constructor(
-    private readonly http: HttpClient,
-    private readonly supabase: SupabaseService
+    private readonly http: HttpClient
   ) {
-    this.url = new URL(`${environment.API_URL}/enrollment`)
+    this.url = `${environment.API_URL}/enrollment`
   }
 
-  public submit(application: Application): Observable<Required<Application>> {
-    return from(this.supabase.client.from('applications').insert(application).select().single()).pipe(
-      map(({ data, error }) => {
-        if (error) throw error
-        if (!data) throw new Error('Not Found')
-        return data as Required<Application>
-      })
-    )
+  public submit(application: EnrollmentApplication): Observable<Required<EnrollmentApplication>> {
+    return this.http.post<Required<EnrollmentApplication>>(this.url, application);
   }
 
-  public uploadMedia(files: File[]): Observable<unknown> {
-    const url = `${this.url.toString()}/media`
+  public uploadMedia(files: File[]): Observable<string[]> {
+    const url = `${this.url}/media`
     const form = new FormData()
     files.forEach(f => {
       form.append('media', f, f.name)
     })
-    return this.http.post(url, form)
+    return this.http.post<string[]>(url, form)
+  }
+
+  public getMedia(): Observable<{ keys: string[], size: bigint }> {
+    const url = `${this.url}/media`
+    return this.http.get<{ keys: string[], size: bigint }>(url)
+  }
+
+  public getMediaResource(key: string): Observable<Blob> {
+    const url = `${this.url}/media/${key}`
+    return this.http.get(url, { responseType: 'blob' })
+  }
+
+  public deleteMediaResource(key: string): Observable<unknown> {
+    const url = `${this.url}/media/${key}`
+    return this.http.delete<unknown>(url)
   }
 }

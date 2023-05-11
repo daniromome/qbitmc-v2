@@ -3,7 +3,7 @@
     <ion-title i18n="@@join">Join QbitMC</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" *ngIf="profile$ | async as profile">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large" i18n="@@join">Join QbitMC</ion-title>
@@ -13,49 +13,36 @@
     <ion-row>
       <ion-col size="12" size-lg="8">
         <ion-card>
-          <ion-avatar *ngIf="avatar$ | async as avatar">
-            <img [src]="avatar">
+          <ion-avatar *ngIf="profile.minecraft">
+            <img [src]="profile.minecraft.id | avatar">
           </ion-avatar>
           <ion-card-header class="ion-card-avatar-header">
-            <ion-card-title i18n>Hi!</ion-card-title>
+            <ion-card-title *ngIf="!profile.minecraft; else ign">Hey!</ion-card-title>
+            <ng-template #ign><ion-card-title>{{ profile.minecraft.name }}</ion-card-title></ng-template>
             <ion-card-subtitle i18n>Tell us about yourself</ion-card-subtitle>
           </ion-card-header>
           <ion-card-content [formGroup]="form" class="ion-no-padding form-container">
             <ion-item lines="full">
-              <ion-label position="floating" i18n>In Game Name <ion-text color="danger">*</ion-text></ion-label>
-              <ion-input [clearInput]="true" formControlName="ign"></ion-input>
+              <ion-label position="floating" i18n>First name</ion-label>
+              <ion-input [clearInput]="true" formControlName="forename"></ion-input>
               <qbit-note
-                #ign
+                #forename
                 i18n-helper
-                [invalid]="form.controls.ign.invalid"
-                [dirty]="form.controls.ign.dirty"
-                helper="Your name inside minecraft"
-                [slot]="ign.slot"
-              ></qbit-note>
-            </ion-item>
-            <ion-item lines="full">
-              <ion-label position="floating" i18n>Nickname</ion-label>
-              <ion-input [clearInput]="true" formControlName="nickname"></ion-input>
-              <qbit-note
-                #nickname
-                i18n-helper
-                [invalid]="form.controls.nickname.invalid"
-                [dirty]="form.controls.nickname.dirty"
+                [invalid]="form.controls.forename.invalid"
+                [dirty]="form.controls.forename.dirty"
                 helper="How would you like us to call you?"
-                [slot]="nickname.slot"
+                [slot]="forename.slot"
               ></qbit-note>
             </ion-item>
             <ion-item lines="full">
               <ion-label position="floating" i18n>Age <ion-text color="danger">*</ion-text></ion-label>
-              <ion-input formControlName="age" inputmode="numeric" clearInput clearOnEdit (ionChange)="numbersOnly()"></ion-input>
+              <ion-input formControlName="age" inputmode="numeric" clearInput clearOnEdit (keyup)="numbersOnly()"></ion-input>
               <qbit-note
                 #age
                 i18n-helper
-                i18n-error
                 [invalid]="form.controls.age.invalid"
                 [dirty]="form.controls.age.dirty"
                 helper="Numbers only"
-                error="You must be at least 16 to apply"
                 [slot]="age.slot"
               ></qbit-note>
             </ion-item>
@@ -86,6 +73,12 @@
             </ion-item>
           </ion-card-content>
         </ion-card>
+        <div class="card-margin" *ngIf="!profile.minecraft">
+          <ion-button expand="block" color="secondary" (click)="linkMinecraftAccount()">
+            <ion-icon ios="cube-outline" md="cube-sharp"></ion-icon>
+            Connect your Minecraft Account*
+          </ion-button>
+        </div>
         <ion-card>
           <ion-card-header>
             <ion-card-title i18n>Media</ion-card-title>
@@ -94,27 +87,28 @@
                 Upload pictures of minecraft buildings you've done in the past.
               </ion-text>
               <ion-text
-                *ngIf="filesSizeExceedsLimit$ | async"
                 [color]="(filesSizeWithinLimit$ | async) ? '': 'danger'"
                 i18n
-              >File size limit exceeded {{ filesSize$ | async | bytes }} / 7.5 MiB.</ion-text>
+              >File size limit {{ filesSize$ | async | bytes }} / 25 MiB.</ion-text>
             </ion-card-subtitle>
           </ion-card-header>
           <ion-card-content class="ion-no-padding">
             <ion-grid>
-              <ng-container *ngIf="files$ | async as files; else noFilesUploaded">
+              <ng-container *ngIf="media$ | async as files; else noFilesUploaded">
                 <ion-row>
                   <ion-col *ngFor="let file of files" size="12" size-md="6" size-xl="4">
                     <div class="image-container">
-                      <img [src]="file.file">
-                      <ion-button size="small" color="danger" class="delete-button" (click)="deleteImage(file.name, files)">
+                      <img [src]="file.blob">
+                      <ion-button size="small" color="danger" class="delete-button" (click)="deleteImage(file.key)">
                         <ion-icon name="close" slot="icon-only"></ion-icon>
                       </ion-button>
                       <div class="image-container-description">
-                        <ion-chip color="medium">{{ file.size | bytes }}</ion-chip>
+                        <ion-chip>{{ (file.size || 0) | bytes }}</ion-chip>
                       </div>
                     </div>
                   </ion-col>
+                </ion-row>
+                <ion-row>
                   <ion-col>
                     <qbit-file-uploader
                       *ngIf="filesSizeWithinLimit$ | async"

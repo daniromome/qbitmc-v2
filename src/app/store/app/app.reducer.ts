@@ -24,8 +24,7 @@ export const reducer = createReducer(
     profile: {
       ...state.profile as Profile,
       application: { createdAt: action.application.created_at, approved: action.application.approved },
-      minecraft: { name: action.application.ign, id: action.application.uuid },
-      nickname: action.application.nickname
+      forename: action.application.forename
     }
   })),
   on(AppActions.getLeaderboardsSuccess, (state, action): AppState => ({ ...state, leaderboards: action.leaderboards })),

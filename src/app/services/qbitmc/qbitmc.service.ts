@@ -5,7 +5,6 @@ import { Observable, map, from } from 'rxjs'
 import { Leaderboards } from '@models/leaderboards'
 import { SupabaseService } from '@services/supabase'
 import { mergeMap } from 'rxjs/operators'
-import { MinecraftService } from '@services/minecraft'
 import { PlayerStatistics } from '@models/player-statistics'
 
 @Injectable({
@@ -15,7 +14,6 @@ export class QbitmcService {
   public constructor(
     private readonly http: HttpClient,
     private readonly supabase: SupabaseService,
-    private readonly mc: MinecraftService
   ) { }
 
   public leaderboards(): Observable<Leaderboards> {

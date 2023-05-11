@@ -15,7 +15,10 @@ import { environment } from 'src/environments/environment'
       useRefreshToken: true,
       renewTimeBeforeTokenExpiresInSeconds: 30,
       ignoreNonceAfterRefresh: true,
-      secureRoutes: [environment.API_URL]
+      secureRoutes: [
+        `${environment.API_URL}/profile`,
+        `${environment.API_URL}/enrollment`
+      ]
     }
   })],
   exports: [AuthModule]

@@ -1,4 +1,4 @@
-import { Application } from '@models/application'
+import { EnrollmentApplication } from '@models/application'
 import { Profile } from '@models/profile'
 import { createAction, props } from '@ngrx/store'
 import { Session } from '@supabase/supabase-js'
@@ -32,13 +32,17 @@ export const getProfileFailure = createAction(
   props<{ error: Error }>()
 )
 
+export const linkMinecraftAccount = createAction(
+  '[App] Link minecraft account'
+)
+
 export const logout = createAction(
   '[App] Logout'
 )
 
 export const submittedApplication = createAction(
   '[App] Submitted Application',
-  props<{ application: Required<Application> }>()
+  props<{ application: Required<EnrollmentApplication> }>()
 )
 
 export const getLeaderboards = createAction(

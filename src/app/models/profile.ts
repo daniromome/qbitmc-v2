@@ -2,7 +2,7 @@ import { Role } from './role'
 
 export interface Profile {
   id: string
-  nickname: string
+  forename: string
   minecraft: {
     id: string,
     name: string
