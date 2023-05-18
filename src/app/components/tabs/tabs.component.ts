@@ -10,7 +10,7 @@ interface Tab {
   icon: string,
   label: string,
   path: string,
-  role: Role
+  role?: Role
 }
 
 @Component({
@@ -28,7 +28,6 @@ export class TabsComponent {
       icon: 'home',
       label: $localize`:@@home:Home`,
       path: 'home',
-      role: 'guest'
     },
     {
       icon: 'storefront',
@@ -55,8 +54,8 @@ export class TabsComponent {
   ) {
     this.tabs$ = this.store.select(selectProfile).pipe(
       map(user => !user || user.roles.length === 0
-        ? [...this.tabs.filter(tab => tab.role === 'guest'), { icon: 'people', label: $localize`Join`, path: 'join', role: 'guest' }]
-        : this.tabs.filter(tab => user.roles.some(r => r === tab.role))
+        ? [...this.tabs.filter(tab => !tab.role), { icon: 'people', label: $localize`Join`, path: 'join', role: 'guest' }]
+        : this.tabs.filter(tab => user.roles.some(r => r === tab.role || !tab.role))
       )
     )
   }

@@ -6,6 +6,11 @@ import { appFeatureKey, AppState } from './app.reducer'
 
 export const selectAppState = createFeatureSelector<AppState>(appFeatureKey)
 
+export const selectInitialized = createSelector(
+  selectAppState,
+  (state) => state.initialized
+)
+
 export const selectProfile = createSelector(
   selectAppState,
   (state) => state.profile
@@ -17,8 +22,8 @@ export const selectIsSignedIn = createSelector(
 )
 
 export const selectPendingApproval = createSelector(
-  selectAppState,
-  (state) => !!state.profile?.minecraft.id && !state.profile?.application?.approved
+  selectProfile,
+  (profile) => !!profile?.application?.createdAt && profile?.application?.approved === null
 )
 
 export const selectUserId = createSelector(

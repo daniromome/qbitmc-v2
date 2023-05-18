@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core'
 import { Router, UrlTree } from '@angular/router'
 import { Store } from '@ngrx/store'
-import { selectApplied } from '@store/app/app.selectors'
-import { map, Observable } from 'rxjs'
+import { selectApplied, selectInitialized } from '@selectors/app'
+import { filter, map, Observable, skip, switchMap, take, tap } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,9 @@ export class ApplyGuard  {
   ) {}
 
   public canActivate(): Observable<boolean | UrlTree> {
-    return this.store.select(selectApplied).pipe(
+    return this.store.select(selectInitialized).pipe(
+      filter(initialized => initialized),
+      switchMap(() => this.store.select(selectApplied)),
       map(applied => !applied || this.router.createUrlTree(['tabs', 'join', 'status']))
     )
   }

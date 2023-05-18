@@ -1,5 +1,10 @@
 <ion-card>
-  <ion-select *ngIf="isPlaytime && control" interface="popover" [formControl]="control" [interfaceOptions]="{ alignment: 'end' }">
+  <ion-select
+    *ngIf="isPlaytime && control"
+    interface="popover"
+    [formControl]="control"
+    [interfaceOptions]="{ alignment: 'end' }"
+    labelPlacement="end">
     <ion-select-option value="hours" i18n="@@hours">Hours</ion-select-option>
     <ion-select-option value="minutes" i18n="@@minutes">Minutes</ion-select-option>
     <ion-select-option value="seconds" i18n="@@seconds">Seconds</ion-select-option>

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface EnrollmentApplication {
   id?: string
-  created_at?: string
+  createdAt?: string
   forename: string
   age: number
   reasons: string

@@ -10,20 +10,23 @@ export interface AppState {
   profile?: Profile
   leaderboards?: Leaderboards
   supporters: MinecraftProfile[]
+  initialized: boolean
 }
 
 export const initialState: AppState = {
-  supporters: []
+  supporters: [],
+  initialized: false
 }
 
 export const reducer = createReducer(
   initialState,
-  on(AppActions.getProfileSuccess, (state, action): AppState => ({ ...state, profile: action.profile })),
+  on(AppActions.getProfileSuccess, (state, action): AppState => ({ ...state, profile: action.profile, initialized: true })),
+  on(AppActions.getProfileFailure, (state): AppState => ({ ...state, initialized: true })),
   on(AppActions.submittedApplication, (state, action): AppState => ({
     ...state,
     profile: {
       ...state.profile as Profile,
-      application: { createdAt: action.application.created_at, approved: action.application.approved },
+      application: { createdAt: action.application.createdAt, approved: action.application.approved },
       forename: action.application.forename
     }
   })),

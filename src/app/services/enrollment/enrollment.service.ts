@@ -35,7 +35,7 @@ export class EnrollmentService {
   }
 
   public getMediaResource(key: string): Observable<Blob> {
-    const url = `${this.url}/media/${key}`
+    const url = `${environment.MINIO_URL}/${key}`
     return this.http.get(url, { responseType: 'blob' })
   }
 

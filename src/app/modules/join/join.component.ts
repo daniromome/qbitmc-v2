@@ -1,14 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
-import { IonicModule, LoadingController, AlertController } from '@ionic/angular'
+import { IonicModule } from '@ionic/angular'
 import { FormFrom } from '../../common/types/forms'
 import { EnrollmentApplication } from '@models/application'
 import { Observable, map, Subject } from 'rxjs'
 import { REGEXP } from '@constants/regexp'
 import { NoteComponent } from '@components/note'
 import { FileUploaderComponent } from '@components/file-uploader'
-import { SupabaseService } from '@services/supabase'
 import { Store } from '@ngrx/store'
 import { selectProfile } from '@selectors/app'
 import { takeUntil } from 'rxjs/operators'
@@ -16,7 +15,6 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
 import { ApplicationActions, ApplicationStoreModule } from '@store/application'
 import { BytesPipe } from '@pipes/bytes'
 import { MAX_UPLOAD_SIZE } from '@constants/index'
-import { EnrollmentService } from '@services/enrollment'
 import { Profile } from '@models/profile'
 import { AvatarPipe } from '@pipes/avatar'
 import { AppActions } from '@store/app'
@@ -102,6 +100,7 @@ export class JoinComponent implements OnInit, OnDestroy {
     this.store.dispatch(ApplicationActions.getMedia())
     const applicationString = localStorage.getItem('application')
     const application = applicationString ? JSON.parse(applicationString) : undefined
+    if (!application) return
     this.form.setValue(application)
     Object.keys(this.form.controls).forEach(k => {
       if (application[k]) this.form.get(k)?.markAsDirty()

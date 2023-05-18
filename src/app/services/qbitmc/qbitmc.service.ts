@@ -3,9 +3,6 @@ import { HttpClient } from '@angular/common/http'
 import { environment } from '../../../environments/environment'
 import { Observable, map, from } from 'rxjs'
 import { Leaderboards } from '@models/leaderboards'
-import { SupabaseService } from '@services/supabase'
-import { mergeMap } from 'rxjs/operators'
-import { PlayerStatistics } from '@models/player-statistics'
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +10,6 @@ import { PlayerStatistics } from '@models/player-statistics'
 export class QbitmcService {
   public constructor(
     private readonly http: HttpClient,
-    private readonly supabase: SupabaseService,
   ) { }
 
   public leaderboards(): Observable<Leaderboards> {

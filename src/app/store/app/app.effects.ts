@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { catchError, map, of, from } from 'rxjs'
 import { AppActions } from '@store/app'
-import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators'
+import { switchMap, tap, withLatestFrom } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
 import { ActivatedRoute, Router } from '@angular/router'
@@ -15,26 +15,28 @@ export class AppEffects {
   public initialize$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.initialize),
     switchMap(() => this.oidcSecurityService.checkAuth()),
-    filter(response => !!response.accessToken),
-    map(() => AppActions.getProfile())
+    map(response => AppActions.getProfile({ token: response.accessToken }))
   ))
 
   public getProfile$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.getProfile),
-    switchMap(() => this.auth.getProfile()),
+    switchMap(({ token }) => {
+      if (!token) throw new Error('User is not signed in')
+      return this.auth.getProfile()
+    }),
     map(profile => AppActions.getProfileSuccess({ profile })),
     catchError(error => of(AppActions.getProfileFailure({ error })))
   ))
 
-  public getProfileFailure$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.getProfileFailure),
-    switchMap(() => from(this.alert.create({
-      header: $localize`:@@unexpectedError:Unexpected Error`,
-      message: $localize`:@@contactAdmin:Please contact an administrator if this issue persists`
-    })).pipe(
-      switchMap(alert => from(alert.present()))
-    ))
-  ), { dispatch: false })
+  // public getProfileFailure$ = createEffect(() => this.actions$.pipe(
+  //   ofType(AppActions.getProfileFailure),
+  //   switchMap(() => from(this.alert.create({
+  //     header: $localize`:@@unexpectedError:Unexpected Error`,
+  //     message: $localize`:@@contactAdmin:Please contact an administrator if this issue persists`
+  //   })).pipe(
+  //     switchMap(alert => from(alert.present()))
+  //   ))
+  // ), { dispatch: false })
 
   public login$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.login),
@@ -58,17 +60,17 @@ export class AppEffects {
     map(action => AppActions.submittedApplication({ application: action.application }))
   ))
 
-  public applicationSubmitFailure$ = createEffect(() => this.actions$.pipe(
-    ofType(ApplicationActions.submitFailure),
-    switchMap(() => from(this.alert.create({
-      header: $localize`:@@errorTitle:Error`,
-      message: $localize`There was an error while submitting your application,
-      you'll be logged out in order to circunvent this issue. Please try again.`,
-      buttons: ['OK']
-    }))),
-    switchMap(alert => from(alert.present())),
-    map(() => AppActions.logout())
-  ))
+  // public applicationSubmitFailure$ = createEffect(() => this.actions$.pipe(
+  //   ofType(ApplicationActions.submitFailure),
+  //   switchMap(() => from(this.alert.create({
+  //     header: $localize`:@@errorTitle:Error`,
+  //     message: $localize`There was an error while submitting your application,
+  //     you'll be logged out in order to circunvent this issue. Please try again.`,
+  //     buttons: ['OK']
+  //   }))),
+  //   switchMap(alert => from(alert.present())),
+  //   map(() => AppActions.logout())
+  // ))
 
   public submittedApplication$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.submittedApplication),
@@ -76,7 +78,7 @@ export class AppEffects {
   ), { dispatch: false })
 
   public getLeaderboards$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.initialize),
+    ofType(AppActions.getLeaderboards),
     switchMap(() => this.qbitmc.leaderboards()),
     map(leaderboards => AppActions.getLeaderboardsSuccess({ leaderboards })),
     catchError(error => of(AppActions.getLeaderboardsFailure({ error })))

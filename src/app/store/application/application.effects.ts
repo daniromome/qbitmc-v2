@@ -71,9 +71,8 @@ export class ApplicationEffects {
 
   public submit$ = createEffect(() => this.actions$.pipe(
     ofType(ApplicationActions.submit),
-    mergeMap(action => this.enrollment.submit(action.application).pipe(
-      map(response => ApplicationActions.submitSuccess({ application: response }))
-    )),
+    switchMap(action => this.enrollment.submit(action.application)),
+    map(response => ApplicationActions.submitSuccess({ application: response })),
     catchError(error => of(ApplicationActions.submitFailure({ error })))
   ))
 

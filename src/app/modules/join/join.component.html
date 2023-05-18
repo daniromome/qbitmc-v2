@@ -58,9 +58,9 @@
                 [slot]="reasons.slot"
               ></qbit-note>
             </ion-item>
-            <ion-item counter="true" lines="full">
+            <ion-item lines="full">
               <ion-label position="floating" i18n>Experiences<ion-text color="danger">*</ion-text></ion-label>
-              <ion-textarea formControlName="experience" maxlength="300" autoGrow></ion-textarea>
+              <ion-textarea formControlName="experience" counter="true" maxlength="300" autoGrow></ion-textarea>
               <qbit-note
                 #experience
                 i18n-helper
@@ -103,7 +103,7 @@
                         <ion-icon name="close" slot="icon-only"></ion-icon>
                       </ion-button>
                       <div class="image-container-description">
-                        <ion-chip>{{ (file.size || 0) | bytes }}</ion-chip>
+                        <ion-chip>{{ file.size | bytes }}</ion-chip>
                       </div>
                     </div>
                   </ion-col>

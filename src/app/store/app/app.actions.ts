@@ -1,7 +1,6 @@
 import { EnrollmentApplication } from '@models/application'
 import { Profile } from '@models/profile'
 import { createAction, props } from '@ngrx/store'
-import { Session } from '@supabase/supabase-js'
 import { Leaderboards } from '@models/leaderboards'
 import { MinecraftProfile } from '@models/minecraft-profile'
 
@@ -13,13 +12,9 @@ export const login = createAction(
   '[App] Login'
 )
 
-export const autoLoginMiddleware = createAction(
-  '[App] Auto Login Middleware',
-  props<{ session: Session | null }>()
-)
-
 export const getProfile = createAction(
-  '[App] Get Profile'
+  '[App] Get Profile',
+  props<{ token: string }>()
 )
 
 export const getProfileSuccess = createAction(

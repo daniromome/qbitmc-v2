@@ -1,14 +1,9 @@
 ion-select {
+  --padding-end: 1rem;
+  --highlight-color-valid: transparent;
+  --highlight-color-invalid: transparent;
+  --highlight-color-focused: transparent;
   position: absolute;
-  &.md {
-    top: 0.5rem;
-    right: 1rem;
-  }
-
-  &.ios {
-    top: 1rem;
-    right: 1rem;
-  }
 }
 
 ion-item {
