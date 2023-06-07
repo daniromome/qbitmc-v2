@@ -61,7 +61,7 @@ export class ApplicationEffects {
   public deleteMediaResource$ = createEffect(() => this.actions$.pipe(
     ofType(ApplicationActions.deleteMediaResource),
     switchMap(({ key }) =>
-      this.enrollment.deleteMediaResource(key).pipe(
+      this.enrollment.deleteMediaResource(key.split('/')[2]).pipe(
         map(() => key)
       )
     ),

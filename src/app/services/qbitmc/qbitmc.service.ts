@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http'
 import { environment } from '../../../environments/environment'
 import { Observable, map, from } from 'rxjs'
 import { Leaderboards } from '@models/leaderboards'
+import { MinecraftProfile } from '@models/minecraft-profile'
 
 @Injectable({
   providedIn: 'root'
@@ -17,15 +18,8 @@ export class QbitmcService {
     return this.http.get<Leaderboards>(url.toString())
   }
 
-  // public supporters(): Observable<MinecraftProfile[]> {
-  //   return from(this.supabase.client
-  //     .from('supporters')
-  //     .select('*')
-  //   ).pipe(
-  //     map(response => {
-  //       if (response.error) throw response.error
-  //       else return response.data.map(d => ({ ...d, avatar: this.mc.getAvatar(d.id) }))
-  //     })
-  //   )
-  // }
+  public supporters(): Observable<MinecraftProfile[]> {
+    const url = new URL(`${environment.API_URL}/supporters`)
+    return this.http.get<MinecraftProfile[]>(url.toString())
+  }
 }

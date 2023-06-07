@@ -71,7 +71,7 @@ export class JoinComponent implements OnInit, OnDestroy {
     private readonly sanitizer: DomSanitizer
   ) {
     this.form = this.fb.group({
-      forename: this.fb.control('', [Validators.required]),
+      forename: this.fb.control('', [Validators.required, Validators.maxLength(12)]),
       age: this.fb.control(0, [Validators.required]),
       experience: this.fb.control('', [Validators.required]),
       reasons: this.fb.control('', [Validators.required]),

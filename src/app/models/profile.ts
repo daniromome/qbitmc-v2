@@ -3,6 +3,7 @@ import { Role } from './role'
 export interface Profile {
   id: string
   forename: string
+  customer: string
   minecraft: {
     id: string,
     name: string
@@ -12,4 +13,5 @@ export interface Profile {
     approved?: boolean
   }
   roles: Role[]
+  disabled: boolean
 }

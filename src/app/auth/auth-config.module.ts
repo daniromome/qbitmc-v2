@@ -17,8 +17,10 @@ import { environment } from 'src/environments/environment'
       ignoreNonceAfterRefresh: true,
       secureRoutes: [
         `${environment.API_URL}/profile`,
+        `${environment.API_URL}/stripe`,
         `${environment.API_URL}/enrollment`
-      ]
+      ],
+      maxIdTokenIatOffsetAllowedInSeconds: 300
     }
   })],
   exports: [AuthModule]

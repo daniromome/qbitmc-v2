@@ -9,11 +9,12 @@ import { LeaderboardComponent } from '@components/leaderboard'
 import { MinecraftProfile } from '@models/minecraft-profile'
 import { PlayerStatistics } from '@models/player-statistics'
 import { AppActions } from '@store/app'
+import { AvatarPipe } from '@pipes/avatar'
 
 @Component({
   selector: 'qbit-home',
   standalone: true,
-  imports: [CommonModule, IonicModule, LeaderboardComponent],
+  imports: [CommonModule, IonicModule, LeaderboardComponent, AvatarPipe],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

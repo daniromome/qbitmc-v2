@@ -14,7 +14,7 @@
       <ion-col size="12" size-lg="8">
         <ion-card>
           <ion-avatar *ngIf="profile.minecraft">
-            <img [src]="profile.minecraft.id | avatar">
+            <img [src]="profile.minecraft.id | avatar" alt="user's minecraft avatar">
           </ion-avatar>
           <ion-card-header class="ion-card-avatar-header">
             <ion-card-title *ngIf="!profile.minecraft; else ign">Hey!</ion-card-title>
@@ -28,9 +28,11 @@
               <qbit-note
                 #forename
                 i18n-helper
+                i18n-error
                 [invalid]="form.controls.forename.invalid"
                 [dirty]="form.controls.forename.dirty"
                 helper="How would you like us to call you?"
+                error="First name must be less than 12 characters"
                 [slot]="forename.slot"
               ></qbit-note>
             </ion-item>
@@ -98,7 +100,7 @@
                 <ion-row>
                   <ion-col *ngFor="let file of files" size="12" size-md="6" size-xl="4">
                     <div class="image-container">
-                      <img [src]="file.blob">
+                      <img [src]="file.blob" alt="image to be sent in enrollment application">
                       <ion-button size="small" color="danger" class="delete-button" (click)="deleteImage(file.key)">
                         <ion-icon name="close" slot="icon-only"></ion-icon>
                       </ion-button>

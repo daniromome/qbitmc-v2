@@ -7,6 +7,7 @@ import { AlertController } from '@ionic/angular'
 import { StripeService } from '@services/stripe'
 import { Store } from '@ngrx/store'
 import { SpinnerService } from '@services/spinner'
+import { selectCustomer } from '@selectors/app';
 
 @Injectable()
 export class ShopEffects {
@@ -34,14 +35,13 @@ export class ShopEffects {
     ))
   ), { dispatch: false })
 
-  // public checkout$ = createEffect(() => this.actions$.pipe(
-  //   ofType(ShopActions.checkout),
-  //   tap(() => this.spinner.spin().subscribe()),
-  //   concatLatestFrom(() => this.store.select(selectJWT)),
-  //   switchMap(([{ price }, jwt]) => this.stripe.checkout(jwt, price)),
-  //   map(url => ShopActions.checkoutSuccess({ url })),
-  //   catchError(() => of(ShopActions.checkoutFailure()))
-  // ))
+  public checkout$ = createEffect(() => this.actions$.pipe(
+    ofType(ShopActions.checkout),
+    tap(() => this.spinner.spin().subscribe()),
+    switchMap(({ price }) => this.stripe.checkout(price)),
+    map(url => ShopActions.checkoutSuccess({ url })),
+    catchError(() => of(ShopActions.checkoutFailure()))
+  ))
 
   public checkoutSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.checkoutSuccess),
@@ -54,14 +54,14 @@ export class ShopEffects {
     switchMap(() => this.spinner.stop())
   ), { dispatch: false })
 
-  // public portal$ = createEffect(() => this.actions$.pipe(
-  //   ofType(ShopActions.portal),
-  //   tap(() => this.spinner.spin().subscribe()),
-  //   concatLatestFrom(() => this.store.select(selectJWT)),
-  //   switchMap(([_, jwt]) => this.stripe.portal(jwt)),
-  //   map(url => ShopActions.portalSuccess({ url })),
-  //   catchError(() => of(ShopActions.portalFailure()))
-  // ))
+  public portal$ = createEffect(() => this.actions$.pipe(
+    ofType(ShopActions.portal),
+    tap(() => this.spinner.spin().subscribe()),
+    concatLatestFrom(() => this.store.select(selectCustomer)),
+    switchMap(([_, customer]) => this.stripe.portal(customer)),
+    map(url => ShopActions.portalSuccess({ url })),
+    catchError(() => of(ShopActions.portalFailure()))
+  ))
 
   public portalSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.portalSuccess),

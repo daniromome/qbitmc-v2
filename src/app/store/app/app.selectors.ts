@@ -21,9 +21,14 @@ export const selectIsSignedIn = createSelector(
   (profile) => !!profile
 )
 
+export const selectIsDisabled = createSelector(
+  selectProfile,
+  (profile) => !!profile?.disabled
+)
+
 export const selectPendingApproval = createSelector(
   selectProfile,
-  (profile) => !!profile?.application?.createdAt && profile?.application?.approved === null
+  (profile) => !!profile?.application?.createdAt && !profile?.application?.approved
 )
 
 export const selectUserId = createSelector(
@@ -49,4 +54,9 @@ export const selectLeaderboards = createSelector(
 export const selectSupporters = createSelector(
   selectAppState,
   (state) => shuffle<MinecraftProfile>(state.supporters)
+)
+
+export const selectCustomer = createSelector(
+  selectProfile,
+  (profile) => profile?.customer
 )

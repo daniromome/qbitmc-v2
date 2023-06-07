@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
 import { Store } from '@ngrx/store'
 import { Observable, map } from 'rxjs'
-import { selectProfile } from '@selectors/app'
+import { selectIsDisabled, selectProfile } from '@selectors/app'
 import { Role } from '@models/role'
 
 interface Tab {
@@ -22,6 +22,7 @@ interface Tab {
 })
 export class TabsComponent {
   public readonly tabs$: Observable<Tab[]>
+  public readonly disabled$: Observable<boolean>
 
   private readonly tabs: Tab[] = [
     {
@@ -58,5 +59,6 @@ export class TabsComponent {
         : this.tabs.filter(tab => user.roles.some(r => r === tab.role || !tab.role))
       )
     )
+    this.disabled$ = this.store.select(selectIsDisabled)
   }
 }

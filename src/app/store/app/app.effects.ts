@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { catchError, map, of, from } from 'rxjs'
 import { AppActions } from '@store/app'
-import { switchMap, tap, withLatestFrom } from 'rxjs/operators'
+import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
-import { ActivatedRoute, Router } from '@angular/router'
 import { ApplicationActions } from '@store/application'
 import { QbitmcService } from '@services/qbitmc'
 import { OidcSecurityService } from 'angular-auth-oidc-client'
@@ -27,6 +26,17 @@ export class AppEffects {
     map(profile => AppActions.getProfileSuccess({ profile })),
     catchError(error => of(AppActions.getProfileFailure({ error })))
   ))
+
+  public getProfileSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.getProfileSuccess),
+    filter(({ profile }) => profile.disabled),
+    switchMap(() => this.alert.create({
+      header: $localize`Account Disabled`,
+      message: $localize`Your account has been deactivated, get in touch with an administrator to get it restored`,
+      buttons: ['OK']
+    })),
+    switchMap(alert => alert.present())
+  ), { dispatch: false })
 
   // public getProfileFailure$ = createEffect(() => this.actions$.pipe(
   //   ofType(AppActions.getProfileFailure),
@@ -60,18 +70,6 @@ export class AppEffects {
     map(action => AppActions.submittedApplication({ application: action.application }))
   ))
 
-  // public applicationSubmitFailure$ = createEffect(() => this.actions$.pipe(
-  //   ofType(ApplicationActions.submitFailure),
-  //   switchMap(() => from(this.alert.create({
-  //     header: $localize`:@@errorTitle:Error`,
-  //     message: $localize`There was an error while submitting your application,
-  //     you'll be logged out in order to circunvent this issue. Please try again.`,
-  //     buttons: ['OK']
-  //   }))),
-  //   switchMap(alert => from(alert.present())),
-  //   map(() => AppActions.logout())
-  // ))
-
   public submittedApplication$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.submittedApplication),
     switchMap(() => this.nav.navigateForward('/tabs/join/status'))
@@ -94,12 +92,12 @@ export class AppEffects {
     switchMap(toast => toast.present())
   ), { dispatch: false })
 
-  // public getSupporters$ = createEffect(() => this.actions$.pipe(
-  //   ofType(AppActions.getSupporters),
-  //   switchMap(() => this.qbitmc.supporters()),
-  //   map(supporters => AppActions.getSupportersSuccess({ supporters })),
-  //   catchError(error => of(AppActions.getSupportersFailure({ error })))
-  // ))
+  public getSupporters$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.initialize),
+    switchMap(() => this.qbitmc.supporters()),
+    map(supporters => AppActions.getSupportersSuccess({ supporters })),
+    catchError(error => of(AppActions.getSupportersFailure({ error })))
+  ))
 
   public getSupportersFailure$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.getSupportersFailure),
@@ -116,8 +114,6 @@ export class AppEffects {
     private readonly auth: AuthService,
     private readonly nav: NavController,
     private readonly alert: AlertController,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
     private readonly qbitmc: QbitmcService,
     private readonly toast: ToastController,
     private readonly oidcSecurityService: OidcSecurityService

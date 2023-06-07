@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core'
 import { Router, UrlTree } from '@angular/router'
 import { Observable, map, take } from 'rxjs'
-import { OidcSecurityService } from 'angular-auth-oidc-client'
+import { Store } from '@ngrx/store'
+import { selectIsSignedIn } from '@store/app/app.selectors'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard  {
   public constructor(
-    private readonly oidcSecurityService: OidcSecurityService,
+    private readonly store: Store,
     private readonly router: Router
   ) {}
 
   public canActivate(): Observable<boolean | UrlTree> {
-    return this.oidcSecurityService.isAuthenticated$.pipe(
-      take(1),
-      map(({ isAuthenticated }) => isAuthenticated  || this.router.createUrlTree(['auth']))
+    return this.store.select(selectIsSignedIn).pipe(
+      map(isSignedIn => isSignedIn || this.router.createUrlTree(['auth']))
     )
   }
 }
