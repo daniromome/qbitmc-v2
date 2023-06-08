@@ -1,0 +1,39 @@
+Privacy Policy
+
+At QbitMC, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and protect information about you.
+
+Information We Collect
+
+If you signup to our website using Discord, your profile information and email will be collected.
+
+We collect information you provide to us when you subscribe to our services, including your name, email address, and payment information. We use Stripe to process payments and subscriptions, and we do not store your payment information on our servers.
+
+In addition, we may collect information automatically when you signup to our website, such as your IP address, browser type, and device type. We may use cookies and similar technologies to collect this information.
+
+If you link your Microsoft account to our services, we also collect your Minecraft account UUID and username.
+
+How We Use Your Information
+
+We use the information we collect to provide and improve our services, to communicate with you, and to personalize your experience. We may also use your information to comply with legal obligations and to protect our rights.
+
+We may share your information with third-party service providers who assist us in providing and improving our services. We may also share your information as required by law or to protect our rights.
+
+Your Rights
+
+You have the right to access, correct, and delete your personal information. You may also object to the processing of your personal information or request that we restrict the processing of your personal information. To exercise these rights, please contact us using the contact information provided below.
+
+Data Retention
+
+We retain your personal information for as long as necessary to provide our services and to comply with legal obligations.
+
+Security
+
+We take reasonable measures to protect your personal information from unauthorized access, use, and disclosure. However, no method of transmission over the internet or method of electronic storage is completely secure, and we cannot guarantee absolute security.
+
+Changes to this Privacy Policy
+
+We may update this Privacy Policy from time to time. If we make significant changes, we will notify you by email or by posting a notice on our website.
+
+Contact Us
+
+If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at hi@daniromo.me.

@@ -1,0 +1,40 @@
+Términos y condiciones de QbitMC
+
+¡Bienvenido a QbitMC! Lea atentamente estos términos y condiciones antes de utilizar nuestro sitio web o suscribirse a nuestros servicios. Al utilizar nuestro sitio web, suscribirse a nuestros servicios, jugar en nuestros servidores de juegos o unirse a nuestra comunidad de discordia, usted acepta estar sujeto a estos términos y condiciones. Si no está de acuerdo con estos términos y condiciones, no debe usar nuestro sitio web ni nuestros servicios.
+
+1. Descripción de los Servicios
+
+QbitMC ofrece un servicio de suscripción de donación voluntaria para ayudar con la infraestructura del servidor y los costos de desarrollo. Al suscribirse a nuestros servicios, recibirá una insignia de nombre distintiva en el juego, la capacidad de chatear usando la API de marcador de posición y su nombre se agregará a nuestra lista de seguidores. Es posible que ofrezcamos cosméticos adicionales en el futuro, pero no está claro cuándo. Tenga en cuenta que estos beneficios cosméticos solo serán aplicables durante el período en que su suscripción esté activa.
+
+2. Pago y Suscripción
+
+QbitMC procesa pagos y suscripciones a través de Stripe. Al suscribirse a nuestros servicios, acepta pagar la tarifa de suscripción por adelantado durante el período de tiempo seleccionado. Puede cancelar su suscripción en cualquier momento, pero no ofrecemos reembolsos por ningún motivo.
+
+3. Protección de datos
+
+QbitMC cumple con el Reglamento General de Protección de Datos (RGPD) y las Leyes de Protección de Datos de México. No compartiremos su información personal con terceros a menos que lo exija la ley o sea necesario para la prestación de nuestros servicios.
+
+4. Restricción de edad
+
+Debe tener al menos 16 años para usar nuestro sitio web y suscribirse a nuestros servicios. Al utilizar nuestro sitio web y suscribirse a nuestros servicios, declara y garantiza que tiene al menos 16 años.
+
+5. Exenciones de responsabilidad y limitaciones de responsabilidad
+
+a. QbitMC se reserva el derecho a la publicación de los archivos de guardado del mundo si el servidor se cierra por cualquier motivo.
+b. El tiempo de actividad del servidor no está garantizado y los reinicios/apagados pueden ocurrir en cualquier momento.
+C. QbitMC se reserva el derecho de cancelar su suscripción sin previo aviso si viola nuestras reglas.
+d. QbitMC no es responsable de las pertenencias perdidas en el juego ni de las acciones realizadas por los miembros de nuestra comunidad que puedan infringir la ley. Si nota algún comportamiento de este tipo, infórmelo a las autoridades correspondientes.
+
+6. Propiedad Intelectual
+
+Todo el contenido de nuestro sitio web, incluidos, entre otros, texto, gráficos, logotipos e imágenes, es propiedad de QbitMC y está protegido por las leyes de propiedad intelectual aplicables. No puede utilizar ninguno de nuestros contenidos sin nuestro consentimiento previo por escrito.
+
+7. Cambios a los Términos y Condiciones
+
+Podemos actualizar estos términos y condiciones de vez en cuando sin previo aviso. Al continuar utilizando nuestro sitio web o suscribirse a nuestros servicios después de cualquier cambio en estos términos y condiciones, usted acepta estar sujeto a los términos y condiciones actualizados.
+
+8. Ley aplicable y jurisdicción
+
+Estos términos y condiciones se rigen por las leyes de México, y cualquier disputa que surja en relación con estos términos y condiciones estará sujeta a la jurisdicción exclusiva de los tribunales de México.
+
+Si tiene alguna pregunta sobre estos términos y condiciones, contáctenos en contacto@daniromo.me

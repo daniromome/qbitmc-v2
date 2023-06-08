@@ -1,17 +1,17 @@
-<div class="status-container" *ngIf="user$ | async as user">
+<div class="status-container" *ngIf="profile$ | async as profile">
   <ion-card>
-    <ion-avatar *ngIf="avatar$ | async as avatar">
-      <img [src]="avatar">
+    <ion-avatar *ngIf="profile.minecraft.id">
+      <img [src]="profile.minecraft.id | avatar">
     </ion-avatar>
     <ion-card-header class="ion-card-avatar-header">
-      <ion-card-title i18n>Hey {{ user.nickname }},</ion-card-title>
-      <ion-card-subtitle i18n *ngIf="user.application.approved || user.application.approved === null; else subtitle">We received your request</ion-card-subtitle>
+      <ion-card-title i18n>Hey {{ profile.minecraft.name }},</ion-card-title>
+      <ion-card-subtitle i18n *ngIf="profile.application?.approved === null; else subtitle">We received your request</ion-card-subtitle>
       <ng-template #subtitle>
-        <ion-card-subtitle i18n>Your application was <ion-text color="danger">rejected</ion-text></ion-card-subtitle>
+        <ion-card-subtitle i18n>Your application has been <ion-text color="danger">rejected</ion-text></ion-card-subtitle>
       </ng-template>
     </ion-card-header>
     <ion-card-content>
-      <ion-text class="ion-text-center" i18n *ngIf="user.application.approved || user.application.approved === null; else rejected">
+      <ion-text class="ion-text-center" i18n *ngIf="profile.application?.approved === null; else rejected">
         You will receive a message from our chatbot in discord when we either
         approve or reject your application. If it's been more than 24 hours and
         you have yet to receive a response, the following button will activate
@@ -19,14 +19,14 @@
       </ion-text>
       <ng-template #rejected>
         <ion-text class="ion-text-center" i18n>
-          We're sorry for the inconveniences but we have determined that you were
+          We're sorry for the inconveniences but we have determined that you are
           not a good fit for our community. If you think there has been a mistake
           you can always reach out to us privately. Best regards.
         </ion-text>
       </ng-template>
     </ion-card-content>
     <ion-item
-      *ngIf="user.application.approved || user.application.approved === null"
+      *ngIf="profile.application?.approved === null"
       href="https://discord.com/channels/917132788753371157/917132788753371159"
       target="_blank"
       rel="noreferrer"

@@ -56,7 +56,7 @@
             <ng-container *ngFor="let supporter of supporters$ | async; last as last">
               <ion-item [lines]="last ? 'none' : 'full'" class="transparent padding">
                 <ion-avatar slot="start">
-                  <img [src]="supporter.avatar">
+                  <img [src]="supporter.id | avatar" [alt]="'Avatar of player ' + supporter.name">
                 </ion-avatar>
                 <ion-label>{{ supporter.name }}</ion-label>
                 <ion-chip color="warning" slot="end">Qbitor+ 💛</ion-chip>

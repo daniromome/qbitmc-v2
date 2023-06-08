@@ -3,30 +3,27 @@ import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
 import { Store } from '@ngrx/store'
 import { AppActions } from '@store/app'
-import { Observable, map } from 'rxjs'
-import { User } from '@models/user'
-import { selectUser } from '@selectors/app'
-import { MinecraftService } from '@services/minecraft'
+import { Observable } from 'rxjs'
+import { Profile } from '@models/profile'
+import { selectProfile } from '@selectors/app'
 import { RolePipe } from '@pipes/role'
 import { RoleColorPipe } from '@pipes/role-color'
+import { AvatarPipe } from '@pipes/avatar'
 
 @Component({
   selector: 'qbit-profile',
   standalone: true,
-  imports: [CommonModule, IonicModule, RolePipe, RoleColorPipe],
+  imports: [CommonModule, IonicModule, RolePipe, RoleColorPipe, AvatarPipe],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
-  public user$: Observable<User | undefined>
-  public avatar$: Observable<string>
+  public user$: Observable<Profile | undefined>
 
   public constructor(
-    private readonly store: Store,
-    private readonly mc: MinecraftService
+    private readonly store: Store
   ) {
-    this.user$ = this.store.select(selectUser)
-    this.avatar$ = this.user$.pipe(map(u => u ? this.mc.getAvatar(u?.minecraft.uuid) : ''))
+    this.user$ = this.store.select(selectProfile)
   }
 
   public logout(): void {

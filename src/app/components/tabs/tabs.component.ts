@@ -1,16 +1,16 @@
-import { Component, ChangeDetectionStrategy, EnvironmentInjector } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
 import { Store } from '@ngrx/store'
 import { Observable, map } from 'rxjs'
-import { selectUser } from '@selectors/app'
+import { selectIsDisabled, selectProfile } from '@selectors/app'
 import { Role } from '@models/role'
 
 interface Tab {
   icon: string,
   label: string,
   path: string,
-  role: Role
+  role?: Role
 }
 
 @Component({
@@ -22,13 +22,13 @@ interface Tab {
 })
 export class TabsComponent {
   public readonly tabs$: Observable<Tab[]>
+  public readonly disabled$: Observable<boolean>
 
   private readonly tabs: Tab[] = [
     {
       icon: 'home',
       label: $localize`:@@home:Home`,
       path: 'home',
-      role: 'guest'
     },
     {
       icon: 'storefront',
@@ -51,14 +51,14 @@ export class TabsComponent {
   ]
 
   public constructor(
-    public readonly environmentInjector: EnvironmentInjector,
     private readonly store: Store
   ) {
-    this.tabs$ = this.store.select(selectUser).pipe(
-      map(user => !user || user.roles.length === 1
-        ? [...this.tabs.filter(tab => tab.role === 'guest'), { icon: 'people', label: $localize`Join`, path: 'join', role: 'guest' }]
-        : this.tabs.filter(tab => user.roles.some(r => r.role === tab.role))
+    this.tabs$ = this.store.select(selectProfile).pipe(
+      map(user => !user || user.roles.length === 0
+        ? [...this.tabs.filter(tab => !tab.role), { icon: 'people', label: $localize`Join`, path: 'join', role: 'guest' }]
+        : this.tabs.filter(tab => user.roles.some(r => r === tab.role || !tab.role))
       )
     )
+    this.disabled$ = this.store.select(selectIsDisabled)
   }
 }

@@ -1,41 +1,34 @@
-import { Application } from '@models/application'
-import { User } from '@models/user'
+import { EnrollmentApplication } from '@models/application'
+import { Profile } from '@models/profile'
 import { createAction, props } from '@ngrx/store'
-import { Session } from '@supabase/supabase-js'
 import { Leaderboards } from '@models/leaderboards'
 import { MinecraftProfile } from '@models/minecraft-profile'
+
+export const initialize = createAction(
+  '[App] Initialize Application'
+)
 
 export const login = createAction(
   '[App] Login'
 )
 
-export const autoLogin = createAction(
-  '[App] Auto Login'
+export const getProfile = createAction(
+  '[App] Get Profile',
+  props<{ token: string }>()
 )
 
-export const autoLoginMiddleware = createAction(
-  '[App] Auto Login Middleware',
-  props<{ session: Session | null }>()
+export const getProfileSuccess = createAction(
+  '[App] Get Profile Success',
+  props<{ profile: Profile }>()
 )
 
-export const loginMiddleware = createAction(
-  '[App] Login Middleware',
-  props<{ session: Session | null }>()
-)
-
-export const loginSuccess = createAction(
-  '[App] Login Success',
-  props<{ user: User }>()
-)
-
-export const autologinFailure = createAction(
-  '[App] Auto Login Failure',
+export const getProfileFailure = createAction(
+  '[App] Get Profile Failure',
   props<{ error: Error }>()
 )
 
-export const loginFailure = createAction(
-  '[App] Login Failure',
-  props<{ error: Error }>()
+export const linkMinecraftAccount = createAction(
+  '[App] Link minecraft account'
 )
 
 export const logout = createAction(
@@ -44,7 +37,7 @@ export const logout = createAction(
 
 export const submittedApplication = createAction(
   '[App] Submitted Application',
-  props<{ application: Required<Application> }>()
+  props<{ application: Required<EnrollmentApplication> }>()
 )
 
 export const getLeaderboards = createAction(

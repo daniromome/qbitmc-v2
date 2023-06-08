@@ -1,81 +1,68 @@
 import { Injectable } from '@angular/core'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
-import { catchError, map, of, from, EMPTY } from 'rxjs'
+import { catchError, map, of, from } from 'rxjs'
 import { AppActions } from '@store/app'
-import { switchMap } from 'rxjs/operators'
+import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
-import { ActivatedRoute, Router } from '@angular/router'
-import { PreferencesService } from '@services/preferences'
 import { ApplicationActions } from '@store/application'
 import { QbitmcService } from '@services/qbitmc'
+import { OidcSecurityService } from 'angular-auth-oidc-client'
 
 @Injectable()
 export class AppEffects {
-  public login$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.login),
-    switchMap(() => this.auth.signIn())
+  public initialize$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.initialize),
+    switchMap(() => this.oidcSecurityService.checkAuth()),
+    map(response => AppActions.getProfile({ token: response.accessToken }))
+  ))
+
+  public getProfile$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.getProfile),
+    switchMap(({ token }) => {
+      if (!token) throw new Error('User is not signed in')
+      return this.auth.getProfile()
+    }),
+    map(profile => AppActions.getProfileSuccess({ profile })),
+    catchError(error => of(AppActions.getProfileFailure({ error })))
+  ))
+
+  public getProfileSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.getProfileSuccess),
+    filter(({ profile }) => profile.disabled),
+    switchMap(() => this.alert.create({
+      header: $localize`Account Disabled`,
+      message: $localize`Your account has been deactivated, get in touch with an administrator to get it restored`,
+      buttons: ['OK']
+    })),
+    switchMap(alert => alert.present())
   ), { dispatch: false })
 
-  public autoLogin$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.autoLogin),
-    switchMap(() => this.auth.getSession()),
-    map(session => AppActions.autoLoginMiddleware({ session }))
-  ))
+  // public getProfileFailure$ = createEffect(() => this.actions$.pipe(
+  //   ofType(AppActions.getProfileFailure),
+  //   switchMap(() => from(this.alert.create({
+  //     header: $localize`:@@unexpectedError:Unexpected Error`,
+  //     message: $localize`:@@contactAdmin:Please contact an administrator if this issue persists`
+  //   })).pipe(
+  //     switchMap(alert => from(alert.present()))
+  //   ))
+  // ), { dispatch: false })
 
-  public loginMiddleware$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.loginMiddleware),
-    switchMap(action => {
-      if (!action.session) throw new Error()
-      this.preferences.delete('redirected')
-      return this.auth.getUser(action.session.user)
-    }),
-    map(user => AppActions.loginSuccess({ user })),
-    catchError(error => of(AppActions.loginFailure({ error })))
-  ))
+  public login$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.login),
+    tap(() => this.oidcSecurityService.authorize())
+  ), { dispatch: false })
 
-  public autologinMiddleware$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.autoLoginMiddleware),
-    switchMap(action => {
-      if (!action.session) throw new Error()
-      this.preferences.delete('redirected')
-      return this.auth.getUser(action.session.user)
-    }),
-    map(user => AppActions.loginSuccess({ user })),
-    catchError(error => of(AppActions.autologinFailure({ error })))
-  ))
-
-  public loginFailure$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.loginFailure),
-    switchMap(() => this.route.queryParams),
-    switchMap(params => {
-      // eslint-disable-next-line dot-notation
-      const error = [params['error'], params['error_description']]
-      if (error[0] && typeof error[0] === 'string') error[0] = error[0].replaceAll('_', ' ').toLocaleUpperCase()
-      return from(
-        this.alert.create({
-          header: error[0] || $localize`:@@unexpectedError:Unexpected Error`,
-          message: error[1] || $localize`:@@contactAdmin:Please contact an administrator if this issue persists`
-        })
-      ).pipe(
-        switchMap(alert => from(alert.present()))
-      )
-    })
+  public linkMinecraftAccount$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.linkMinecraftAccount),
+    withLatestFrom(this.oidcSecurityService.getAccessToken()),
+    switchMap(([ _action, token ]) => this.auth.linkMcAccount(token))
   ), { dispatch: false })
 
   public logout$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.logout),
-    switchMap(() => this.auth.signOut()),
+    switchMap(() => this.oidcSecurityService.logoffAndRevokeTokens()),
     switchMap(() => from(this.nav.navigateRoot('/tabs/home')))
-  ), { dispatch: false })
-
-  public loginSuccess$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.loginSuccess),
-    switchMap(() => {
-      const url = this.router.url.split('/')
-      url.pop()
-      return this.router.url === '/tabs/home' ? EMPTY : from(this.nav.navigateBack(url))
-    })
   ), { dispatch: false })
 
   public applicationSubmit$ = createEffect(() => this.actions$.pipe(
@@ -83,21 +70,9 @@ export class AppEffects {
     map(action => AppActions.submittedApplication({ application: action.application }))
   ))
 
-  public applicationSubmitFailure$ = createEffect(() => this.actions$.pipe(
-    ofType(ApplicationActions.submitFailure),
-    switchMap(() => from(this.alert.create({
-      header: $localize`:@@errorTitle:Error`,
-      message: $localize`There was an error while submitting your application,
-      you'll be logged out in order to circunvent this issue. Please try again.`,
-      buttons: ['OK']
-    }))),
-    switchMap(alert => from(alert.present())),
-    map(() => AppActions.logout())
-  ))
-
   public submittedApplication$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.submittedApplication),
-    switchMap(() => from(this.nav.navigateForward('/tabs/join/status')))
+    switchMap(() => this.nav.navigateForward('/tabs/join/status'))
   ), { dispatch: false })
 
   public getLeaderboards$ = createEffect(() => this.actions$.pipe(
@@ -109,15 +84,16 @@ export class AppEffects {
 
   public getLeaderboardsFailure$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.getLeaderboardsFailure),
-    switchMap(() => from(this.toast.create({
+    switchMap(() => this.toast.create({
       message: $localize`There was an error loading leaderboards, please try again later`,
       buttons: ['OK'],
       duration: 3000
-    })).pipe(switchMap(toast => from(toast.present()))))
+    })),
+    switchMap(toast => toast.present())
   ), { dispatch: false })
 
   public getSupporters$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.getSupporters),
+    ofType(AppActions.initialize),
     switchMap(() => this.qbitmc.supporters()),
     map(supporters => AppActions.getSupportersSuccess({ supporters })),
     catchError(error => of(AppActions.getSupportersFailure({ error })))
@@ -125,11 +101,12 @@ export class AppEffects {
 
   public getSupportersFailure$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.getSupportersFailure),
-    switchMap(() => from(this.toast.create({
+    switchMap(() => this.toast.create({
       message: $localize`There was an error loading supporters list, please try again later`,
       buttons: ['OK'],
       duration: 3000
-    })).pipe(switchMap(toast => from(toast.present()))))
+    })),
+    switchMap(toast => from(toast.present()))
   ), { dispatch: false })
 
   public constructor(
@@ -137,10 +114,8 @@ export class AppEffects {
     private readonly auth: AuthService,
     private readonly nav: NavController,
     private readonly alert: AlertController,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly preferences: PreferencesService,
     private readonly qbitmc: QbitmcService,
-    private readonly toast: ToastController
+    private readonly toast: ToastController,
+    private readonly oidcSecurityService: OidcSecurityService
   ) {}
 }

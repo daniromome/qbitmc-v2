@@ -6,44 +6,44 @@ import { appFeatureKey, AppState } from './app.reducer'
 
 export const selectAppState = createFeatureSelector<AppState>(appFeatureKey)
 
-export const selectUser = createSelector(
+export const selectInitialized = createSelector(
   selectAppState,
-  (state) => state.user
+  (state) => state.initialized
+)
+
+export const selectProfile = createSelector(
+  selectAppState,
+  (state) => state.profile
 )
 
 export const selectIsSignedIn = createSelector(
-  selectUser,
-  (user) => !!user
+  selectProfile,
+  (profile) => !!profile
+)
+
+export const selectIsDisabled = createSelector(
+  selectProfile,
+  (profile) => !!profile?.disabled
 )
 
 export const selectPendingApproval = createSelector(
-  selectAppState,
-  (state) => !!state.user?.minecraft.uuid && !state.user?.application.approved
+  selectProfile,
+  (profile) => !!profile?.application?.createdAt && !profile?.application?.approved
 )
 
 export const selectUserId = createSelector(
-  selectUser,
-  (user) => user?.id
+  selectProfile,
+  (profile) => profile?.id
 )
 
 export const selectApplied = createSelector(
-  selectUser,
-  (user) => !!user?.application.createdAt
-)
-
-export const selectToken = createSelector(
-  selectAppState,
-  (state) => state.token
-)
-
-export const selectJWT = createSelector(
-  selectAppState,
-  (state) => state.jwt || ''
+  selectProfile,
+  (profile) => !!profile?.application?.createdAt
 )
 
 export const selectIsRole = (role: Role) => createSelector(
   selectAppState,
-  (state) => !!state.user?.roles.some(r => r.role === role)
+  (state) => !!state.profile?.roles.some(r => r === role)
 )
 
 export const selectLeaderboards = createSelector(
@@ -54,4 +54,9 @@ export const selectLeaderboards = createSelector(
 export const selectSupporters = createSelector(
   selectAppState,
   (state) => shuffle<MinecraftProfile>(state.supporters)
+)
+
+export const selectCustomer = createSelector(
+  selectProfile,
+  (profile) => profile?.customer
 )

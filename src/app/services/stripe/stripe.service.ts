@@ -14,7 +14,7 @@ export class StripeService {
   public constructor(
     private http: HttpClient
   ) {
-    this.baseUrl = environment.STRIPE_URL
+    this.baseUrl = `${environment.API_URL}/stripe`
   }
 
   public products(): Observable<Product[]> {
@@ -22,19 +22,18 @@ export class StripeService {
     return this.http.get<Product[]>(url)
   }
 
-  public checkout(jwt: string, price: string): Observable<string> {
+  public checkout(price: string): Observable<string> {
     const url = this.url('checkout')
-    return this.http.post<string>(url, { price }, { headers: { Authorization: jwt } })
+    return this.http.post<string>(url, price, { responseType: 'text' as 'json' })
   }
 
-  public portal(jwt: string): Observable<string> {
+  public portal(customer?: string): Observable<string> {
     const url = this.url('portal')
-    return this.http.get<string>(url, { headers: { Authorization: jwt } })
+    return this.http.post<string>(url, customer, { responseType: 'text' as 'json' })
   }
 
   private url(...segments: string[]): string {
     segments.unshift(this.baseUrl)
-    segments.push('')
     return segments.join('/')
   }
 }

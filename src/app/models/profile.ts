@@ -1,9 +1,17 @@
-import { Roles } from './role'
+import { Role } from './role'
+
 export interface Profile {
-  id?: string
-  name: string
-  picture: string
-  uuid?: string
-  roles: Roles
-  approved?: boolean
+  id: string
+  forename: string
+  customer: string
+  minecraft: {
+    id: string,
+    name: string
+  }
+  application?: {
+    createdAt?: string,
+    approved?: boolean
+  }
+  roles: Role[]
+  disabled: boolean
 }

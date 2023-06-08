@@ -5,6 +5,7 @@ import { ApplyGuard } from '@guards/apply'
 import { AuthenticatedGuard } from '@guards/authenticated'
 import { QbitorGuard } from '@guards/qbitor'
 import { AuthGuard } from '@guards/auth'
+import { enabledGuard } from '@guards/enabled'
 
 const routes: Routes = [
   {
@@ -17,34 +18,34 @@ const routes: Routes = [
       },
       {
         path: 'join',
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, enabledGuard],
         children: [
           {
             path: '',
             loadComponent: () => import('./modules/join/join.component').then(c => c.JoinComponent),
-            canActivate: [ApplyGuard]
+            canActivate: [ApplyGuard, enabledGuard]
           },
           {
             path: 'status',
             loadComponent: () => import('./modules/join/status/status.component').then(c => c.StatusComponent),
-            canActivate: [AppliedGuard]
+            canActivate: [AppliedGuard, enabledGuard]
           }
         ]
       },
       {
         path: 'shop',
         loadComponent: () => import('./modules/shop/shop.component').then(c => c.ShopComponent),
-        canActivate: [QbitorGuard]
+        canActivate: [QbitorGuard, enabledGuard]
       },
       {
         path: 'map',
         loadComponent: () => import('./modules/map/map.component').then(c => c.MapComponent),
-        canActivate: [QbitorGuard]
+        canActivate: [QbitorGuard, enabledGuard]
       },
       {
         path: 'profile',
         loadComponent: () => import('./modules/profile/profile.component').then(c => c.ProfileComponent),
-        canActivate: [QbitorGuard]
+        canActivate: [QbitorGuard, enabledGuard]
       },
       {
         path: '',
