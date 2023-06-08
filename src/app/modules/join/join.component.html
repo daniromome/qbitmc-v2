@@ -144,7 +144,7 @@
           </ion-card-content>
         </ion-card>
         <div class="card-margin">
-          <ion-button expand="block" color="secondary" [disabled]="(filesSizeExceedsLimit$ | async) || form.invalid" (click)="submit()" i18n>Submit</ion-button>
+          <ion-button expand="block" color="secondary" [disabled]="(filesSizeExceedsLimit$ | async) || form.invalid || !profile.minecraft" (click)="submit()" i18n>Submit</ion-button>
         </div>
       </ion-col>
     </ion-row>
