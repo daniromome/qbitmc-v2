@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Profile } from '@models/profile'
-import { Observable, from, map } from 'rxjs'
+import { Observable } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
 
@@ -26,7 +26,7 @@ export class AuthService {
     params.append('nonce', nonce)
     params.append('hash', hash)
     params.append('client_id', clientId)
-    params.append('redirect_uri', 'http://localhost:4200')
+    params.append('redirect_uri', environment.SITE_URL)
     window.location.href = `https://keycloak.daniromo.me/realms/qbitmc/broker/azure/link?${params.toString()}`
   }
 }
