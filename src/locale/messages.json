@@ -65,7 +65,10 @@
     "6668505899176604459": "There was an error loading leaderboards, please try again later",
     "3225372250282818278": "There was an error loading supporters list, please try again later",
     "8009133822344873131": "Your upload failed since you went over the 25 MiB limit by {$PH}",
+    "submit-application-failure": "An error ocurred while submitting your application, please try again later.",
     "unexpectedError": "Unexpected Error",
-    "contactAdmin": "Please contact an administrator if this issue persists"
+    "contactAdmin": "Please contact an administrator if this issue persists",
+    "shop-insufficient-permissions": "You need to apply and be accepted in order to use the shop",
+    "shop-not-signed-in": "You need to be signed-in in to use the shop"
   }
 }

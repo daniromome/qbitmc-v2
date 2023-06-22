@@ -65,7 +65,10 @@
     "6668505899176604459": "Ha habido un error al cargar las leaderboards, porfavor intenta de nuevo más tarde",
     "3225372250282818278": "Ha habido un error al cargar la lista de donadores, porfavor intenta de nuevo más tarde",
     "8009133822344873131": "La subida de tus archivos falló puesto que excediste el límite de 25MiB por {$PH}",
+    "submit-application-failure": "Ha ocurrido un error al envíar tu aplicación, porfavor intenta de nuevo más tarde.",
     "unexpectedError": "Error Inesperado",
-    "contactAdmin": "Porfavor contacta a un administrador si este error persiste"
+    "contactAdmin": "Porfavor contacta a un administrador si este error persiste",
+    "shop-insufficient-permissions": "Necesitas aplicar y ser aceptado para poder usar la tienda",
+    "shop-not-signed-in": "Debes de iniciar sesión para poder usar la tienda"
   }
 }
