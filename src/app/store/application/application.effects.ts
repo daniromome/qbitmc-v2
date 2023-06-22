@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core'
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects'
 import { EnrollmentService } from '@services/enrollment'
 import { ApplicationActions } from '@store/application'
-import { catchError, mergeMap, map, switchMap, tap } from 'rxjs/operators'
+import { catchError, mergeMap, map, switchMap, tap, repeat } from 'rxjs/operators'
 import { forkJoin, of } from 'rxjs'
 import { Store } from '@ngrx/store'
 import { selectApplicationMedia } from './application.selectors'
 import { MAX_UPLOAD_SIZE } from '@constants/index'
 import { BytesPipe } from '@pipes/bytes'
-import { AlertController } from '@ionic/angular'
+import { AlertController, ToastController } from '@ionic/angular'
 
 @Injectable()
 export class ApplicationEffects {
@@ -16,7 +16,8 @@ export class ApplicationEffects {
     ofType(ApplicationActions.getMedia),
     switchMap(() => this.enrollment.getMedia()),
     map(({ keys }) => ApplicationActions.getMediaSuccess({ keys })),
-    catchError(error => of(ApplicationActions.getMediaFailure({ error })))
+    catchError(error => of(ApplicationActions.getMediaFailure({ error }))),
+    repeat()
   ))
 
   public getMediaSuccess$ = createEffect(() => this.actions$.pipe(
@@ -32,7 +33,8 @@ export class ApplicationEffects {
       )))
     ),
     map(media => ApplicationActions.getMediaResourcesSuccess({ media })),
-    catchError(error => of(ApplicationActions.getMediaResourcesFailure({ error })))
+    catchError(error => of(ApplicationActions.getMediaResourcesFailure({ error }))),
+    repeat()
   ))
 
   public uploadMediaResources$ = createEffect(() => this.actions$.pipe(
@@ -49,7 +51,8 @@ export class ApplicationEffects {
       )
     }),
     map(media => ApplicationActions.uploadMediaResourcesSuccess({ media })),
-    catchError(error => of(ApplicationActions.uploadMediaResourcesFailure({ error })))
+    catchError(error => of(ApplicationActions.uploadMediaResourcesFailure({ error }))),
+    repeat()
   ))
 
   public uploadMediaResourcesFailure$ = createEffect(() => this.actions$.pipe(
@@ -66,14 +69,16 @@ export class ApplicationEffects {
       )
     ),
     map(key => ApplicationActions.deleteMediaResourceSuccess({ key })),
-    catchError(error => of(ApplicationActions.deleteMediaResourceFailure({ error })))
+    catchError(error => of(ApplicationActions.deleteMediaResourceFailure({ error }))),
+    repeat()
   ))
 
   public submit$ = createEffect(() => this.actions$.pipe(
     ofType(ApplicationActions.submit),
     switchMap(action => this.enrollment.submit(action.application)),
     map(response => ApplicationActions.submitSuccess({ application: response })),
-    catchError(error => of(ApplicationActions.submitFailure({ error })))
+    catchError(error => of(ApplicationActions.submitFailure({ error }))),
+    repeat()
   ))
 
   public submitSuccess$ = createEffect(() => this.actions$.pipe(
@@ -81,11 +86,22 @@ export class ApplicationEffects {
     tap(() => localStorage.removeItem('application'))
   ), { dispatch: false })
 
+  public submitFailure$ = createEffect(() => this.actions$.pipe(
+    ofType(ApplicationActions.submitFailure),
+    switchMap(() => this.toast.create({
+      message: $localize`:@@submit-application-failure:An error ocurred while submitting your application, please try again later.`,
+      buttons: ['OK'],
+      duration: 4500
+    })),
+    switchMap(toast => toast.present())
+  ), { dispatch: false })
+
   public constructor(
     private readonly actions$: Actions,
     private readonly enrollment: EnrollmentService,
     private readonly store: Store,
     private readonly bytes: BytesPipe,
-    private readonly alert: AlertController
+    private readonly alert: AlertController,
+    private readonly toast: ToastController
   ) {}
 }

@@ -27,6 +27,6 @@ export class AuthService {
     params.append('hash', hash)
     params.append('client_id', clientId)
     params.append('redirect_uri', environment.SITE_URL)
-    window.location.href = `https://keycloak.daniromo.me/realms/qbitmc/broker/azure/link?${params.toString()}`
+    window.location.href = `${environment.KEYCLOAK_URL}/broker/azure/link?${params.toString()}`
   }
 }

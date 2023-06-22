@@ -33,8 +33,7 @@ export class TabsComponent {
     {
       icon: 'storefront',
       label: $localize`:@@shop:Shop`,
-      path: 'shop',
-      role: 'qbitor'
+      path: 'shop'
     },
     {
       icon: 'compass',
