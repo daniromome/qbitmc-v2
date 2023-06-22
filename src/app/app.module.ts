@@ -12,8 +12,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
 import { RouteReuseStrategy } from '@angular/router'
 import { AppStoreModule } from '@store/app'
 import { DecimalPipe } from '@angular/common'
-import { AuthConfigModule } from './auth/auth-config.module'
-import { AuthInterceptor } from 'angular-auth-oidc-client'
+import { AuthInterceptor, AuthModule } from 'angular-auth-oidc-client'
+import { environment } from 'src/environments/environment'
 
 @NgModule({
   declarations: [
@@ -28,7 +28,26 @@ import { AuthInterceptor } from 'angular-auth-oidc-client'
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     EffectsModule.forRoot([]),
     AppStoreModule,
-    AuthConfigModule
+    AuthModule.forRoot({
+      config: {
+        authority: environment.KEYCLOAK_URL,
+        redirectUrl: window.location.origin,
+        postLogoutRedirectUri: window.location.origin,
+        clientId: 'qbitmc',
+        scope: 'openid profile',
+        responseType: 'code',
+        silentRenew: true,
+        useRefreshToken: true,
+        renewTimeBeforeTokenExpiresInSeconds: 30,
+        ignoreNonceAfterRefresh: true,
+        secureRoutes: [
+          `${environment.API_URL}/profile`,
+          `${environment.API_URL}/stripe`,
+          `${environment.API_URL}/enrollment`
+        ],
+        maxIdTokenIatOffsetAllowedInSeconds: 300
+      }
+    })
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

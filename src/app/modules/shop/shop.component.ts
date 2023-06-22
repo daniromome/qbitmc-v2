@@ -3,7 +3,7 @@ import { ShopStoreModule } from '../../store/shop/shop.module'
 import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
 import { Component, OnInit } from '@angular/core'
-import { Observable } from 'rxjs'
+import { Observable } from 'rxjs';
 import { Product } from '@models/product'
 import { Store } from '@ngrx/store'
 import { selectProducts } from '@selectors/shop'
@@ -31,11 +31,7 @@ export class ShopComponent implements OnInit {
     this.products$ = this.store.select(selectProducts)
   }
 
-  public subscription(isSupporter: boolean, price: string): void {
-    if (isSupporter) {
-      this.store.dispatch(ShopActions.portal())
-    } else {
-      this.store.dispatch(ShopActions.checkout({ price }))
-    }
+  public subscription(price: string): void {
+    this.store.dispatch(ShopActions.subscribe({ price }))
   }
 }

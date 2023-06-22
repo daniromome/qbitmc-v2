@@ -18,10 +18,8 @@
           </ion-card-header>
           <ion-card-content class="ion-no-padding">
             <ion-item lines="none" class="transparent"><ion-text class="ion-text-wrap"><h2>{{ product.description }}</h2></ion-text></ion-item>
-            <ion-item *ngIf="isSupporter$ | async; else subscribe" (click)="subscription(true, product.price.id)" color="secondary" lines="none" button i18n>Manage Subscription</ion-item>
-            <ng-template #subscribe>
-              <ion-item (click)="subscription(false, product.price.id)" color="secondary" lines="none" button class="last-card-item" i18n>Subscribe</ion-item>
-            </ng-template>
+            <ion-item *ngIf="isSupporter$ | async" (click)="subscription(product.price.id)" color="secondary" lines="none" button i18n>Manage Subscription</ion-item>
+            <ion-item *ngIf="(isSupporter$ | async) === false" (click)="subscription(product.price.id)" color="secondary" lines="none" button i18n>Subscribe</ion-item>
           </ion-card-content>
         </ion-card>
       </ion-col>

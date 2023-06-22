@@ -35,7 +35,7 @@ const routes: Routes = [
       {
         path: 'shop',
         loadComponent: () => import('./modules/shop/shop.component').then(c => c.ShopComponent),
-        canActivate: [QbitorGuard, enabledGuard]
+        canActivate: [enabledGuard]
       },
       {
         path: 'map',

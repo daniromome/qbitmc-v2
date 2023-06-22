@@ -5,6 +5,16 @@ export const getProducts = createAction(
   '[Shop] Get Products'
 )
 
+export const subscribe = createAction(
+  '[Shop] Subscribe',
+  props<{ price: string }>()
+)
+
+export const auth = createAction(
+  '[Shop] Auth',
+  props<{ isSignedIn: boolean }>()
+)
+
 export const checkout = createAction(
   '[Shop] Checkout',
   props<{ price: string }>()
