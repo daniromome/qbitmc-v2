@@ -3,6 +3,7 @@ import { MinecraftProfile } from '@models/minecraft-profile'
 import { Role } from '@models/role'
 import { createSelector, createFeatureSelector } from '@ngrx/store'
 import { appFeatureKey, AppState } from './app.reducer'
+import { inflate } from '@functions/inflate'
 
 export const selectAppState = createFeatureSelector<AppState>(appFeatureKey)
 
@@ -53,7 +54,17 @@ export const selectLeaderboards = createSelector(
 
 export const selectSupporters = createSelector(
   selectAppState,
-  (state) => shuffle<MinecraftProfile>(state.supporters)
+  (state) => {
+    const shuffledSupporters = shuffle<MinecraftProfile>(state.supporters)
+    if (shuffledSupporters.length < 1) return []
+    if (shuffledSupporters.length < 5) return inflate<MinecraftProfile>(shuffledSupporters, 10)
+    return inflate<MinecraftProfile>(shuffledSupporters, shuffledSupporters.length * 2)
+  }
+)
+
+export const selectServers = createSelector(
+  selectAppState,
+  (state) => state.servers
 )
 
 export const selectCustomer = createSelector(

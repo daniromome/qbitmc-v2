@@ -8,77 +8,62 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="background">
-  <ion-grid class="full-height">
+  <ion-grid class="full-height main-container">
     <ion-row class="full-height">
       <ion-col size="12" size-md="6" size-xl="4" class="center-items-container">
-        <ng-container *ngIf="isDesktop$ | async; else logo" [ngTemplateOutlet]="supportersList"></ng-container>
+        <img src="assets/logo.svg">
       </ion-col>
       <ion-col size="12" size-md="6" size-xl="4" class="center-items-container">
-        <ion-grid *ngIf="isDesktop$ | async; else description">
-          <ion-row>
-            <ng-container *ngTemplateOutlet="logo"></ng-container>
-          </ion-row>
-          <ion-row>
-            <ng-container *ngTemplateOutlet="description"></ng-container>
-          </ion-row>
-        </ion-grid>
+        <ion-text i18n class="description">
+          Founded in 2015 our community qbitmc has focused on bringing a vanilla experiences to its members
+          with a technical & aesthetic turn. Inspired on the hermitcraft server each and one of us have our
+          own base and get involved into trust-based trading on the shopping district of the server. We also
+          come together every now and then to collaborate on big community projects such as automated farms
+          and buildings
+        </ion-text>
       </ion-col>
       <ion-col class="full-height">
-        <ng-container *ngIf="(isDesktop$ | async) === false" [ngTemplateOutlet]="supportersList"></ng-container>
-        <ion-grid class="full-height" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
-          <ion-row>
-            <ion-col class="center-items-container" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
-              <ion-text class="section-title secondary-text" i18n>Leaderboards</ion-text>
+        <ion-row>
+          <ion-col class="ion-text-center">
+            <ion-text class="section-title secondary-text" i18n="@@">Server List</ion-text>
+          </ion-col>
+        </ion-row>
+        <ng-container *ngIf="servers$ | async as servers">
+          <ion-row *ngFor="let server of servers">
+            <ion-col>
+              <ion-card class="server-list-item">
+                <ion-card-header>
+                  <ion-card-title><ion-text class="section-title">{{ server.name }}</ion-text></ion-card-title>
+                  <ion-card-subtitle>{{ server.game }} {{ server.version }}</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content>
+                  <p *ngIf="server.ip"><ion-text color="dark">{{ server.ip }}</ion-text></p>
+                  <p><ion-text [color]="server.status !== 'running' ? 'medium' : 'success'">{{ server.status | titlecase }}</ion-text></p>
+                  <p *ngIf="server.staff_only"><ion-text color="danger">Staff Only</ion-text></p>
+                </ion-card-content>
+                <div
+                  class="server-list-item-badge"
+                  [style.background-color]="server.status !== 'running' ? 'var(--ion-color-danger)' : 'var(--ion-color-success)'"
+                ></div>
+              </ion-card>
             </ion-col>
           </ion-row>
-          <ion-row class="leaderboards-container">
-            <ion-col *ngFor="let leaderboard of leaderboards$ | async" size="12" size-md="6" size-xl="12" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
-              <qbit-leaderboard [leaderboard]="leaderboard[1]" [stat]="leaderboard[0]"></qbit-leaderboard>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+        </ng-container>
       </ion-col>
     </ion-row>
   </ion-grid>
+  <div class="supporters-list" *ngIf="supporters$ | async as supporters">
+    <ng-container *ngIf="elementsInView$ | async as elementsInView">
+      <qbit-slider [elementsInView]="elementsInView" [elementsCount]="supporters.length">
+        <ion-item class="blurry supporters-list-item" lines="none" *ngFor="let supporter of supporters">
+          <ion-avatar slot="start">
+            <img [src]="supporter.id | avatar" [alt]="'Avatar of player ' + supporter.name">
+          </ion-avatar>
+          <ion-label>{{ supporter.name }}</ion-label>
+          <ion-chip color="warning" slot="end">Qbitor+ 💛</ion-chip>
+        </ion-item>
+      </qbit-slider>
+    </ng-container>
+  </div>
 </ion-content>
 
-<ng-template #supportersList>
-  <ion-grid class="full-height full-width" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
-    <ion-row [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
-      <ion-col class="center-items-container" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
-        <ion-text class="section-title secondary-text" i18n>Supporters</ion-text>
-      </ion-col>
-    </ion-row>
-    <ion-row class="leaderboards-container" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
-      <ion-col size="12" [ngClass]="{ 'ion-no-padding': (isDesktop$ | async) === false }">
-        <ion-card>
-          <ion-card-content class="ion-no-padding">
-            <ng-container *ngFor="let supporter of supporters$ | async; last as last">
-              <ion-item [lines]="last ? 'none' : 'full'" class="transparent padding">
-                <ion-avatar slot="start">
-                  <img [src]="supporter.id | avatar" [alt]="'Avatar of player ' + supporter.name">
-                </ion-avatar>
-                <ion-label>{{ supporter.name }}</ion-label>
-                <ion-chip color="warning" slot="end">Qbitor+ 💛</ion-chip>
-              </ion-item>
-            </ng-container>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ng-template>
-
-<ng-template #logo>
-  <img src="assets/logo.svg">
-</ng-template>
-
-<ng-template #description>
-  <ion-text i18n class="description">
-    Founded in 2015 our community qbitmc has focused on bringing a vanilla experiences to its members
-    with a technical & aesthetic turn. Inspired on the hermitcraft server each and one of us have our
-    own base and get involved into trust-based trading on the shopping district of the server. We also
-    come together every now and then to collaborate on big community projects such as automated farms
-    and buildings
-  </ion-text>
-</ng-template>

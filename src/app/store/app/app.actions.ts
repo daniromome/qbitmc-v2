@@ -3,6 +3,7 @@ import { Profile } from '@models/profile'
 import { createAction, props } from '@ngrx/store'
 import { Leaderboards } from '@models/leaderboards'
 import { MinecraftProfile } from '@models/minecraft-profile'
+import { Server } from '@models/server'
 
 export const initialize = createAction(
   '[App] Initialize Application'
@@ -61,5 +62,17 @@ export const getSupportersSuccess = createAction(
 )
 export const getSupportersFailure = createAction(
   '[App] Get Supporters Failure',
+  props<{ error: Error }>()
+)
+
+export const getServers = createAction(
+  '[App] Get Servers'
+)
+export const getServersSuccess = createAction(
+  '[App] Get Servers Success',
+  props<{ servers: Server[] }>()
+)
+export const getServersFailure = createAction(
+  '[App] Get Servers Failure',
   props<{ error: Error }>()
 )

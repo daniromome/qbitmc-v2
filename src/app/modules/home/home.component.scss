@@ -1,6 +1,6 @@
 @use 'src/theme/mixins.scss' as mixins;
 
-$background: url('https://i.imgur.com/hKNKXLW.png') no-repeat center center;
+$background: url('https://i.imgur.com/5B9ygAM.png') no-repeat center center;
 @include mixins.background-image($background);
 
 ion-select::part(icon) {
@@ -35,5 +35,40 @@ ion-text {
 .full-height {
   @include mixins.xl {
     height: 100%;
+  }
+}
+
+.supporters-list {
+  position: fixed;
+  bottom: 0;
+  &-item{
+    transition: 0.3s;
+    &:hover {
+      box-shadow: rgba(var(--ion-color-warning-rgb), 0.5) 0px 0.25rem 1rem;
+    }
+  }
+  qbit-slider {
+    width: 100dvw;
+  }
+}
+
+ion-content {
+  &.md {
+    --padding-bottom: 5.5rem;
+  }
+  &.ios {
+    --padding-bottom: 4.75rem;
+  }
+}
+
+.server-list-item {
+  position: relative;
+  &-badge {
+    height: 1rem;
+    width: 1rem;
+    position: absolute;
+    top: 0;
+    right: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 0%);
   }
 }

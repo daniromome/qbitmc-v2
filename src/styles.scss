@@ -22,10 +22,11 @@ iframe {
   height: 100%;
 }
 
+ion-avatar {
+  --border-radius: 0.25rem;
+}
+
 ion-card {
-  ion-avatar {
-    --border-radius: 0.25rem;
-  }
   backdrop-filter: blur(1rem);
   -webkit-backdrop-filter: blur(1rem);
   background-color: rgba(var(--ion-card-background-rgb, 255,255,255), 0.75);
@@ -55,4 +56,12 @@ ion-popover::part(arrow) {
 
 .full-width {
   width: 100%;
+}
+
+ion-item.blurry {
+  border-radius: 0.25rem;
+  backdrop-filter: blur(1rem);
+  -webkit-backdrop-filter: blur(1rem);
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 0.25rem 1rem;
+  --background: rgba(var(--ion-card-background-rgb, 255,255,255), 0.75);
 }

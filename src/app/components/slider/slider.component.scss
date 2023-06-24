@@ -1,0 +1,24 @@
+$slide-width: calc(var(--slide-width) + 1rem);
+$slide-width-negative: calc(var(--slide-width-negative) - 1rem);
+
+@keyframes scroll {
+  from { transform: translateX(0) }
+  to { transform: translateX(calc($slide-width-negative * calc(var(--slide-total-elements) / 2)))}
+}
+
+.slider {
+  overflow: hidden;
+  &-track {
+    animation: scroll var(--slide-animation-speed) linear infinite;
+    &:hover {
+      animation-play-state: paused;
+    }
+		display: flex;
+		width: calc($slide-width * var(--slide-total-elements));
+    & > * {
+      width: var(--slide-width);
+      margin: 1rem;
+      margin-left: 0;
+    }
+  }
+}
