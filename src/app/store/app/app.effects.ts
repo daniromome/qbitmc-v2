@@ -75,22 +75,22 @@ export class AppEffects {
     switchMap(() => this.nav.navigateForward('/tabs/join/status'))
   ), { dispatch: false })
 
-  public getLeaderboards$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.getLeaderboards),
-    switchMap(() => this.qbitmc.leaderboards()),
-    map(leaderboards => AppActions.getLeaderboardsSuccess({ leaderboards })),
-    catchError(error => of(AppActions.getLeaderboardsFailure({ error })))
-  ))
+  // public getLeaderboards$ = createEffect(() => this.actions$.pipe(
+  //   ofType(AppActions.getLeaderboards),
+  //   switchMap(() => this.qbitmc.leaderboards()),
+  //   map(leaderboards => AppActions.getLeaderboardsSuccess({ leaderboards })),
+  //   catchError(error => of(AppActions.getLeaderboardsFailure({ error })))
+  // ))
 
-  public getLeaderboardsFailure$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.getLeaderboardsFailure),
-    switchMap(() => this.toast.create({
-      message: $localize`There was an error loading leaderboards, please try again later`,
-      buttons: ['OK'],
-      duration: 3000
-    })),
-    switchMap(toast => toast.present())
-  ), { dispatch: false })
+  // public getLeaderboardsFailure$ = createEffect(() => this.actions$.pipe(
+  //   ofType(AppActions.getLeaderboardsFailure),
+  //   switchMap(() => this.toast.create({
+  //     message: $localize`There was an error loading leaderboards, please try again later`,
+  //     buttons: ['OK'],
+  //     duration: 3000
+  //   })),
+  //   switchMap(toast => toast.present())
+  // ), { dispatch: false })
 
   public getSupporters$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.initialize),
@@ -102,7 +102,24 @@ export class AppEffects {
   public getSupportersFailure$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.getSupportersFailure),
     switchMap(() => this.toast.create({
-      message: $localize`There was an error loading supporters list, please try again later`,
+      message: $localize`:@@list-supporters-error:There was an error loading supporters list, please try again later`,
+      buttons: ['OK'],
+      duration: 3000
+    })),
+    switchMap(toast => from(toast.present()))
+  ), { dispatch: false })
+
+  public getServers$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.initialize),
+    switchMap(() => this.qbitmc.servers()),
+    map(servers => AppActions.getServersSuccess({ servers })),
+    catchError(error => of(AppActions.getServersFailure({ error })))
+  ))
+
+  public getServersFailure$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.getServersFailure),
+    switchMap(() => this.toast.create({
+      message: $localize`:@@list-servers-error:There was an error loading servers list, please try again later`,
       buttons: ['OK'],
       duration: 3000
     })),
