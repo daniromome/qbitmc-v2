@@ -1,6 +1,6 @@
 @use 'src/theme/mixins.scss' as mixins;
 
-$background: url('/assets/landscape-1.png') no-repeat center center;
+$background: url('https://i.imgur.com/5B9ygAM.png') no-repeat center center;
 @include mixins.background-image($background);
 
 ion-select::part(icon) {
