@@ -40,7 +40,8 @@ export class ShopEffects {
     tap(() => this.spinner.spin().subscribe()),
     switchMap(({ price }) => this.stripe.checkout(price)),
     map(url => ShopActions.checkoutSuccess({ url })),
-    catchError(() => of(ShopActions.checkoutFailure()))
+    catchError(() => of(ShopActions.checkoutFailure())),
+    repeat()
   ))
 
   public checkoutSuccess$ = createEffect(() => this.actions$.pipe(
@@ -60,7 +61,8 @@ export class ShopEffects {
     concatLatestFrom(() => this.store.select(selectCustomer)),
     switchMap(([_, customer]) => this.stripe.portal(customer)),
     map(url => ShopActions.portalSuccess({ url })),
-    catchError(() => of(ShopActions.portalFailure()))
+    catchError(() => of(ShopActions.portalFailure())),
+    repeat()
   ))
 
   public portalSuccess$ = createEffect(() => this.actions$.pipe(

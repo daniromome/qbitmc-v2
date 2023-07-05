@@ -44,8 +44,19 @@ const routes: Routes = [
       },
       {
         path: 'profile',
-        loadComponent: () => import('./modules/profile/profile.component').then(c => c.ProfileComponent),
-        canActivate: [QbitorGuard, enabledGuard]
+        canActivate: [QbitorGuard, enabledGuard],
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./modules/profile/profile.component').then(c => c.ProfileComponent),
+            canActivate: [QbitorGuard, enabledGuard]
+          },
+          {
+            path: 'nickname',
+            loadComponent: () => import('./modules/profile/nickname-editor/nickname-editor.component').then(c => c.NicknameEditorComponent),
+            canActivate: [QbitorGuard, enabledGuard]
+          }
+        ]
       },
       {
         path: '',

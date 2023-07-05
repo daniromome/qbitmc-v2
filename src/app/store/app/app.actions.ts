@@ -76,3 +76,29 @@ export const getServersFailure = createAction(
   '[App] Get Servers Failure',
   props<{ error: Error }>()
 )
+
+export const navigateToNicknameEditor = createAction(
+  '[App] Navigate to Nickname Editor'
+)
+
+export const setUnsavedChanges = createAction(
+  '[App] Set Unsaved Changes',
+  props<{ changes: boolean }>()
+)
+
+export const navigateBack = createAction(
+  '[App] Navigate Back'
+)
+
+export const updateNickname = createAction(
+  '[App] Update Nickname',
+  props<{ nickname: string }>()
+)
+export const updateNicknameSuccess = createAction(
+  '[App] Update Nickname Success',
+  props<{ profile: Profile }>()
+)
+export const updateNicknameFailure = createAction(
+  '[App] Update Nickname Failure',
+  props<{ error: Error }>()
+)

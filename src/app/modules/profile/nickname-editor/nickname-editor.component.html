@@ -1,0 +1,135 @@
+<ion-content class="background">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" sizeMd="6" sizeLg="4" sizeXL="2.4" *ngFor="let group of form.controls; index as index">
+        <ng-container [formGroup]="group">
+          <ion-segment formControlName="style" mode="ios">
+            <ion-segment-button [value]="undefined">
+              <ion-label i18n="@@text-style-unstyled">Unstyled</ion-label>
+              <ion-icon name="ban"></ion-icon>
+            </ion-segment-button>
+            <ion-segment-button [value]="STYLE.RAINBOW">
+              <ion-label i18n="@@text-style-rainbow">Rainbow</ion-label>
+              <ion-icon name="sparkles"></ion-icon>
+            </ion-segment-button>
+            <ion-segment-button [value]="STYLE.GRADIENT">
+              <ion-label i18n="@@text-style-gradient">Gradient</ion-label>
+              <ion-icon name="star-half"></ion-icon>
+            </ion-segment-button>
+            <ion-segment-button [value]="STYLE.COLOR">
+              <ion-label i18n="@@text-style-color">Color</ion-label>
+              <ion-icon name="star"></ion-icon>
+            </ion-segment-button>
+          </ion-segment>
+
+          <ion-card>
+            <ion-card-content class="ion-no-padding">
+              <ion-item class="transparent" lines="full" *ngIf="group.value">
+                <ion-label i18n="@@text-style-preview">Preview</ion-label>
+                <qbit-styled-text [text]="convertFormToStyledText(index)"></qbit-styled-text>
+              </ion-item>
+
+              <ng-container formGroupName="attributes">
+                <ion-item class="transparent" lines="full">
+                  <ion-input formControlName="content" errorText="Nickname may not include <, > or :">
+                    <div slot="label"><ion-text i18n="@@text-style-input-label">Text</ion-text><ion-text color="danger"> *</ion-text></div>
+                  </ion-input>
+                </ion-item>
+                <ion-accordion-group>
+                  <ion-accordion value="attributes">
+                    <ion-item slot="header" class="transparent" lines="full" [style.--border-width]="'0 0 1px 0'">
+                      <ion-label i18n="@@text-style-attributes">Attributes</ion-label>
+                    </ion-item>
+                    <div slot="content">
+                      <ion-item lines="full" class="transparent">
+                        <ion-checkbox i18n="@@text-style-attribute-bold" formControlName="bold">Bold</ion-checkbox>
+                      </ion-item>
+                      <ion-item lines="full" class="transparent">
+                        <ion-checkbox i18n="@@text-style-attribute-strikethrough" formControlName="strikethrough">Strikethrough</ion-checkbox>
+                      </ion-item>
+                      <ion-item lines="full" class="transparent">
+                        <ion-checkbox i18n="@@text-style-attribute-underline" formControlName="underline">Underline</ion-checkbox>
+                      </ion-item>
+                      <ion-item lines="full" class="transparent">
+                        <ion-checkbox i18n="@@text-style-attribute-italic" formControlName="italic">Italic</ion-checkbox>
+                      </ion-item>
+                    </div>
+                  </ion-accordion>
+                </ion-accordion-group>
+              </ng-container>
+
+              <ng-container [ngSwitch]="group.controls.style.value">
+                <ng-container *ngSwitchCase="STYLE.RAINBOW" [ngTemplateOutlet]="rainbow"></ng-container>
+                <ng-container *ngSwitchCase="STYLE.GRADIENT" [ngTemplateOutlet]="gradient"></ng-container>
+                <ng-container *ngSwitchCase="STYLE.COLOR" [ngTemplateOutlet]="color"></ng-container>
+                <ng-container *ngSwitchDefault [ngTemplateOutlet]="none"></ng-container>
+              </ng-container>
+
+              <ion-item lines="none" class="ion-no-padding transparent">
+                <ion-buttons slot="end">
+                  <ion-button (click)="add(index)">
+                    <ion-icon name="add" slot="icon-only"></ion-icon>
+                  </ion-button>
+                  <ion-button (click)="delete(index)">
+                    <ion-icon name="trash" slot="icon-only" color="danger"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+
+          <ng-template #rainbow formGroupName="rainbow">
+            <ion-item class="transparent" lines="full">
+              <ion-range
+                [label]="sliderLabel(SLIDER_LABEL.SATURATION, group.controls.rainbow.controls.saturation.value)"
+                [min]="1"
+                formControlName="saturation"
+              ></ion-range>
+            </ion-item>
+          </ng-template>
+          <ng-template #gradient formGroupName="gradient">
+            <ng-container formArrayName="colors">
+              <ion-item
+                *ngFor="let control of group.controls.gradient.controls.colors.controls; index as i"
+                button
+                lines="full"
+                class="transparent"
+                (click)="gradientInput.click()">
+                <ion-input
+                  readonly
+                  label="Color {{ i + 1 }}"
+                  [value]="group.controls.gradient.controls.colors.at(i).value"
+                  [style.--color]="group.controls.gradient.controls.colors.at(i).value">
+                </ion-input>
+                <input type="color" [formControlName]="i" [style.display]="'none'" #gradientInput>
+              </ion-item>
+              <ion-item class="transparent" button lines="full" (click)="newGradientColor(index)">
+                <ion-label i18n="@@text-style-add-color-input">Add Color</ion-label>
+                <ion-icon slot="end" name="add"></ion-icon>
+              </ion-item>
+            </ng-container>
+          </ng-template>
+          <ng-template #color formGroupName="color">
+            <ion-item class="transparent" button (click)="colorInput.click()" lines="full">
+              <ion-input
+                readonly
+                i18n-label="@@text-style-color-input-label"
+                label="Color"
+                [value]="group.controls.color.controls.color.value"
+                [style.--color]="group.controls.color.controls.color.value">
+              </ion-input>
+              <input type="color" formControlName="color" [style.display]="'none'" #colorInput>
+            </ion-item>
+          </ng-template>
+          <ng-template #none>
+          </ng-template>
+        </ng-container>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="center" *ngIf="form.dirty" [@inOutAnimation]>
+    <ion-fab-button color="secondary" [disabled]="form.invalid" (click)="save()">
+      <ion-icon name="save"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

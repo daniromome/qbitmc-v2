@@ -1,0 +1,19 @@
+ion-content.background {
+  --content-background: url('https://i.imgur.com/XXkbo85.png') no-repeat center center;
+}
+
+ion-segment {
+  margin-bottom: 0.625rem;
+  &-button {
+    --padding-top: 0.25rem;
+    --padding-bottom: 0.25rem;
+    --color-checked: var(--ion-color-secondary-contrast);
+    &::part(indicator-background) {
+      background: var(--ion-color-secondary);
+    }
+  }
+}
+
+ion-accordion {
+  --ion-background-color: transparent;
+}

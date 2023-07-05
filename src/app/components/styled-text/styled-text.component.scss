@@ -1,0 +1,53 @@
+span {
+  font-weight: var(--font-weight);
+  font-style: var(--font-style);
+  color: var(--text-color);
+  position: relative;
+  &.gradient {
+    background: var(--text-color);
+    background-clip: text;
+    color: transparent;
+  }
+  &.rainbow {
+    --background-color: linear-gradient(
+      90deg,
+      color-mix(in srgb, white, rgba(255, 0, 0, 1) var(--rainbow-saturation)) 0%,
+      color-mix(in srgb, white, rgba(255, 154, 0, 1) var(--rainbow-saturation)) 10%,
+      color-mix(in srgb, white, rgba(208, 222, 33, 1) var(--rainbow-saturation)) 20%,
+      color-mix(in srgb, white, rgba(79, 220, 74, 1) var(--rainbow-saturation)) 30%,
+      color-mix(in srgb, white, rgba(63, 218, 216, 1) var(--rainbow-saturation)) 40%,
+      color-mix(in srgb, white, rgba(47, 201, 226, 1) var(--rainbow-saturation)) 50%,
+      color-mix(in srgb, white, rgba(28, 127, 238, 1) var(--rainbow-saturation)) 60%,
+      color-mix(in srgb, white, rgba(95, 21, 242, 1) var(--rainbow-saturation)) 70%,
+      color-mix(in srgb, white, rgba(186, 12, 248, 1) var(--rainbow-saturation)) 80%,
+      color-mix(in srgb, white, rgba(251, 7, 217, 1) var(--rainbow-saturation)) 90%,
+      color-mix(in srgb, white, rgba(255, 0, 0, 1) var(--rainbow-saturation)) 100%
+    );
+    background: var(--background-color);
+    background-clip: text;
+    color: transparent;
+  }
+  font-family: Minecraft, 'Noto Emoji';
+  &.strikethrough {
+    &:after {
+      width: 100%;
+      position: absolute;
+      height: 2px;
+      bottom: calc(50% - 2px);
+      left: 0;
+      background: var(--background-color, var(--text-color));
+      content: ' ';
+    }
+  }
+  &.underline {
+    &:before {
+      width: 100%;
+      position: absolute;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: var(--background-color, var(--text-color));
+      content: ' ';
+    }
+  }
+}
