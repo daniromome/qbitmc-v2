@@ -1,12 +1,3 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>QbitMC</ion-title>
-    <ion-select interface="popover" [value]="locale" slot="end" (ionChange)="changeLocale($event)">
-      <ion-select-option value="es">ES</ion-select-option>
-      <ion-select-option value="en">EN</ion-select-option>
-    </ion-select>
-  </ion-toolbar>
-</ion-header>
 <ion-content class="background">
   <ion-grid class="full-height main-container">
     <ion-row class="full-height">
@@ -29,8 +20,8 @@
           </ion-col>
         </ion-row>
         <ng-container *ngIf="servers$ | async as servers">
-          <ion-row *ngFor="let server of servers">
-            <ion-col>
+          <ion-row>
+            <ion-col size="12" sizeMd="6" sizeLg="4" sizeXl="12" *ngFor="let server of servers">
               <ion-card class="server-list-item">
                 <ion-card-header>
                   <ion-card-title><ion-text class="section-title">{{ server.name }}</ion-text></ion-card-title>
@@ -55,7 +46,7 @@
   <div class="supporters-list" *ngIf="supporters$ | async as supporters">
     <ng-container *ngIf="elementsInView$ | async as elementsInView">
       <qbit-slider [elementsInView]="elementsInView" [elementsCount]="supporters.length">
-        <ion-item class="blurry supporters-list-item" lines="none" *ngFor="let supporter of supporters">
+        <ion-item class="blur supporters-list-item" lines="none" *ngFor="let supporter of supporters">
           <ion-avatar slot="start">
             <img [src]="supporter.id | avatar" [alt]="'Avatar of player ' + supporter.name">
           </ion-avatar>

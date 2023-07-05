@@ -1,7 +1,6 @@
-@use 'src/theme/mixins.scss' as mixins;
-
-$background: url('https://i.imgur.com/qLuQyjM.png') no-repeat center center;
-@include mixins.background-image($background);
+ion-content.background {
+  --content-background: url('https://i.imgur.com/qLuQyjM.png') no-repeat center center;
+}
 
 ion-grid {
   height: 100%;

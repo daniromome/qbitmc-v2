@@ -1,6 +1,5 @@
 import { logout } from './store/app/app.meta-reducers'
 import { NgModule, isDevMode } from '@angular/core'
-import { BrowserModule } from '@angular/platform-browser'
 
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
@@ -14,13 +13,14 @@ import { AppStoreModule } from '@store/app'
 import { DecimalPipe } from '@angular/common'
 import { AuthInterceptor, AuthModule } from 'angular-auth-oidc-client'
 import { environment } from 'src/environments/environment'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     IonicModule.forRoot(),

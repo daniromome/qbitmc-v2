@@ -1,10 +1,18 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { IonicModule } from '@ionic/angular'
+import { IonicModule, NavController } from '@ionic/angular'
 import { Store } from '@ngrx/store'
-import { Observable, map } from 'rxjs'
+import { Observable, filter, map } from 'rxjs'
 import { selectIsDisabled, selectProfile } from '@selectors/app'
 import { Role } from '@models/role'
+import { LocaleService } from '@services/locale'
+import { Profile } from '@models/profile'
+import { AvatarPipe } from '@pipes/avatar'
+import { Locale } from '@models/locale'
+import { RolePipe } from '@pipes/role'
+import { RoleColorPipe } from '@pipes/role-color'
+import { AppActions } from '@store/app'
+import { NavigationEnd, Router } from '@angular/router'
 
 interface Tab {
   icon: string,
@@ -16,13 +24,17 @@ interface Tab {
 @Component({
   selector: 'qbit-tabs',
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, AvatarPipe, RolePipe, RoleColorPipe],
   templateUrl: './tabs.component.html',
+  styleUrls: ['./tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsComponent {
   public readonly tabs$: Observable<Tab[]>
   public readonly disabled$: Observable<boolean>
+  public readonly locale: string
+  public readonly profile$: Observable<Profile | undefined>
+  public readonly route$: Observable<string[]>
 
   private readonly tabs: Tab[] = [
     {
@@ -50,7 +62,10 @@ export class TabsComponent {
   ]
 
   public constructor(
-    private readonly store: Store
+    private readonly localeService: LocaleService,
+    private readonly store: Store,
+    private readonly router: Router,
+    private readonly nav: NavController
   ) {
     this.tabs$ = this.store.select(selectProfile).pipe(
       map(user => !user || user.roles.length === 0
@@ -59,5 +74,23 @@ export class TabsComponent {
       )
     )
     this.disabled$ = this.store.select(selectIsDisabled)
+    this.profile$ = this.store.select(selectProfile)
+    this.locale = localeService.locale
+    this.route$ = router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(event => (event as NavigationEnd).url.split('/').slice(1))
+    )
+  }
+
+  public changeLocale(locale: Locale): void {
+    this.localeService.navigateToLocale(locale)
+  }
+
+  public logout(): void {
+    this.store.dispatch(AppActions.logout())
+  }
+
+  public navigateBack(): void {
+    this.store.dispatch(AppActions.navigateBack())
   }
 }

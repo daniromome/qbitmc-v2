@@ -1,9 +1,4 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title i18n="@@map">Map</ion-title>
-  </ion-toolbar>
-</ion-header>
-<ion-content [scrollY]="false">
+<ion-content [scrollY]="false" class="background">
   <div class="frame-container" id="container">
     <iframe [src]="map" frameBorder="0" load="lazy" id="frame"></iframe>
   </div>

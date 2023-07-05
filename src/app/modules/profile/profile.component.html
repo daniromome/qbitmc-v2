@@ -1,35 +1,26 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title i18n="@@profile">Profile</ion-title>
-  </ion-toolbar>
-</ion-header>
 <ion-content class="background">
-  <ion-grid>
+  <ion-grid *ngIf="profile$ | async as profile">
     <ion-row>
-      <ion-col size="0" size-md="2" size-lg="3" size-xl="4"></ion-col>
-      <ion-col class="center-items-container">
-        <ion-card *ngIf="user$ | async as user" class="full-width">
-          <ion-avatar>
-            <img [src]="user.minecraft.id | avatar">
-          </ion-avatar>
-          <ion-card-header>
-            <ion-card-title>{{ user.minecraft.name }}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content class="ion-no-padding">
-            <ion-item class="transparent" lines="none">
-              <ion-label i18n>Roles</ion-label>
-              <ion-chip *ngFor="let role of user.roles" [color]="role | roleColor">
-                <ion-label>{{ role | role }}</ion-label>
-              </ion-chip>
-            </ion-item>
-            <ion-item (click)="logout()" color="danger" button>
-              <ion-icon name="log-out" slot="start"></ion-icon>
-              <ion-label i18n>Logout</ion-label>
-            </ion-item>
-          </ion-card-content>
-        </ion-card>
+      <ion-col size="0" sizeLg="3" *ngIf="isTablet$ | async"></ion-col>
+      <ion-col size="12" sizeLg="6" class="profile">
+        <div>
+          <img [src]="profile.minecraft.id | avatar:'render-body'" alt="Minecraft skin render" class="body-render">
+        </div>
+        <div class="profile-nickname">
+          <qbit-styled-text *ngFor="let role of profile.roles | styledRole" [text]="role"></qbit-styled-text>
+          <ng-container *ngFor="let nick of nickname$ | async">
+            <qbit-styled-text [text]="nick"></qbit-styled-text>&nbsp;
+          </ng-container>
+        </div>
+        <div class="rounded-ion-items">
+          <ion-item lines="none" detail="false" button (click)="navigateToNicknameEditor()">
+            <ion-icon name="color-palette" slot="start"></ion-icon>
+            <ion-label i18n="@@profile-customize-nickname">Customize nickname</ion-label>
+            <ion-chip color="warning" slot="end">Qbitor+</ion-chip>
+          </ion-item>
+        </div>
       </ion-col>
-      <ion-col size="0" size-md="2" size-lg="3" size-xl="4"></ion-col>
+      <ion-col size="0" sizeLg="3" *ngIf="isTablet$ | async"></ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>

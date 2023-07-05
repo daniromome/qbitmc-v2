@@ -71,3 +71,13 @@ export const selectCustomer = createSelector(
   selectProfile,
   (profile) => profile?.customer
 )
+
+export const selectNickname = createSelector(
+  selectAppState,
+  (state) => state.nickname
+)
+
+export const selectPendingChanges = createSelector(
+  selectAppState,
+  state => state.changes
+)

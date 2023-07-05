@@ -29,4 +29,8 @@ export class AuthService {
     params.append('redirect_uri', environment.SITE_URL)
     window.location.href = `${environment.KEYCLOAK_URL}/broker/azure/link?${params.toString()}`
   }
+
+  public updateProfile(profile: Profile): Observable<Profile> {
+    return this.http.put<Profile>(`${environment.API_URL}/profile`, profile)
+  }
 }

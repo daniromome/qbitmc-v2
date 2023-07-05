@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core'
-import { Actions, createEffect, ofType } from '@ngrx/effects'
+import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects'
 import { catchError, map, of, from } from 'rxjs'
 import { AppActions } from '@store/app'
-import { filter, switchMap, tap, withLatestFrom } from 'rxjs/operators'
+import { filter, repeat, switchMap, tap, withLatestFrom } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
 import { ApplicationActions } from '@store/application'
 import { QbitmcService } from '@services/qbitmc'
 import { OidcSecurityService } from 'angular-auth-oidc-client'
+import { Store } from '@ngrx/store'
+import { selectIsRole, selectPendingChanges, selectProfile } from '@selectors/app'
+import { Router } from '@angular/router'
 
 @Injectable()
 export class AppEffects {
@@ -126,6 +129,54 @@ export class AppEffects {
     switchMap(toast => from(toast.present()))
   ), { dispatch: false })
 
+  public navigateToNicknameEditor$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.navigateToNicknameEditor),
+    concatLatestFrom(() => this.store.select(selectIsRole('supporter'))),
+    switchMap(([_, isSupporter]) => isSupporter
+      ? this.nav.navigateForward(['tabs', 'profile', 'nickname'])
+      : this.nav.navigateBack(['tabs', 'shop'])
+    )
+  ), { dispatch: false })
+
+  public navigateBack$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.navigateBack),
+    concatLatestFrom(() => this.store.select(selectPendingChanges)),
+    switchMap(([action, pendingChanges]) => {
+      if (pendingChanges) {
+        return from(
+          this.alert.create({
+            buttons: [ { text: 'Confirm', role: 'confirm' }, { text: 'Cancel', role: 'cancel' } ],
+            header: 'Warning',
+            message: 'You have unsaved changes, are you sure you want to go back?'
+          })
+        ).pipe(
+          switchMap(alert => from(alert.present()).pipe(switchMap(() => alert.onWillDismiss()))),
+          switchMap(event => {
+            if (event.role === 'cancel') return of(AppActions.setUnsavedChanges({ changes: true }))
+            return this.navigateBack()
+          })
+        )
+      }
+      return this.navigateBack()
+    })
+  ))
+
+  public updateNickname$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.updateNickname),
+    concatLatestFrom(() => this.store.select(selectProfile)),
+    switchMap(([action, profile]) => {
+      return this.auth.updateProfile({ ...profile!, nickname: action.nickname })
+    }),
+    map(profile => AppActions.updateNicknameSuccess({ profile })),
+    catchError(error => of(AppActions.updateNicknameFailure({ error }))),
+    repeat()
+  ))
+
+  public updateNicknameSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.updateNicknameSuccess),
+    switchMap(() => this.navigateBack())
+  ))
+
   public constructor(
     private readonly actions$: Actions,
     private readonly auth: AuthService,
@@ -133,6 +184,13 @@ export class AppEffects {
     private readonly alert: AlertController,
     private readonly qbitmc: QbitmcService,
     private readonly toast: ToastController,
-    private readonly oidcSecurityService: OidcSecurityService
+    private readonly oidcSecurityService: OidcSecurityService,
+    private readonly store: Store,
+    private readonly router: Router
   ) {}
+
+  private navigateBack() {
+    const route = this.router.url.split('/').slice(1, -1)
+    return from(this.nav.navigateBack(route)).pipe(map(() => AppActions.setUnsavedChanges({ changes: false })))
+  }
 }

@@ -24,7 +24,7 @@ export class MapComponent {
 
   public ionViewWillLeave(): void {
     const container = document.getElementById('container')
-    if (!container || !container.firstChild) return
+    if (!container?.firstChild) return
     container.removeChild(container.firstChild)
     this.first = false
   }
