@@ -7,6 +7,11 @@ import { inflate } from '@functions/inflate'
 
 export const selectAppState = createFeatureSelector<AppState>(appFeatureKey)
 
+export const selectToken = createSelector(
+  selectAppState,
+  state => state.token
+)
+
 export const selectInitialized = createSelector(
   selectAppState,
   (state) => state.initialized

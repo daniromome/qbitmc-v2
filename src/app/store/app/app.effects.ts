@@ -7,25 +7,41 @@ import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
 import { ApplicationActions } from '@store/application'
 import { QbitmcService } from '@services/qbitmc'
-import { OidcSecurityService } from 'angular-auth-oidc-client'
 import { Store } from '@ngrx/store'
-import { selectIsRole, selectPendingChanges, selectProfile } from '@selectors/app'
-import { Router } from '@angular/router'
+import { selectToken, selectIsRole, selectPendingChanges, selectProfile } from '@selectors/app'
+import { ActivatedRoute, Router } from '@angular/router'
+import { Location } from '@angular/common'
 
 @Injectable()
 export class AppEffects {
   public initialize$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.initialize),
-    switchMap(() => this.oidcSecurityService.checkAuth()),
-    map(response => AppActions.getProfile({ token: response.accessToken }))
+    switchMap(() => this.route.fragment),
+    map(fragment => {
+      const params = new URLSearchParams(fragment || '')
+      return { tokenType: params.get('token_type'), accessToken: params.get('access_token') }
+    }),
+    filter(result => !!result.tokenType && !!result.accessToken),
+    tap(() => {
+      const path = this.location.path(false)
+      this.location.replaceState(path);
+    }),
+    switchMap(result =>
+      this.auth.getDiscordProfile(result.tokenType!, result.accessToken!).pipe(
+        switchMap(profile => this.auth.exchangeToken(result.accessToken!, profile))
+      )
+    ),
+    map(token => AppActions.setAccessToken({ token }))
+  ))
+
+  public setToken$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.setAccessToken),
+    map(() => AppActions.getProfile())
   ))
 
   public getProfile$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.getProfile),
-    switchMap(({ token }) => {
-      if (!token) throw new Error('User is not signed in')
-      return this.auth.getProfile()
-    }),
+    switchMap(() => this.auth.getProfile()),
     map(profile => AppActions.getProfileSuccess({ profile })),
     catchError(error => of(AppActions.getProfileFailure({ error })))
   ))
@@ -53,18 +69,21 @@ export class AppEffects {
 
   public login$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.login),
-    tap(() => this.oidcSecurityService.authorize())
+    tap(() => this.auth.discordSignIn())
   ), { dispatch: false })
 
   public linkMinecraftAccount$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.linkMinecraftAccount),
-    withLatestFrom(this.oidcSecurityService.getAccessToken()),
-    switchMap(([ _action, token ]) => this.auth.linkMcAccount(token))
+    withLatestFrom(this.store.select(selectToken)),
+    filter(token => !!token),
+    switchMap(([ _action, token ]) => this.auth.linkMcAccount(token!.access_token))
   ), { dispatch: false })
 
   public logout$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.logout),
-    switchMap(() => this.oidcSecurityService.logoffAndRevokeTokens()),
+    withLatestFrom(this.store.select(selectToken)),
+    filter(token => !!token),
+    switchMap(([_action, token]) => this.auth.logout(token!.refresh_token)),
     switchMap(() => from(this.nav.navigateRoot('/tabs/home')))
   ), { dispatch: false })
 
@@ -184,9 +203,10 @@ export class AppEffects {
     private readonly alert: AlertController,
     private readonly qbitmc: QbitmcService,
     private readonly toast: ToastController,
-    private readonly oidcSecurityService: OidcSecurityService,
     private readonly store: Store,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly location: Location
   ) {}
 
   private navigateBack() {
