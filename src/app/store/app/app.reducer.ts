@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store'
-import { Profile } from '@models/profile'
+import { KeycloakToken, Profile } from '@models/profile'
 import { AppActions } from '@store/app'
 import { Leaderboards } from '@models/leaderboards'
 import { MinecraftProfile } from '@models/minecraft-profile'
@@ -10,6 +10,7 @@ import { parseUnstyledText } from '@functions/styled-text'
 export const appFeatureKey = 'app'
 
 export interface AppState {
+  token?: KeycloakToken
   profile?: Profile
   leaderboards?: Leaderboards
   supporters: MinecraftProfile[]
@@ -55,5 +56,7 @@ export const reducer = createReducer(
   on(AppActions.getSupportersSuccess, (state, action): AppState => ({ ...state, supporters: action.supporters })),
   on(AppActions.getServersSuccess, (state, action): AppState => ({ ...state, servers: action.servers })),
   on(AppActions.setUnsavedChanges, (state, action): AppState => ({ ...state, changes: action.changes })),
-  on(AppActions.updateNicknameSuccess, (state, action): AppState => getNickname(state, action.profile))
+  on(AppActions.updateNicknameSuccess, (state, action): AppState => getNickname(state, action.profile)),
+  on(AppActions.setAccessToken, (state, action): AppState => ({ ...state, token: action.token })),
+  on(AppActions.refreshAccessToken, (state, action): AppState => ({ ...state, token: action.token }))
 )

@@ -1,5 +1,5 @@
 import { EnrollmentApplication } from '@models/application'
-import { Profile } from '@models/profile'
+import { KeycloakToken, Profile } from '@models/profile'
 import { createAction, props } from '@ngrx/store'
 import { Leaderboards } from '@models/leaderboards'
 import { MinecraftProfile } from '@models/minecraft-profile'
@@ -14,8 +14,7 @@ export const login = createAction(
 )
 
 export const getProfile = createAction(
-  '[App] Get Profile',
-  props<{ token: string }>()
+  '[App] Get Profile'
 )
 
 export const getProfileSuccess = createAction(
@@ -101,4 +100,13 @@ export const updateNicknameSuccess = createAction(
 export const updateNicknameFailure = createAction(
   '[App] Update Nickname Failure',
   props<{ error: Error }>()
+)
+
+export const setAccessToken = createAction(
+  '[App] Set Access Token',
+  props<{ token: KeycloakToken }>()
+)
+export const refreshAccessToken = createAction(
+  '[App] Refresh Access Token',
+  props<{ token: KeycloakToken }>()
 )
