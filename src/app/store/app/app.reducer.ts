@@ -42,7 +42,7 @@ const getNickname = (state: AppState, profile: Profile): AppState => {
 
 export const reducer = createReducer(
   initialState,
-  on(AppActions.getProfileSuccess, (state, action): AppState => getNickname(state, action.profile)),
+  on(AppActions.getProfileSuccess, (state, action): AppState => ({ ...getNickname(state, action.profile), initialized: true })),
   on(AppActions.getProfileFailure, (state): AppState => ({ ...state, initialized: true })),
   on(AppActions.submittedApplication, (state, action): AppState => ({
     ...state,
@@ -58,5 +58,6 @@ export const reducer = createReducer(
   on(AppActions.setUnsavedChanges, (state, action): AppState => ({ ...state, changes: action.changes })),
   on(AppActions.updateNicknameSuccess, (state, action): AppState => getNickname(state, action.profile)),
   on(AppActions.setAccessToken, (state, action): AppState => ({ ...state, token: action.token })),
-  on(AppActions.refreshAccessToken, (state, action): AppState => ({ ...state, token: action.token }))
+  on(AppActions.refreshAccessToken, (state, action): AppState => ({ ...state, token: action.token })),
+  on(AppActions.logoutDone, (state): AppState => ({ ...state, changes: false, nickname: [], profile: undefined, token: undefined }))
 )

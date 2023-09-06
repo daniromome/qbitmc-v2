@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { AppActions } from '@store/app'
 
@@ -9,9 +9,7 @@ import { AppActions } from '@store/app'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
-  public constructor(
-    private readonly store: Store
-  ) {}
+  private readonly store = inject(Store)
 
   public ngOnInit(): void {
     this.store.dispatch(AppActions.initialize())

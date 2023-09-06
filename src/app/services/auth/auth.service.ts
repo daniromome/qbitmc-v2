@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { DiscordProfile, KeycloakToken, Profile } from '@models/profile'
-import { Observable, filter, map, switchMap, timer } from 'rxjs'
+import { Observable, filter, first, map, switchMap, timer } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
 import { Store } from '@ngrx/store'
@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   public getProfile(): Observable<Profile> {
-    return this.http.get<Profile>(`${environment.API_URL}/profile`)
+    return this.http.get<Profile>(`${environment.API_URL}/profile`).pipe(first())
   }
 
   public async linkMcAccount(accessToken: string): Promise<void> {
@@ -93,6 +93,8 @@ export class AuthService {
     const params = new URLSearchParams()
     params.set('client_id', environment.KEYCLOAK_CLIENT_ID)
     params.set('refresh_token', token)
-    return this.http.post<void>(url, params, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+    return this.http.post<void>(url, params, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).pipe(
+      first()
+    )
   }
 }

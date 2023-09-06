@@ -1,4 +1,3 @@
-import { logout } from './store/app/app.meta-reducers'
 import { NgModule, isDevMode } from '@angular/core'
 
 import { AppRoutingModule } from './app-routing.module'
@@ -23,7 +22,7 @@ import { AuthInterceptor } from '@services/auth/auth.interceptor'
     AppRoutingModule,
     HttpClientModule,
     IonicModule.forRoot(),
-    StoreModule.forRoot({}, { metaReducers: [logout] }),
+    StoreModule.forRoot({}, { metaReducers: [] }),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     EffectsModule.forRoot([]),
     AppStoreModule

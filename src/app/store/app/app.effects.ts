@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core'
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects'
-import { catchError, map, of, from, Observable } from 'rxjs'
+import { catchError, map, of, from, Observable, EMPTY } from 'rxjs'
 import { AppActions } from '@store/app'
-import { filter, repeat, switchMap, tap } from 'rxjs/operators'
+import { exhaustMap, filter, repeat, switchMap, tap } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
 import { ApplicationActions } from '@store/application'
@@ -83,10 +83,10 @@ export class AppEffects {
   public logout$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.logout),
     concatLatestFrom(() => this.store.select(selectToken)),
-    filter(token => !!token),
-    switchMap(([_action, token]) => this.auth.logout(token!.refresh_token)),
-    switchMap(() => from(this.nav.navigateRoot('/tabs/home')))
-  ), { dispatch: false })
+    exhaustMap(([_action, token]) => token ? this.auth.logout(token.refresh_token) : EMPTY),
+    switchMap(() => this.nav.navigateRoot(['tabs', 'home'])),
+    map(() => AppActions.logoutDone())
+  ))
 
   public applicationSubmit$ = createEffect(() => this.actions$.pipe(
     ofType(ApplicationActions.submitSuccess),

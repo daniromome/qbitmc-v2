@@ -2,10 +2,10 @@ import { shuffle } from '@functions/shuffle'
 import { MinecraftProfile } from '@models/minecraft-profile'
 import { Role } from '@models/role'
 import { createSelector, createFeatureSelector } from '@ngrx/store'
-import { appFeatureKey, AppState } from './app.reducer'
+import { AppState } from './app.reducer'
 import { inflate } from '@functions/inflate'
 
-export const selectAppState = createFeatureSelector<AppState>(appFeatureKey)
+export const selectAppState = createFeatureSelector<AppState>('app')
 
 export const selectToken = createSelector(
   selectAppState,
