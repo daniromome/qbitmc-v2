@@ -30,7 +30,7 @@
                 <ion-card-content>
                   <p *ngIf="server.ip"><ion-text color="dark">{{ server.ip }}</ion-text></p>
                   <p><ion-text [color]="server.status !== 'running' ? 'medium' : 'success'">{{ server.status | titlecase }}</ion-text></p>
-                  <p *ngIf="server.staff_only"><ion-text color="danger">Staff Only</ion-text></p>
+                  <p *ngIf="server.staffOnly"><ion-text color="danger">Staff Only</ion-text></p>
                 </ion-card-content>
                 <div
                   class="server-list-item-badge"
