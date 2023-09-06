@@ -17,7 +17,7 @@ export class EnrollmentService {
   }
 
   public submit(application: EnrollmentApplication): Observable<Required<EnrollmentApplication>> {
-    return this.http.post<Required<EnrollmentApplication>>(this.url, application);
+    return this.http.post<Required<EnrollmentApplication>>(this.url, application)
   }
 
   public uploadMedia(files: File[]): Observable<string[]> {

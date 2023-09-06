@@ -19,7 +19,7 @@ import { Profile } from '@models/profile'
 import { AvatarPipe } from '@pipes/avatar'
 import { AppActions } from '@store/app'
 import { selectApplicationMediaSize } from '@store/application/application.selectors'
-import { selectApplicationMedia } from '../../store/application/application.selectors';
+import { selectApplicationMedia } from '../../store/application/application.selectors'
 import { Media } from '@models/media'
 
 interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'id'>> {}

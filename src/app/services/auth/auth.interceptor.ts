@@ -1,22 +1,21 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core'
 import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
   HttpInterceptor
-} from '@angular/common/http';
-import { Observable, filter, first, switchMap, tap } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { selectToken } from '@store/app/app.selectors';
+} from '@angular/common/http'
+import { Observable, switchMap } from 'rxjs'
+import { Store } from '@ngrx/store'
+import { selectToken } from '@store/app/app.selectors'
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-
   private readonly store = inject(Store)
 
-  constructor() {}
+  public constructor() {}
 
-  intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const secureRoutes = ['profile', 'stripe', 'enrollment', 'logout']
     if (!secureRoutes.some(path => req.url.includes(path))) return next.handle(req)
     return this.store.select(selectToken).pipe(

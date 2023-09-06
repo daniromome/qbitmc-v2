@@ -7,7 +7,7 @@ import { selectIsRole } from '@selectors/app'
 @Injectable({
   providedIn: 'root'
 })
-export class QbitorGuard  {
+export class QbitorGuard {
   public constructor(
     private readonly store: Store,
     private readonly router: Router

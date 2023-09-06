@@ -38,7 +38,7 @@ export class ProfileComponent {
     this.store.dispatch(AppActions.logout())
   }
 
-  public navigateToNicknameEditor() {
+  public navigateToNicknameEditor(): void {
     this.store.dispatch(AppActions.navigateToNicknameEditor())
   }
 }

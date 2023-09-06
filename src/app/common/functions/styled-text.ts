@@ -1,15 +1,16 @@
-import { ColorTextStyle, GradientTextStyle, RainbowTextStyle, StyledText, TextStyle } from "@models/styled-text"
-import { Style } from '../../models/styled-text';
+import { ColorTextStyle, GradientTextStyle, RainbowTextStyle, StyledText, TextStyle } from '@models/styled-text'
+import { Style } from '../../models/styled-text'
 
-const parseStyleTag = (text: string) => {
+const parseStyleTag = (text: string): ColorTextStyle | RainbowTextStyle | GradientTextStyle | undefined => {
   const attributes = text.split(':')
   const tag = attributes.shift()
   switch (tag) {
     case 'color':
       return { color: attributes.at(-1), style: TextStyle.COLOR } as ColorTextStyle
-    case 'rainbow':
-      const [ frequency, saturation, offset ] = attributes.map(Number)
+    case 'rainbow': {
+      const [frequency, saturation, offset] = attributes.map(Number)
       return { frequency, saturation, offset, style: TextStyle.RAINBOW } as RainbowTextStyle
+    }
     case 'gradient':
       return { colors: attributes, style: TextStyle.GRADIENT } as GradientTextStyle
     default:
@@ -23,22 +24,22 @@ export const parseUnstyledText = (text: string): StyledText => {
     strikethrough: false,
     underline: false,
     italic: false,
-    obfuscated: false,
+    obfuscated: false
   }
   const tags = text.split('>')
   const content = tags.pop()?.trim()
   const styleIndex = tags.findIndex(s => s.includes(':'))
   const styleString = styleIndex !== -1 ? tags.splice(styleIndex, 1)[0] : undefined
-  tags.forEach(name => attributes[name] = true);
+  tags.forEach(name => { attributes[name] = true })
   const style = styleString ? parseStyleTag(styleString) : undefined
   return { ...attributes, content, style } as StyledText
 }
 
-const stringifyStyle = (style: Style) => {
+const stringifyStyle = (style: Style): string => {
   switch (style.style) {
-    case TextStyle.COLOR: return `<${style.style}:${style.color}>`;
-    case TextStyle.GRADIENT: return `<${style.style}:${style.colors.join(':')}>`;
-    case TextStyle.RAINBOW: return `<${style.style}:${style.frequency}:${style.saturation}:${style.offset}>`;
+    case TextStyle.COLOR: return `<${style.style}:${style.color}>`
+    case TextStyle.GRADIENT: return `<${style.style}:${style.colors.join(':')}>`
+    case TextStyle.RAINBOW: return `<${style.style}:${style.frequency}:${style.saturation}:${style.offset}>`
   }
 }
 

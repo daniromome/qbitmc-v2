@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core'
 import { Router, UrlTree } from '@angular/router'
 import { Store } from '@ngrx/store'
 import { selectApplied, selectInitialized } from '@selectors/app'
-import { filter, map, Observable, skip, switchMap, take, tap } from 'rxjs'
+import { filter, map, Observable, switchMap } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApplyGuard  {
+export class ApplyGuard {
   public constructor(
     private readonly store: Store,
     private readonly router: Router

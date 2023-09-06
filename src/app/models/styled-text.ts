@@ -1,6 +1,11 @@
-import { FormGroup, FormControl } from "@angular/forms"
-import { FormFrom } from "../common/types/forms"
+import { FormGroup, FormControl } from '@angular/forms'
+import { FormFrom } from '../common/types/forms'
 
+export enum TextStyle {
+  GRADIENT = 'gradient',
+  RAINBOW = 'rainbow',
+  COLOR = 'color'
+}
 export interface GradientTextStyle {
   colors: string[]
   style: TextStyle.GRADIENT
@@ -16,12 +21,6 @@ export interface RainbowTextStyle {
 export interface ColorTextStyle {
   color: string
   style: TextStyle.COLOR
-}
-
-export enum TextStyle {
-  GRADIENT = 'gradient',
-  RAINBOW = 'rainbow',
-  COLOR = 'color'
 }
 
 export type Style = GradientTextStyle | RainbowTextStyle | ColorTextStyle

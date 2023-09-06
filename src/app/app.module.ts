@@ -11,7 +11,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
 import { RouteReuseStrategy } from '@angular/router'
 import { AppStoreModule } from '@store/app'
 import { DecimalPipe } from '@angular/common'
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { AuthInterceptor } from '@services/auth/auth.interceptor'
 
 @NgModule({
@@ -26,7 +26,7 @@ import { AuthInterceptor } from '@services/auth/auth.interceptor'
     StoreModule.forRoot({}, { metaReducers: [logout] }),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     EffectsModule.forRoot([]),
-    AppStoreModule,
+    AppStoreModule
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

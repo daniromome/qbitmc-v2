@@ -7,7 +7,7 @@ import { AlertController, NavController, ToastController } from '@ionic/angular'
 import { StripeService } from '@services/stripe'
 import { Store } from '@ngrx/store'
 import { SpinnerService } from '@services/spinner'
-import { selectCustomer, selectIsRole, selectIsSignedIn } from '@selectors/app';
+import { selectCustomer, selectIsRole, selectIsSignedIn } from '@selectors/app'
 
 @Injectable()
 export class ShopEffects {

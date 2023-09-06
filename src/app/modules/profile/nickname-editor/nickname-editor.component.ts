@@ -1,18 +1,18 @@
-import { selectNickname } from '@selectors/app';
-import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { StyledTextComponent } from '@components/styled-text/styled-text.component';
-import { IonicModule } from '@ionic/angular';
-import { StyledRolePipe } from '@pipes/styled-role';
-import { Store } from '@ngrx/store';
-import { Observable, finalize, first, map } from 'rxjs';
-import { StyledText, StyledTextForm, TextStyle } from '@models/styled-text';
-import { animate, style, transition, trigger } from '@angular/animations';
-import { AppActions } from '@store/app';
-import { FormArray, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { stringifyStyledText } from '@functions/styled-text';
-import { REGEXP } from '@constants/regexp';
+import { selectNickname } from '@selectors/app'
+import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { StyledTextComponent } from '@components/styled-text/styled-text.component'
+import { IonicModule } from '@ionic/angular'
+import { StyledRolePipe } from '@pipes/styled-role'
+import { Store } from '@ngrx/store'
+import { Observable, finalize, first, map } from 'rxjs'
+import { StyledText, StyledTextForm, TextStyle } from '@models/styled-text'
+import { animate, style, transition, trigger } from '@angular/animations'
+import { AppActions } from '@store/app'
+import { FormArray, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { stringifyStyledText } from '@functions/styled-text'
+import { REGEXP } from '@constants/regexp'
 
 enum SliderLabel {
   SATURATION = 'saturation'
@@ -64,7 +64,7 @@ export class NicknameEditorComponent implements OnInit {
   private readonly nickname$: Observable<StyledText[]>
   private readonly firstChange$: Observable<void>
 
-  constructor() {
+  public constructor() {
     this.form = this.fb.array<StyledTextForm>([])
     this.nickname$ = this.store.select(selectNickname).pipe(
       first(),
@@ -88,7 +88,7 @@ export class NicknameEditorComponent implements OnInit {
     this.form.removeAt(index)
   }
 
-  public save() {
+  public save(): void {
     const nickname = this.form.controls.map((_, index) => stringifyStyledText(this.convertFormToStyledText(index))).join(' <r>')
     this.store.dispatch(AppActions.updateNickname({ nickname }))
   }
@@ -101,12 +101,12 @@ export class NicknameEditorComponent implements OnInit {
   public newStyledTextForm(text?: StyledText): StyledTextForm {
     return this.fb.group({
       attributes: this.fb.group({
-        content: this.fb.control<string>(text?.content ?? '', [ Validators.pattern(REGEXP.VALID_NICKNAME)] ),
+        content: this.fb.control<string>(text?.content ?? '', [Validators.pattern(REGEXP.VALID_NICKNAME)]),
         bold: this.fb.control<boolean>(text?.bold ?? false),
         strikethrough: this.fb.control<boolean>(text?.strikethrough ?? false),
         underline: this.fb.control<boolean>(text?.underline ?? false),
         italic: this.fb.control<boolean>(text?.italic ?? false),
-        obfuscated: this.fb.control<boolean>(text?.obfuscated ?? false),
+        obfuscated: this.fb.control<boolean>(text?.obfuscated ?? false)
       }),
       style: this.fb.control<TextStyle | undefined>(text?.style?.style),
       color: this.fb.group({
@@ -119,22 +119,22 @@ export class NicknameEditorComponent implements OnInit {
         colors: this.fb.array(text?.style?.style === TextStyle.GRADIENT
           ? text.style.colors.map(color => this.fb.control(color))
           : [
-            this.fb.control('#ffffff'),
-            this.fb.control('#ffffff')
-          ]
+              this.fb.control('#ffffff'),
+              this.fb.control('#ffffff')
+            ]
         )
       }),
       rainbow: this.fb.group(text?.style?.style === TextStyle.RAINBOW
         ? {
-          frequency: this.fb.control(text.style.frequency * 100),
-          offset: this.fb.control(text.style.offset * 100),
-          saturation: this.fb.control(text.style.saturation * 100)
-        }
+            frequency: this.fb.control(text.style.frequency * 100),
+            offset: this.fb.control(text.style.offset * 100),
+            saturation: this.fb.control(text.style.saturation * 100)
+          }
         : {
-          frequency: this.fb.control(1),
-          offset: this.fb.control(0),
-          saturation: this.fb.control(30)
-        }
+            frequency: this.fb.control(1),
+            offset: this.fb.control(0),
+            saturation: this.fb.control(30)
+          }
       )
     })
   }
@@ -162,7 +162,7 @@ export class NicknameEditorComponent implements OnInit {
   }
 
   public sliderLabel(label: SliderLabel, value: number): string {
-    return `${this.sliderLabelString(label)} ${value}%`;
+    return `${this.sliderLabelString(label)} ${value}%`
   }
 
   private sliderLabelString(label: SliderLabel): string {

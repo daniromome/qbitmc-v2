@@ -18,12 +18,12 @@ export const reducer = createReducer(
   initialState,
   on(ApplicationActions.getMediaResourcesSuccess, (state, action): ApplicationState => {
     const media = { ...state.media }
-    action.media.forEach(m => media[m.key] = m)
+    action.media.forEach(m => { media[m.key] = m })
     return { ...state, media }
   }),
   on(ApplicationActions.uploadMediaResourcesSuccess, (state, action): ApplicationState => {
     const media = { ...state.media }
-    action.media.forEach(m => media[m.key] = m)
+    action.media.forEach(m => { media[m.key] = m })
     return { ...state, media }
   }),
   on(ApplicationActions.deleteMediaResourceSuccess, (state, action): ApplicationState => {

@@ -12,7 +12,7 @@ import { Server } from '@models/server'
 })
 export class QbitmcService {
   public constructor(
-    private readonly http: HttpClient,
+    private readonly http: HttpClient
   ) { }
 
   public leaderboards(): Observable<Leaderboards> {
@@ -30,8 +30,8 @@ export class QbitmcService {
     return this.http.get<PterodactylServer[]>(url.toString()).pipe(
       map(response => response.map(server => {
         const { id, name, description, status } = server
-        const { ip, game, version, staff_only } = JSON.parse(description)
-        return { id, name, status, ip, game, version, staff_only }
+        const { ip, game, version, staff_only: staffOnly } = JSON.parse(description)
+        return { id, name, status, ip, game, version, staffOnly }
       }))
     )
   }

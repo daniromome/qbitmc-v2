@@ -7,7 +7,7 @@ import { map, Observable } from 'rxjs'
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticatedGuard  {
+export class AuthenticatedGuard {
   public constructor(
     private readonly store: Store,
     private readonly router: Router

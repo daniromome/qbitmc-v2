@@ -1,8 +1,8 @@
-import { AvatarPipe } from './avatar.pipe';
+import { AvatarPipe } from './avatar.pipe'
 
 describe('AvatarPipe', () => {
   it('create an instance', () => {
-    const pipe = new AvatarPipe();
-    expect(pipe).toBeTruthy();
-  });
-});
+    const pipe = new AvatarPipe()
+    expect(pipe).toBeTruthy()
+  })
+})

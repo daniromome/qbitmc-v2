@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { DiscordProfile, KeycloakToken, Profile } from '@models/profile'
-import { Observable, filter, first, interval, map, switchMap, timer } from 'rxjs'
+import { Observable, filter, map, switchMap, timer } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
 import { Store } from '@ngrx/store'
@@ -18,10 +18,13 @@ export class AuthService {
   public constructor() {
     this.store.select(selectToken).pipe(
       filter(token => !!token),
-      first(),
-      switchMap(token => timer(0, (token!.expires_in * 1000) - 1000).pipe(
-        switchMap(() => this.refreshToken(token!.refresh_token))
-      )),
+      switchMap(token => {
+        const delay = (token!.expires_in * 1000) - 1000
+        return timer(delay, delay).pipe(
+          switchMap(() => this.refreshToken(token!.refresh_token))
+        )
+      }
+      ),
       takeUntilDestroyed()
     ).subscribe(token => this.store.dispatch(AppActions.refreshAccessToken({ token })))
   }
@@ -54,12 +57,12 @@ export class AuthService {
     params.set('redirect_uri', window.location.origin)
     params.set('response_type', 'token')
     params.set('scope', 'identify email guilds.join')
-    window.open(`${environment.DISCORD_URL}/oauth2/authorize?${params.toString()}`, '__self');
+    window.open(`${environment.DISCORD_URL}/oauth2/authorize?${params.toString()}`, '__self')
   }
 
   public getDiscordProfile(tokenType: string, token: string): Observable<DiscordProfile> {
     const url = `${environment.DISCORD_URL}/oauth2/@me`
-    return this.http.get<{ user: DiscordProfile }>(url, { headers: { Authorization: `${tokenType} ${token}`}}).pipe(
+    return this.http.get<{ user: DiscordProfile }>(url, { headers: { Authorization: `${tokenType} ${token}` } }).pipe(
       map(result => result.user)
     )
   }
@@ -73,7 +76,7 @@ export class AuthService {
     params.set('subject_issuer', 'discord')
     params.set('subject_token_type', 'urn:ietf:params:oauth:token-type:access_token')
     if (profile) params.set('user_profile', JSON.stringify(profile))
-    return this.http.post<KeycloakToken>(url, params, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }})
+    return this.http.post<KeycloakToken>(url, params, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
   }
 
   public refreshToken(token: string): Observable<KeycloakToken> {

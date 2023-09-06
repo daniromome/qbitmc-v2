@@ -40,7 +40,7 @@ export class TabsComponent {
     {
       icon: 'home',
       label: $localize`:@@home:Home`,
-      path: 'home',
+      path: 'home'
     },
     {
       icon: 'storefront',

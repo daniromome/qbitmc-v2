@@ -7,7 +7,7 @@ import { selectPendingApproval, selectInitialized } from '@selectors/app'
 @Injectable({
   providedIn: 'root'
 })
-export class AppliedGuard  {
+export class AppliedGuard {
   public constructor(
     private readonly store: Store,
     private readonly router: Router

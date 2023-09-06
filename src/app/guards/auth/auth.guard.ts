@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core'
 import { Router, UrlTree } from '@angular/router'
-import { Observable, map, take } from 'rxjs'
+import { Observable, map } from 'rxjs'
 import { Store } from '@ngrx/store'
 import { selectIsSignedIn } from '@store/app/app.selectors'
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard  {
+export class AuthGuard {
   public constructor(
     private readonly store: Store,
     private readonly router: Router

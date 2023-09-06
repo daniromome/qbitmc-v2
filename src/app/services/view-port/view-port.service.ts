@@ -1,6 +1,6 @@
-import { Injectable, inject } from '@angular/core';
-import { Platform } from '@ionic/angular';
-import { Observable, map, startWith } from 'rxjs';
+import { Injectable, inject } from '@angular/core'
+import { Platform } from '@ionic/angular'
+import { Observable, map, startWith } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class ViewPortService {
   public readonly isTablet$: Observable<boolean>
   public readonly width$: Observable<number>
 
-  constructor() {
+  public constructor() {
     this.width$ = this.platform.resize.pipe(
       startWith(() => this.platform.width()),
       map(() => this.platform.width())

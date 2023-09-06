@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core'
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects'
-import { catchError, map, of, from } from 'rxjs'
+import { catchError, map, of, from, Observable } from 'rxjs'
 import { AppActions } from '@store/app'
-import { filter, repeat, switchMap, tap, withLatestFrom } from 'rxjs/operators'
+import { filter, repeat, switchMap, tap } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
 import { ApplicationActions } from '@store/application'
@@ -11,6 +11,7 @@ import { Store } from '@ngrx/store'
 import { selectToken, selectIsRole, selectPendingChanges, selectProfile } from '@selectors/app'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Location } from '@angular/common'
+import { TypedAction } from '@ngrx/store/src/models'
 
 @Injectable()
 export class AppEffects {
@@ -24,7 +25,7 @@ export class AppEffects {
     filter(result => !!result.tokenType && !!result.accessToken),
     tap(() => {
       const path = this.location.path(false)
-      this.location.replaceState(path);
+      this.location.replaceState(path)
     }),
     switchMap(result =>
       this.auth.getDiscordProfile(result.tokenType!, result.accessToken!).pipe(
@@ -74,14 +75,14 @@ export class AppEffects {
 
   public linkMinecraftAccount$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.linkMinecraftAccount),
-    withLatestFrom(this.store.select(selectToken)),
+    concatLatestFrom(() => this.store.select(selectToken)),
     filter(token => !!token),
-    switchMap(([ _action, token ]) => this.auth.linkMcAccount(token!.access_token))
+    switchMap(([_action, token]) => this.auth.linkMcAccount(token!.access_token))
   ), { dispatch: false })
 
   public logout$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.logout),
-    withLatestFrom(this.store.select(selectToken)),
+    concatLatestFrom(() => this.store.select(selectToken)),
     filter(token => !!token),
     switchMap(([_action, token]) => this.auth.logout(token!.refresh_token)),
     switchMap(() => from(this.nav.navigateRoot('/tabs/home')))
@@ -160,11 +161,11 @@ export class AppEffects {
   public navigateBack$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.navigateBack),
     concatLatestFrom(() => this.store.select(selectPendingChanges)),
-    switchMap(([action, pendingChanges]) => {
+    switchMap(([_action, pendingChanges]) => {
       if (pendingChanges) {
         return from(
           this.alert.create({
-            buttons: [ { text: 'Confirm', role: 'confirm' }, { text: 'Cancel', role: 'cancel' } ],
+            buttons: [{ text: 'Confirm', role: 'confirm' }, { text: 'Cancel', role: 'cancel' }],
             header: 'Warning',
             message: 'You have unsaved changes, are you sure you want to go back?'
           })
@@ -209,7 +210,7 @@ export class AppEffects {
     private readonly location: Location
   ) {}
 
-  private navigateBack() {
+  private navigateBack(): Observable<TypedAction<string>> {
     const route = this.router.url.split('/').slice(1, -1)
     return from(this.nav.navigateBack(route)).pipe(map(() => AppActions.setUnsavedChanges({ changes: false })))
   }

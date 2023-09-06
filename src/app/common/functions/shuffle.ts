@@ -1,4 +1,3 @@
-/* eslint-disable prefer-arrow/prefer-arrow-functions */
 export function shuffle<T>(a: T[]): T[] {
   const array = [...a]
   let currentIndex = array.length

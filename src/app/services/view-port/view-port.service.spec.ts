@@ -1,16 +1,16 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing'
 
-import { ViewPortService } from './view-port.service';
+import { ViewPortService } from './view-port.service'
 
 describe('ViewPortService', () => {
-  let service: ViewPortService;
+  let service: ViewPortService
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ViewPortService);
-  });
+    TestBed.configureTestingModule({})
+    service = TestBed.inject(ViewPortService)
+  })
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+    expect(service).toBeTruthy()
+  })
+})

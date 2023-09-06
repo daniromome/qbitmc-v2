@@ -1,7 +1,8 @@
 {
   "root": true,
   "globals": {
-    "$localize": "readonly"
+    "$localize": "readonly",
+    "localStorage": "readonly"
   },
   "ignorePatterns": [
     "projects/**/*"
@@ -19,8 +20,7 @@
         "createDefaultProgram": true
       },
       "extends": [
-        "plugin:@angular-eslint/ng-cli-compat",
-        "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
+        "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
         "plugin:@ngrx/all-requiring-type-checking",
         "standard"
@@ -76,7 +76,9 @@
         ],
         "dot-notation": "off",
         "@typescript-eslint/dot-notation": "off",
-        "accessor-pairs": "off"
+        "accessor-pairs": "off",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
       }
     },
     {
@@ -114,5 +116,8 @@
       ],
       "rules": {}
     }
+  ],
+  "plugins": [
+    "@typescript-eslint"
   ]
 }
