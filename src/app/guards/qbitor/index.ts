@@ -1,1 +1,1 @@
-export { QbitorGuard } from './qbitor.guard'
+export { qbitorGuard } from './qbitor.guard'

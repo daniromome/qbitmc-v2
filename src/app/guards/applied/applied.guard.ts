@@ -1,23 +1,15 @@
-import { Injectable } from '@angular/core'
-import { UrlTree, Router } from '@angular/router'
-import { Observable, filter, map, switchMap } from 'rxjs'
+import { inject } from '@angular/core'
+import { Router, CanActivateFn } from '@angular/router'
+import { filter, map, switchMap } from 'rxjs'
 import { Store } from '@ngrx/store'
-import { selectPendingApproval, selectInitialized } from '@selectors/app'
+import { appFeature } from '@store/app'
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AppliedGuard {
-  public constructor(
-    private readonly store: Store,
-    private readonly router: Router
-  ) {}
-
-  public canActivate(): Observable<boolean | UrlTree> {
-    return this.store.select(selectInitialized).pipe(
-      filter(initialized => initialized),
-      switchMap(() => this.store.select(selectPendingApproval)),
-      map(pending => pending || this.router.createUrlTree(['tabs', 'join']))
-    )
-  }
+export const appliedGuard: CanActivateFn = () => {
+  const store = inject(Store)
+  const router = inject(Router)
+  return store.select(appFeature.selectInitialized).pipe(
+    filter(initialized => initialized),
+    switchMap(() => store.select(appFeature.selectPendingApproval)),
+    map(pending => pending || router.createUrlTree(['tabs', 'join']))
+  )
 }

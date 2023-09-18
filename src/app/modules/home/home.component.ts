@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
 import { Observable, map } from 'rxjs'
 import { Store } from '@ngrx/store'
-import { selectServers, selectSupporters } from '@selectors/app'
 import { LeaderboardComponent } from '@components/leaderboard'
 import { MinecraftProfile } from '@models/minecraft-profile'
-import { AppActions } from '@store/app'
+import { AppActions, appFeature } from '@store/app'
 import { AvatarPipe } from '@pipes/avatar'
 import { SliderComponent } from '@components/slider'
 import { Server } from '@models/server'
@@ -41,9 +40,9 @@ export class HomeComponent implements OnInit {
       })
     )
     this.isDesktop$ = this.view.isDesktop$
-    this.supporters$ = this.store.select(selectSupporters)
+    this.supporters$ = this.store.select(appFeature.selectSupporters)
     this.supportersCount$ = this.supporters$.pipe(map(supporters => supporters.length))
-    this.servers$ = this.store.select(selectServers)
+    this.servers$ = this.store.select(appFeature.selectServers)
   }
 
   public ngOnInit(): void {

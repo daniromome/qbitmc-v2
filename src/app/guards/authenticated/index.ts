@@ -1,2 +1,1 @@
-import { AuthenticatedGuard } from './authenticated.guard'
-export { AuthenticatedGuard }
+export { authenticatedGuard } from './authenticated.guard'

@@ -1,2 +1,1 @@
-import { AuthGuard } from './auth.guard'
-export { AuthGuard }
+export { authGuard } from './auth.guard'

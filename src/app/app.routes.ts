@@ -1,13 +1,17 @@
-import { NgModule } from '@angular/core'
-import { RouterModule, Routes, PreloadAllModules } from '@angular/router'
-import { AppliedGuard } from '@guards/applied'
-import { ApplyGuard } from '@guards/apply'
-import { AuthenticatedGuard } from '@guards/authenticated'
-import { QbitorGuard } from '@guards/qbitor'
-import { AuthGuard } from '@guards/auth'
+import { Routes } from '@angular/router'
+import { appliedGuard } from '@guards/applied'
+import { applyGuard } from '@guards/apply'
+import { authGuard } from '@guards/auth'
+import { authenticatedGuard } from '@guards/authenticated'
 import { enabledGuard } from '@guards/enabled'
+import { qbitorGuard } from '@guards/qbitor'
+import { provideEffects } from '@ngrx/effects'
+import { provideState } from '@ngrx/store'
+import { BytesPipe } from '@pipes/bytes'
+import { applicationFeature, ApplicationEffects } from '@store/application'
+import { ShopEffects, shopFeature } from '@store/shop'
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: 'tabs',
     loadComponent: () => import('./components/tabs').then(c => c.TabsComponent),
@@ -18,43 +22,52 @@ const routes: Routes = [
       },
       {
         path: 'join',
-        canActivate: [AuthGuard, enabledGuard],
+        canActivate: [authGuard, enabledGuard],
         children: [
           {
             path: '',
             loadComponent: () => import('./modules/join/join.component').then(c => c.JoinComponent),
-            canActivate: [ApplyGuard, enabledGuard]
+            canActivate: [applyGuard, enabledGuard]
           },
           {
             path: 'status',
             loadComponent: () => import('./modules/join/status/status.component').then(c => c.StatusComponent),
-            canActivate: [AppliedGuard, enabledGuard]
+            canActivate: [appliedGuard, enabledGuard]
           }
+        ],
+        providers: [
+          provideState(applicationFeature),
+          provideEffects(ApplicationEffects),
+          BytesPipe
         ]
       },
       {
         path: 'shop',
         loadComponent: () => import('./modules/shop/shop.component').then(c => c.ShopComponent),
-        canActivate: [enabledGuard]
+        canActivate: [enabledGuard],
+        providers: [
+          provideState(shopFeature),
+          provideEffects(ShopEffects)
+        ]
       },
       {
         path: 'map',
         loadComponent: () => import('./modules/map/map.component').then(c => c.MapComponent),
-        canActivate: [QbitorGuard, enabledGuard]
+        canActivate: [qbitorGuard, enabledGuard]
       },
       {
         path: 'profile',
-        canActivate: [QbitorGuard, enabledGuard],
+        canActivate: [qbitorGuard, enabledGuard],
         children: [
           {
             path: '',
             loadComponent: () => import('./modules/profile/profile.component').then(c => c.ProfileComponent),
-            canActivate: [QbitorGuard, enabledGuard]
+            canActivate: [qbitorGuard, enabledGuard]
           },
           {
             path: 'nickname',
             loadComponent: () => import('./modules/profile/nickname-editor/nickname-editor.component').then(c => c.NicknameEditorComponent),
-            canActivate: [QbitorGuard, enabledGuard]
+            canActivate: [qbitorGuard, enabledGuard]
           }
         ]
       },
@@ -73,12 +86,6 @@ const routes: Routes = [
   {
     path: 'auth',
     loadComponent: () => import('./modules/auth/auth.component').then(c => c.AuthComponent),
-    canActivate: [AuthenticatedGuard]
+    canActivate: [authenticatedGuard]
   }
 ]
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }

@@ -1,5 +1,5 @@
 import { FormGroup, FormControl } from '@angular/forms'
-import { FormFrom } from '../common/types/forms'
+import { FormFrom } from '../utils/form-from'
 
 export enum TextStyle {
   GRADIENT = 'gradient',

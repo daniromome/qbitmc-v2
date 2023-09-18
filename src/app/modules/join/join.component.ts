@@ -2,24 +2,21 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
-import { FormFrom } from '../../common/types/forms'
+import { FormFrom } from '../../utils/form-from'
 import { EnrollmentApplication } from '@models/application'
 import { Observable, map, Subject } from 'rxjs'
 import { REGEXP } from '@constants/regexp'
 import { NoteComponent } from '@components/note'
 import { FileUploaderComponent } from '@components/file-uploader'
 import { Store } from '@ngrx/store'
-import { selectProfile } from '@selectors/app'
 import { takeUntil } from 'rxjs/operators'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
-import { ApplicationActions, ApplicationStoreModule } from '@store/application'
+import { ApplicationActions, applicationFeature } from '@store/application'
 import { BytesPipe } from '@pipes/bytes'
 import { MAX_UPLOAD_SIZE } from '@constants/index'
 import { Profile } from '@models/profile'
 import { AvatarPipe } from '@pipes/avatar'
-import { AppActions } from '@store/app'
-import { selectApplicationMediaSize } from '@store/application/application.selectors'
-import { selectApplicationMedia } from '../../store/application/application.selectors'
+import { AppActions, appFeature } from '@store/app'
 import { Media } from '@models/media'
 
 interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'id'>> {}
@@ -38,7 +35,6 @@ interface SafeMedia extends Omit<Media, 'blob'> {
     IonicModule,
     NoteComponent,
     FileUploaderComponent,
-    ApplicationStoreModule,
     BytesPipe,
     AvatarPipe
   ],
@@ -77,11 +73,11 @@ export class JoinComponent implements OnInit, OnDestroy {
       reasons: this.fb.control('', [Validators.required]),
       rules: this.fb.control(false, [Validators.requiredTrue])
     })
-    this.profile$ = this.store.select(selectProfile)
-    this.media$ = this.store.select(selectApplicationMedia).pipe(
+    this.profile$ = this.store.select(appFeature.selectProfile)
+    this.media$ = this.store.select(applicationFeature.selectApplicationMedia).pipe(
       map(media => media.map(m => ({ ...m, blob: m.blob ? this.sanitizer.bypassSecurityTrustUrl(m.blob) : undefined })))
     )
-    this.filesSize$ = this.store.select(selectApplicationMediaSize)
+    this.filesSize$ = this.store.select(applicationFeature.selectApplicationMediaSize)
     this.filesSizeWithinLimit$ = this.filesSize$.pipe(
       map(size => size <= MAX_UPLOAD_SIZE)
     )

@@ -1,18 +1,19 @@
-import { createReducer, on } from '@ngrx/store'
+import { MemoizedSelector, createFeature, createReducer, createSelector, on } from '@ngrx/store'
 import { KeycloakToken, Profile } from '@models/profile'
 import { AppActions } from '@store/app'
 import { Leaderboards } from '@models/leaderboards'
 import { MinecraftProfile } from '@models/minecraft-profile'
 import { Server } from '@models/server'
 import { StyledText } from '@models/styled-text'
-import { parseUnstyledText } from '@functions/styled-text'
+import { parseUnstyledText, inflateArray, shuffleArray } from '@utils'
+import { Role } from '@models/role'
 
 export const appFeatureKey = 'app'
 
 export interface AppState {
-  token?: KeycloakToken
-  profile?: Profile
-  leaderboards?: Leaderboards
+  token: KeycloakToken | undefined
+  profile: Profile | undefined
+  leaderboards: Leaderboards | undefined
   supporters: MinecraftProfile[]
   servers: Server[]
   initialized: boolean,
@@ -21,6 +22,9 @@ export interface AppState {
 }
 
 export const initialState: AppState = {
+  token: undefined,
+  profile: undefined,
+  leaderboards: undefined,
   supporters: [],
   servers: [],
   initialized: false,
@@ -61,3 +65,51 @@ export const reducer = createReducer(
   on(AppActions.refreshAccessToken, (state, action): AppState => ({ ...state, token: action.token })),
   on(AppActions.logoutDone, (state): AppState => ({ ...state, changes: false, nickname: [], profile: undefined, token: undefined }))
 )
+
+export const appFeature = createFeature({
+  name: appFeatureKey,
+  reducer,
+  extraSelectors: ({ selectProfile, selectAppState }) => ({
+    selectIsSignedIn: createSelector(
+      selectProfile,
+      profile => !!profile
+    ),
+    selectIsDisabled: createSelector(
+      selectProfile,
+      profile => !!profile?.disabled
+    ),
+    selectPendingApproval: createSelector(
+      selectProfile,
+      profile => !!profile?.application?.createdAt && !profile?.application?.approved
+    ),
+    selectUserId: createSelector(
+      selectProfile,
+      (profile) => profile?.id
+    ),
+    selectApplied: createSelector(
+      selectProfile,
+      (profile) => !!profile?.application?.createdAt
+    ),
+    selectIsRole: (role: Role): MemoizedSelector<Record<string, any>, boolean, (s1: AppState) => boolean> => createSelector(
+      selectAppState,
+      (state) => !!state.profile?.roles.some(r => r === role)
+    ),
+    selectLeaderboards: createSelector(
+      selectAppState,
+      (state) => state.leaderboards ? Object.entries(state.leaderboards) : []
+    ),
+    selectSupporters: createSelector(
+      selectAppState,
+      (state) => {
+        const shuffledSupporters = shuffleArray<MinecraftProfile>(state.supporters)
+        if (shuffledSupporters.length < 1) return []
+        if (shuffledSupporters.length < 5) return inflateArray<MinecraftProfile>(shuffledSupporters, 10)
+        return inflateArray<MinecraftProfile>(shuffledSupporters, shuffledSupporters.length * 2)
+      }
+    ),
+    selectCustomer: createSelector(
+      selectProfile,
+      (profile) => profile?.customer
+    )
+  })
+})

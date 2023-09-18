@@ -4,9 +4,8 @@ import { Observable, filter, first, map, switchMap, timer } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
 import { Store } from '@ngrx/store'
-import { selectToken } from '@store/app/app.selectors'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { AppActions } from '@store/app'
+import { AppActions, appFeature } from '@store/app'
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,7 @@ export class AuthService {
   private readonly store = inject(Store)
 
   public constructor() {
-    this.store.select(selectToken).pipe(
+    this.store.select(appFeature.selectToken).pipe(
       filter(token => !!token),
       switchMap(token => {
         const delay = (token!.expires_in * 1000) - 1000

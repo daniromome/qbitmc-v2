@@ -33,14 +33,10 @@
       "@pipes/*": ["src/app/pipes/*"],
       "@components/*": ["src/app/components/*"],
       "@store/*": ["src/app/store/*"],
-      "@classes/*": ["src/app/common/classes/*"],
-      "@errors/*": ["src/app/common/errors/*"],
-      "@constants/*": ["src/app/common/constants/*"],
-      "@generics/*": ["src/app/common/generics/*"],
-      "@functions/*": ["src/app/common/functions/*"],
+      "@constants/*": ["src/app/constants/*"],
+      "@utils": ["src/app/utils"],
       "@guards/*": ["src/app/guards/*"],
       "@directives/*": ["src/app/directives/*"],
-      "@selectors/app": ["src/app/store/app/app.selectors"],
       "@selectors/application": ["src/app/store/application/application.selectors"],
       "@selectors/shop": ["src/app/store/shop/shop.selectors"]
     }

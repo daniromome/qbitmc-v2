@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core'
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects'
 import { EnrollmentService } from '@services/enrollment'
-import { ApplicationActions } from '@store/application'
+import { ApplicationActions, applicationFeature } from '@store/application'
 import { catchError, map, switchMap, tap, repeat } from 'rxjs/operators'
 import { forkJoin, of } from 'rxjs'
 import { Store } from '@ngrx/store'
-import { selectApplicationMedia } from './application.selectors'
 import { MAX_UPLOAD_SIZE } from '@constants/index'
 import { BytesPipe } from '@pipes/bytes'
 import { AlertController, ToastController } from '@ionic/angular'
@@ -39,7 +38,7 @@ export class ApplicationEffects {
 
   public uploadMediaResources$ = createEffect(() => this.actions$.pipe(
     ofType(ApplicationActions.uploadMediaResources),
-    concatLatestFrom(() => this.store.select(selectApplicationMedia)),
+    concatLatestFrom(() => this.store.select(applicationFeature.selectApplicationMedia)),
     switchMap(([{ files }, media]) => {
       const currentMediaSize = media.map(m => m.size).reduce((accumulator, value) => accumulator + value, 0)
       const uploadedMediaSize = files.map(f => f.size).reduce((accumulator, value) => accumulator + value, 0)

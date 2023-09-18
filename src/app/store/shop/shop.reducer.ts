@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store'
+import { createFeature, createReducer, on } from '@ngrx/store'
 import { Product } from '@models/product'
 import { ShopActions } from '@store/shop'
 
@@ -20,3 +20,8 @@ export const reducer = createReducer(
   on(ShopActions.getProductsFailure, (state): ShopState => ({ ...state, loading: false })),
   on(ShopActions.getProductsSuccess, (state, action): ShopState => ({ ...state, products: action.products, loading: false }))
 )
+
+export const shopFeature = createFeature({
+  name: shopFeatureKey,
+  reducer
+})

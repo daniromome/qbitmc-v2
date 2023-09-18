@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core'
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects'
 import { catchError, map, of, from, Observable, EMPTY } from 'rxjs'
-import { AppActions } from '@store/app'
+import { AppActions, appFeature } from '@store/app'
 import { exhaustMap, filter, repeat, switchMap, tap } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
 import { ApplicationActions } from '@store/application'
 import { QbitmcService } from '@services/qbitmc'
 import { Store } from '@ngrx/store'
-import { selectToken, selectIsRole, selectPendingChanges, selectProfile } from '@selectors/app'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Location } from '@angular/common'
 import { TypedAction } from '@ngrx/store/src/models'
@@ -75,14 +74,14 @@ export class AppEffects {
 
   public linkMinecraftAccount$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.linkMinecraftAccount),
-    concatLatestFrom(() => this.store.select(selectToken)),
+    concatLatestFrom(() => this.store.select(appFeature.selectToken)),
     filter(token => !!token),
     switchMap(([_action, token]) => this.auth.linkMcAccount(token!.access_token))
   ), { dispatch: false })
 
   public logout$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.logout),
-    concatLatestFrom(() => this.store.select(selectToken)),
+    concatLatestFrom(() => this.store.select(appFeature.selectToken)),
     exhaustMap(([_action, token]) => token ? this.auth.logout(token.refresh_token) : EMPTY),
     switchMap(() => this.nav.navigateRoot(['tabs', 'home'])),
     map(() => AppActions.logoutDone())
@@ -151,7 +150,7 @@ export class AppEffects {
 
   public navigateToNicknameEditor$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.navigateToNicknameEditor),
-    concatLatestFrom(() => this.store.select(selectIsRole('supporter'))),
+    concatLatestFrom(() => this.store.select(appFeature.selectIsRole('supporter'))),
     switchMap(([_, isSupporter]) => isSupporter
       ? this.nav.navigateForward(['tabs', 'profile', 'nickname'])
       : this.nav.navigateBack(['tabs', 'shop'])
@@ -160,7 +159,7 @@ export class AppEffects {
 
   public navigateBack$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.navigateBack),
-    concatLatestFrom(() => this.store.select(selectPendingChanges)),
+    concatLatestFrom(() => this.store.select(appFeature.selectChanges)),
     switchMap(([_action, pendingChanges]) => {
       if (pendingChanges) {
         return from(
@@ -183,7 +182,7 @@ export class AppEffects {
 
   public updateNickname$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.updateNickname),
-    concatLatestFrom(() => this.store.select(selectProfile)),
+    concatLatestFrom(() => this.store.select(appFeature.selectProfile)),
     switchMap(([action, profile]) => {
       return this.auth.updateProfile({ ...profile!, nickname: action.nickname })
     }),

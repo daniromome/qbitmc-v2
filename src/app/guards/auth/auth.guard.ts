@@ -1,21 +1,13 @@
-import { Injectable } from '@angular/core'
-import { Router, UrlTree } from '@angular/router'
-import { Observable, map } from 'rxjs'
+import { inject } from '@angular/core'
+import { CanActivateFn, Router } from '@angular/router'
+import { map } from 'rxjs'
 import { Store } from '@ngrx/store'
-import { selectIsSignedIn } from '@store/app/app.selectors'
+import { appFeature } from '@store/app'
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthGuard {
-  public constructor(
-    private readonly store: Store,
-    private readonly router: Router
-  ) {}
-
-  public canActivate(): Observable<boolean | UrlTree> {
-    return this.store.select(selectIsSignedIn).pipe(
-      map(isSignedIn => isSignedIn || this.router.createUrlTree(['auth']))
-    )
-  }
+export const authGuard: CanActivateFn = () => {
+  const store = inject(Store)
+  const router = inject(Router)
+  return store.select(appFeature.selectIsSignedIn).pipe(
+    map(isSignedIn => isSignedIn || router.createUrlTree(['auth']))
+  )
 }

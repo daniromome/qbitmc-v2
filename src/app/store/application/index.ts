@@ -1,5 +1,5 @@
 import * as ApplicationActions from './application.actions'
-import { ApplicationState } from './application.reducer'
-import { ApplicationStoreModule } from './application-store.module'
+import { ApplicationState, applicationFeature } from './application.reducer'
+import { ApplicationEffects } from './application.effects'
 
-export { ApplicationActions, ApplicationState, ApplicationStoreModule }
+export { ApplicationActions, ApplicationState, applicationFeature, ApplicationEffects }
