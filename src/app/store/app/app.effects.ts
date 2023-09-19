@@ -1,41 +1,23 @@
 import { Injectable } from '@angular/core'
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects'
-import { catchError, map, of, from, Observable, EMPTY } from 'rxjs'
+import { catchError, map, of, from, Observable } from 'rxjs'
 import { AppActions, appFeature } from '@store/app'
-import { exhaustMap, filter, repeat, switchMap, tap } from 'rxjs/operators'
+import { filter, repeat, switchMap, tap } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
 import { ApplicationActions } from '@store/application'
 import { QbitmcService } from '@services/qbitmc'
 import { Store } from '@ngrx/store'
-import { ActivatedRoute, Router } from '@angular/router'
-import { Location } from '@angular/common'
+import { Router } from '@angular/router'
 import { TypedAction } from '@ngrx/store/src/models'
+import { OidcSecurityService } from 'angular-auth-oidc-client'
 
 @Injectable()
 export class AppEffects {
   public initialize$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.initialize),
-    switchMap(() => this.route.fragment),
-    map(fragment => {
-      const params = new URLSearchParams(fragment || '')
-      return { tokenType: params.get('token_type'), accessToken: params.get('access_token') }
-    }),
-    filter(result => !!result.tokenType && !!result.accessToken),
-    tap(() => {
-      const path = this.location.path(false)
-      this.location.replaceState(path)
-    }),
-    switchMap(result =>
-      this.auth.getDiscordProfile(result.tokenType!, result.accessToken!).pipe(
-        switchMap(profile => this.auth.exchangeToken(result.accessToken!, profile))
-      )
-    ),
-    map(token => AppActions.setAccessToken({ token }))
-  ))
-
-  public setToken$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.setAccessToken),
+    switchMap(() => this.oidc.checkAuth()),
+    filter(({ isAuthenticated }) => isAuthenticated),
     map(() => AppActions.getProfile())
   ))
 
@@ -69,23 +51,26 @@ export class AppEffects {
 
   public login$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.login),
-    tap(() => this.auth.discordSignIn())
+    tap(() => this.oidc.authorize())
   ), { dispatch: false })
 
   public linkMinecraftAccount$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.linkMinecraftAccount),
-    concatLatestFrom(() => this.store.select(appFeature.selectToken)),
+    switchMap(() => this.oidc.getAccessToken()),
     filter(token => !!token),
-    switchMap(([_action, token]) => this.auth.linkMcAccount(token!.access_token))
+    switchMap(token => this.auth.linkMcAccount(token))
   ), { dispatch: false })
 
   public logout$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.logout),
-    concatLatestFrom(() => this.store.select(appFeature.selectToken)),
-    exhaustMap(([_action, token]) => token ? this.auth.logout(token.refresh_token) : EMPTY),
-    switchMap(() => this.nav.navigateRoot(['tabs', 'home'])),
+    switchMap(() => this.oidc.logoffAndRevokeTokens()),
     map(() => AppActions.logoutDone())
   ))
+
+  public logoutDone$ = createEffect(() => this.actions$.pipe(
+    ofType(AppActions.logoutDone),
+    switchMap(() => this.nav.navigateRoot(['tabs', 'home']))
+  ), { dispatch: false })
 
   public applicationSubmit$ = createEffect(() => this.actions$.pipe(
     ofType(ApplicationActions.submitSuccess),
@@ -94,7 +79,7 @@ export class AppEffects {
 
   public submittedApplication$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.submittedApplication),
-    switchMap(() => this.nav.navigateForward('/tabs/join/status'))
+    switchMap(() => this.nav.navigateForward(['tabs', 'join', 'status']))
   ), { dispatch: false })
 
   // public getLeaderboards$ = createEffect(() => this.actions$.pipe(
@@ -205,8 +190,7 @@ export class AppEffects {
     private readonly toast: ToastController,
     private readonly store: Store,
     private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly location: Location
+    private readonly oidc: OidcSecurityService
   ) {}
 
   private navigateBack(): Observable<TypedAction<string>> {
