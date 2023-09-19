@@ -1,4 +1,3 @@
-import { selectNickname } from '@selectors/app'
 import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { StyledTextComponent } from '@components/styled-text/styled-text.component'
@@ -8,10 +7,10 @@ import { Store } from '@ngrx/store'
 import { Observable, finalize, first, map } from 'rxjs'
 import { StyledText, StyledTextForm, TextStyle } from '@models/styled-text'
 import { animate, style, transition, trigger } from '@angular/animations'
-import { AppActions } from '@store/app'
+import { AppActions, appFeature } from '@store/app'
 import { FormArray, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { stringifyStyledText } from '@functions/styled-text'
+import { stringifyStyledText } from '@utils'
 import { REGEXP } from '@constants/regexp'
 
 enum SliderLabel {
@@ -66,7 +65,7 @@ export class NicknameEditorComponent implements OnInit {
 
   public constructor() {
     this.form = this.fb.array<StyledTextForm>([])
-    this.nickname$ = this.store.select(selectNickname).pipe(
+    this.nickname$ = this.store.select(appFeature.selectNickname).pipe(
       first(),
       takeUntilDestroyed()
     )

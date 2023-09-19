@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common'
 import { IonicModule, NavController } from '@ionic/angular'
 import { Store } from '@ngrx/store'
 import { Observable, filter, map } from 'rxjs'
-import { selectIsDisabled, selectProfile } from '@selectors/app'
 import { Role } from '@models/role'
 import { LocaleService } from '@services/locale'
 import { Profile } from '@models/profile'
@@ -11,7 +10,7 @@ import { AvatarPipe } from '@pipes/avatar'
 import { Locale } from '@models/locale'
 import { RolePipe } from '@pipes/role'
 import { RoleColorPipe } from '@pipes/role-color'
-import { AppActions } from '@store/app'
+import { AppActions, appFeature } from '@store/app'
 import { NavigationEnd, Router } from '@angular/router'
 
 interface Tab {
@@ -67,14 +66,14 @@ export class TabsComponent {
     private readonly router: Router,
     private readonly nav: NavController
   ) {
-    this.tabs$ = this.store.select(selectProfile).pipe(
+    this.tabs$ = this.store.select(appFeature.selectProfile).pipe(
       map(user => !user || user.roles.length === 0
         ? [...this.tabs.filter(tab => !tab.role), { icon: 'people', label: $localize`Join`, path: 'join', role: 'guest' }]
         : this.tabs.filter(tab => user.roles.some(r => r === tab.role || !tab.role))
       )
     )
-    this.disabled$ = this.store.select(selectIsDisabled)
-    this.profile$ = this.store.select(selectProfile)
+    this.disabled$ = this.store.select(appFeature.selectIsDisabled)
+    this.profile$ = this.store.select(appFeature.selectProfile)
     this.locale = localeService.locale
     this.route$ = router.events.pipe(
       filter(event => event instanceof NavigationEnd),

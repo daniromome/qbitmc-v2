@@ -1,16 +1,17 @@
 import { TestBed } from '@angular/core/testing'
+import { CanActivateFn } from '@angular/router'
 
-import { QbitorGuard } from './qbitor.guard'
+import { qbitorGuard } from './qbitor.guard'
 
-describe('QbitorGuard', () => {
-  let guard: QbitorGuard
+describe('qbitorGuard', () => {
+  const executeGuard: CanActivateFn = (...guardParameters) =>
+    TestBed.runInInjectionContext(() => qbitorGuard(...guardParameters))
 
   beforeEach(() => {
     TestBed.configureTestingModule({})
-    guard = TestBed.inject(QbitorGuard)
   })
 
   it('should be created', () => {
-    expect(guard).toBeTruthy()
+    expect(executeGuard).toBeTruthy()
   })
 })

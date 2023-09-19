@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform, inject } from '@angular/core'
 import { DecimalPipe } from '@angular/common'
 
 @Pipe({
@@ -6,9 +6,7 @@ import { DecimalPipe } from '@angular/common'
   standalone: true
 })
 export class TicksPipe implements PipeTransform {
-  public constructor(
-    private readonly decimalPipe: DecimalPipe
-  ) {}
+  private readonly decimalPipe = inject(DecimalPipe)
 
   public transform(value: number, unit: 'hours' | 'minutes' | 'seconds' | 'ticks' = 'hours'): string {
     switch (unit) {

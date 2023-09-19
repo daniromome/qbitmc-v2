@@ -1,5 +1,4 @@
-import { ColorTextStyle, GradientTextStyle, RainbowTextStyle, StyledText, TextStyle } from '@models/styled-text'
-import { Style } from '../../models/styled-text'
+import { Style, ColorTextStyle, GradientTextStyle, RainbowTextStyle, StyledText, TextStyle } from '@models/styled-text'
 
 const parseStyleTag = (text: string): ColorTextStyle | RainbowTextStyle | GradientTextStyle | undefined => {
   const attributes = text.split(':')

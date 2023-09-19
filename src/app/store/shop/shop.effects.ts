@@ -7,7 +7,7 @@ import { AlertController, NavController, ToastController } from '@ionic/angular'
 import { StripeService } from '@services/stripe'
 import { Store } from '@ngrx/store'
 import { SpinnerService } from '@services/spinner'
-import { selectCustomer, selectIsRole, selectIsSignedIn } from '@selectors/app'
+import { appFeature } from '@store/app'
 
 @Injectable()
 export class ShopEffects {
@@ -58,7 +58,7 @@ export class ShopEffects {
   public portal$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.portal),
     tap(() => this.spinner.spin().subscribe()),
-    concatLatestFrom(() => this.store.select(selectCustomer)),
+    concatLatestFrom(() => this.store.select(appFeature.selectCustomer)),
     switchMap(([_, customer]) => this.stripe.portal(customer)),
     map(url => ShopActions.portalSuccess({ url })),
     catchError(() => of(ShopActions.portalFailure())),
@@ -79,9 +79,9 @@ export class ShopEffects {
   public subscribe$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.subscribe),
     concatLatestFrom(() => zip(
-      this.store.select(selectIsRole('supporter')),
-      this.store.select(selectIsRole('qbitor')),
-      this.store.select(selectIsSignedIn)
+      this.store.select(appFeature.selectIsRole('supporter')),
+      this.store.select(appFeature.selectIsRole('qbitor')),
+      this.store.select(appFeature.selectIsSignedIn)
     )),
     map(([{ price }, [isSupporter, isQbitor, isSignedIn]]) => {
       if (isSupporter) {

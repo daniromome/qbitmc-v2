@@ -1,2 +1,1 @@
-import { AppliedGuard } from './applied.guard'
-export { AppliedGuard }
+export { appliedGuard } from './applied.guard'

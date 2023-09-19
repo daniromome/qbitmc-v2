@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
 import { Store } from '@ngrx/store'
-import { AppActions } from '@store/app'
+import { AppActions, appFeature } from '@store/app'
 import { Observable } from 'rxjs'
 import { Profile } from '@models/profile'
-import { selectNickname, selectProfile } from '@selectors/app'
 import { StyledTextComponent } from '@components/styled-text/styled-text.component'
 import { StyledText } from '@models/styled-text'
 import { StyledRolePipe } from '@pipes/styled-role'
@@ -29,8 +28,8 @@ export class ProfileComponent {
 
   public constructor(
   ) {
-    this.profile$ = this.store.select(selectProfile)
-    this.nickname$ = this.store.select(selectNickname)
+    this.profile$ = this.store.select(appFeature.selectProfile)
+    this.nickname$ = this.store.select(appFeature.selectNickname)
     this.isTablet$ = this.view.isTablet$
   }
 
