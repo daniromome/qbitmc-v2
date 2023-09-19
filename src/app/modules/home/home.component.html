@@ -5,7 +5,7 @@
         <img src="assets/logo.svg">
       </ion-col>
       <ion-col size="12" size-md="6" size-xl="4" class="center-items-container">
-        <ion-text i18n class="description">
+        <ion-text i18n="@@site-description" class="description">
           Founded in 2015 our community qbitmc has focused on bringing a vanilla experiences to its members
           with a technical & aesthetic turn. Inspired on the hermitcraft server each and one of us have our
           own base and get involved into trust-based trading on the shopping district of the server. We also
@@ -16,7 +16,7 @@
       <ion-col class="full-height">
         <ion-row>
           <ion-col class="ion-text-center">
-            <ion-text class="section-title secondary-text" i18n="@@">Server List</ion-text>
+            <ion-text class="section-title secondary-text" i18n="@@server-list-title">Server List</ion-text>
           </ion-col>
         </ion-row>
         <ng-container *ngIf="servers$ | async as servers">

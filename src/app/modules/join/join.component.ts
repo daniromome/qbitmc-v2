@@ -44,12 +44,12 @@ interface SafeMedia extends Omit<Media, 'blob'> {
 })
 export class JoinComponent implements OnInit, OnDestroy {
   public readonly rules = [
-    $localize`Be respectful toward other members of the community, any verbal abuse or sign of harassment will be sanctioned accordingly`,
-    $localize`Take care of the environment in the server (not leaving floating trees, when chopping trees down placing saplings on the
+    $localize`:@@rule-a:Be respectful toward other members of the community, any verbal abuse or sign of harassment will be sanctioned accordingly`,
+    $localize`:@@rule-b:Take care of the environment in the server (not leaving floating trees, when chopping trees down placing saplings on the
     area and repairing creeper holes)`,
-    $localize`Have common sense. We trust your ability to make a good judgement about the actions you take and know you're capable of
+    $localize`:@@rule-c:Have common sense. We trust your ability to make a good judgement about the actions you take and know you're capable of
     identifying what's good from what its not`,
-    $localize`Avoid any kind of political arguments that may be controversial or hurtful toward other people, at least within out community
+    $localize`:@@rule-d:Avoid any kind of political arguments that may be controversial or hurtful toward other people, at least within out community
     chats and the minecraft server`
   ]
 

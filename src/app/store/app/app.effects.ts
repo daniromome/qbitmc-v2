@@ -11,6 +11,7 @@ import { Store } from '@ngrx/store'
 import { Router } from '@angular/router'
 import { TypedAction } from '@ngrx/store/src/models'
 import { OidcSecurityService } from 'angular-auth-oidc-client'
+import { ROLE } from '@models/role'
 
 @Injectable()
 export class AppEffects {
@@ -32,8 +33,8 @@ export class AppEffects {
     ofType(AppActions.getProfileSuccess),
     filter(({ profile }) => profile.disabled),
     switchMap(() => this.alert.create({
-      header: $localize`Account Disabled`,
-      message: $localize`Your account has been deactivated, get in touch with an administrator to get it restored`,
+      header: $localize`:@@account-disabled-title:Account Disabled`,
+      message: $localize`:@@account-disabled-message:Your account has been deactivated, get in touch with an administrator to get it restored`,
       buttons: ['OK']
     })),
     switchMap(alert => alert.present())
@@ -42,8 +43,8 @@ export class AppEffects {
   // public getProfileFailure$ = createEffect(() => this.actions$.pipe(
   //   ofType(AppActions.getProfileFailure),
   //   switchMap(() => from(this.alert.create({
-  //     header: $localize`:@@unexpectedError:Unexpected Error`,
-  //     message: $localize`:@@contactAdmin:Please contact an administrator if this issue persists`
+  //     header: $localize`:@@unexpected-error-title:Unexpected Error`,
+  //     message: $localize`:@@unexpected-error-message:Please contact an administrator if this issue persists`
   //   })).pipe(
   //     switchMap(alert => from(alert.present()))
   //   ))
@@ -135,7 +136,7 @@ export class AppEffects {
 
   public navigateToNicknameEditor$ = createEffect(() => this.actions$.pipe(
     ofType(AppActions.navigateToNicknameEditor),
-    concatLatestFrom(() => this.store.select(appFeature.selectIsRole('supporter'))),
+    concatLatestFrom(() => this.store.select(appFeature.selectIsRole(ROLE.SUPPORTER))),
     switchMap(([_, isSupporter]) => isSupporter
       ? this.nav.navigateForward(['tabs', 'profile', 'nickname'])
       : this.nav.navigateBack(['tabs', 'shop'])

@@ -8,6 +8,7 @@ import { StripeService } from '@services/stripe'
 import { Store } from '@ngrx/store'
 import { SpinnerService } from '@services/spinner'
 import { appFeature } from '@store/app'
+import { ROLE } from '@models/role'
 
 @Injectable()
 export class ShopEffects {
@@ -27,8 +28,8 @@ export class ShopEffects {
     ofType(ShopActions.getProductsFailure),
     switchMap(() => this.spinner.stop()),
     switchMap(() => from(this.alert.create({
-      header: $localize`:@@unexpectedError:Unexpected Error`,
-      message: $localize`:@@contactAdmin:Please contact an administrator if this issue persists`,
+      header: $localize`:@@unexpected-error-title:Unexpected Error`,
+      message: $localize`:@@unexpected-error-message:Please contact an administrator if this issue persists`,
       buttons: ['OK']
     })).pipe(
       switchMap(alert => from(alert.present()))
@@ -79,8 +80,8 @@ export class ShopEffects {
   public subscribe$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.subscribe),
     concatLatestFrom(() => zip(
-      this.store.select(appFeature.selectIsRole('supporter')),
-      this.store.select(appFeature.selectIsRole('qbitor')),
+      this.store.select(appFeature.selectIsRole(ROLE.SUPPORTER)),
+      this.store.select(appFeature.selectIsRole(ROLE.QBITOR)),
       this.store.select(appFeature.selectIsSignedIn)
     )),
     map(([{ price }, [isSupporter, isQbitor, isSignedIn]]) => {

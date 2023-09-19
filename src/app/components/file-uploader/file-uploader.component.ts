@@ -14,7 +14,7 @@ import { switchMap } from 'rxjs/operators'
 })
 export class FileUploaderComponent {
   @Input() public max = 0
-  @Input() public label = $localize`Drag and drop file(s) to upload`
+  @Input() public label = $localize`:@@image-upload-dropzone-label:Drag and drop file(s) to upload`
   @Input() public type?: 'image' | 'any' = 'any'
   @Output() public droppedFiles: EventEmitter<File[]> = new EventEmitter()
   public isHovering = false
@@ -48,8 +48,8 @@ export class FileUploaderComponent {
     this.uploaded.splice(0, this.uploaded.length)
     if (this.max && files.length > this.max) {
       from(this.alert.create({
-        header: $localize`:@@errorTitle:Error`,
-        message: $localize`You can upload a maximum of ${this.max} file(s) at a time`
+        header: $localize`:@@error-title:Error`,
+        message: $localize`:@@image-upload-max-exceeded:You can upload a maximum of ${this.max} file(s) at a time`
       })).pipe(switchMap(alert => from(alert.present()))).subscribe()
     } else if (this.max === 1 && files.length === 1) {
       const file = files.item(0)
@@ -73,8 +73,8 @@ export class FileUploaderComponent {
     const valid = file.type.split('/')[0] === this.type
     if (valid) return valid
     from(this.alert.create({
-      header: $localize`:@@errorTitle:Error`,
-      message: $localize`The type of file "${file?.name}" is not allowed. Try uploading it in the following format "${this.type}"`
+      header: $localize`:@@error-title:Error`,
+      message: $localize`:@@image-upload-unsupported-file-type:The type of file "${file?.name}" is not allowed. Try uploading it in the following format "${this.type}"`
     })).pipe(switchMap(alert => from(alert.present()))).subscribe()
     return valid
   }

@@ -44,7 +44,7 @@ export class ApplicationEffects {
       const uploadedMediaSize = files.map(f => f.size).reduce((accumulator, value) => accumulator + value, 0)
       const totalSize = currentMediaSize + uploadedMediaSize
       if (totalSize > MAX_UPLOAD_SIZE)
-        throw new Error($localize`Your upload failed since you went over the 25 MiB limit by ${this.bytes.transform(totalSize - MAX_UPLOAD_SIZE)}`)
+        throw new Error($localize`:@@exceeded-media-upload-size:Your upload failed since you went over the 25 MiB limit by ${this.bytes.transform(totalSize - MAX_UPLOAD_SIZE)}`)
       return this.enrollment.uploadMedia(files).pipe(
         map(keys => keys.map((key, i) => ({ key, size: files.at(i)!.size, blob: URL.createObjectURL(files.at(i)!) })))
       )

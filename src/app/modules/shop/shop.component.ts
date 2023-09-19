@@ -6,6 +6,7 @@ import { Observable } from 'rxjs'
 import { Product } from '@models/product'
 import { Store } from '@ngrx/store'
 import { ShopActions, shopFeature } from '@store/shop'
+import { ROLE } from '@models/role'
 
 @Component({
   selector: 'qbit-shop',
@@ -21,7 +22,7 @@ export class ShopComponent implements OnInit {
   public constructor(
     private readonly store: Store
   ) {
-    this.isSupporter$ = this.store.select(appFeature.selectIsRole('supporter'))
+    this.isSupporter$ = this.store.select(appFeature.selectIsRole(ROLE.SUPPORTER))
   }
 
   public ngOnInit(): void {
