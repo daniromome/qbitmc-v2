@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core'
-import { Role } from '@models/role'
+import { ROLE, Role } from '@models/role'
 
 @Pipe({
   name: 'role',
@@ -8,9 +8,9 @@ import { Role } from '@models/role'
 export class RolePipe implements PipeTransform {
   public transform(role: Role): unknown {
     switch (role) {
-      case 'supporter':
+      case ROLE.SUPPORTER:
         return 'qbitor+'
-      case 'guest':
+      case ROLE.GUEST:
         return $localize`:@@guest:guest`
       default:
         return role

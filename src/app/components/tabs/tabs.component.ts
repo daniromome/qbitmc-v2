@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { IonicModule, NavController } from '@ionic/angular'
 import { Store } from '@ngrx/store'
 import { Observable, filter, map } from 'rxjs'
-import { Role } from '@models/role'
+import { ROLE, Role } from '@models/role'
 import { LocaleService } from '@services/locale'
 import { Profile } from '@models/profile'
 import { AvatarPipe } from '@pipes/avatar'
@@ -38,25 +38,25 @@ export class TabsComponent {
   private readonly tabs: Tab[] = [
     {
       icon: 'home',
-      label: $localize`:@@home:Home`,
+      label: $localize`:@@home-tab-label:Home`,
       path: 'home'
     },
     {
       icon: 'storefront',
-      label: $localize`:@@shop:Shop`,
+      label: $localize`:@@shop-tab-label:Shop`,
       path: 'shop'
     },
     {
       icon: 'compass',
-      label: $localize`:@@map:Map`,
+      label: $localize`:@@map-tab-label:Map`,
       path: 'map',
-      role: 'qbitor'
+      role: ROLE.QBITOR
     },
     {
       icon: 'person',
-      label: $localize`:@@profile:Profile`,
+      label: $localize`:@@profile-tab-label:Profile`,
       path: 'profile',
-      role: 'qbitor'
+      role: ROLE.QBITOR
     }
   ]
 
@@ -68,7 +68,7 @@ export class TabsComponent {
   ) {
     this.tabs$ = this.store.select(appFeature.selectProfile).pipe(
       map(user => !user || user.roles.length === 0
-        ? [...this.tabs.filter(tab => !tab.role), { icon: 'people', label: $localize`Join`, path: 'join', role: 'guest' }]
+        ? [...this.tabs.filter(tab => !tab.role), { icon: 'people', label: $localize`:@@join-tab-label:Join`, path: 'join', role: ROLE.GUEST }]
         : this.tabs.filter(tab => user.roles.some(r => r === tab.role || !tab.role))
       )
     )

@@ -1,3 +1,4 @@
+import { TitleCasePipe } from '@angular/common'
 import { Routes } from '@angular/router'
 import { appliedGuard } from '@guards/applied'
 import { applyGuard } from '@guards/apply'
@@ -58,6 +59,9 @@ export const routes: Routes = [
       {
         path: 'profile',
         canActivate: [qbitorGuard, enabledGuard],
+        providers: [
+          TitleCasePipe
+        ],
         children: [
           {
             path: '',

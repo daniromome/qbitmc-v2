@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core'
-import { Role } from '@models/role'
+import { ROLE, Role } from '@models/role'
 
 @Pipe({
   name: 'roleColor',
@@ -8,13 +8,13 @@ import { Role } from '@models/role'
 export class RoleColorPipe implements PipeTransform {
   public transform(role: Role): unknown {
     switch (role) {
-      case 'admin':
+      case ROLE.ADMIN:
         return 'danger'
-      case 'mod':
+      case ROLE.MOD:
         return 'success'
-      case 'qbitor':
+      case ROLE.QBITOR:
         return 'primary'
-      case 'supporter':
+      case ROLE.SUPPORTER:
         return 'warning'
       default:
         return 'medium'
