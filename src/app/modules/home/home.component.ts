@@ -1,51 +1,48 @@
-import { Component, ChangeDetectionStrategy, OnInit, inject } from '@angular/core'
+import { Component, ChangeDetectionStrategy, OnInit, inject, computed } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { IonicModule } from '@ionic/angular'
-import { Observable, map } from 'rxjs'
 import { Store } from '@ngrx/store'
-import { LeaderboardComponent } from '@components/leaderboard'
-import { MinecraftProfile } from '@models/minecraft-profile'
-import { AppActions, appFeature } from '@store/app'
+import { appActions, appFeature } from '@store/app'
 import { AvatarPipe } from '@pipes/avatar'
 import { SliderComponent } from '@components/slider'
-import { Server } from '@models/server'
 import { ViewPortService } from '@services/view-port'
+import { IonContent, IonRow, IonGrid, IonCol, IonText, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonCardSubtitle, IonItem, IonAvatar, IonLabel, IonChip, IonIcon, IonButton } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { calendarOutline, gameControllerOutline, peopleOutline, globeOutline, hammerOutline } from 'ionicons/icons'
+import { BulletPointComponent } from '@components/bullet-point'
+import { RouterLinkWithHref } from '@angular/router'
 
 @Component({
   selector: 'qbit-home',
   standalone: true,
-  imports: [CommonModule, IonicModule, LeaderboardComponent, AvatarPipe, SliderComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [IonButton, IonIcon, IonChip, IonLabel, IonAvatar, IonItem, IonCardSubtitle, IonCardContent, IonCardTitle, IonCardHeader, IonCard, IonText, IonCol, IonGrid, IonRow, IonContent, CommonModule, AvatarPipe, SliderComponent, BulletPointComponent, RouterLinkWithHref]
 })
 export class HomeComponent implements OnInit {
-  public readonly isDesktop$: Observable<boolean>
-  public readonly elementsInView$: Observable<number>
-  public readonly supporters$: Observable<MinecraftProfile[]>
-  public readonly supportersCount$: Observable<number>
-  public readonly servers$: Observable<Server[]>
   private readonly store = inject(Store)
-  private readonly view = inject(ViewPortService)
+  public readonly view = inject(ViewPortService)
+  public readonly elementsInView = computed(() => {
+    const width = this.view.width()
+    if (width < 992) return 1
+    if (width < 1400) return 2
+    return 3
+  })
 
-  public constructor(
-  ) {
-    this.elementsInView$ = this.view.width$.pipe(
-      map(width => {
-        if (width < 576) return 1
-        if (width < 768) return 2
-        if (width < 992) return 3
-        if (width < 1400) return 4
-        return 5
-      })
-    )
-    this.isDesktop$ = this.view.isDesktop$
-    this.supporters$ = this.store.select(appFeature.selectSupporters)
-    this.supportersCount$ = this.supporters$.pipe(map(supporters => supporters.length))
-    this.servers$ = this.store.select(appFeature.selectServers)
+  public readonly isSignedIn = this.store.selectSignal(appFeature.selectIsSignedIn)
+  public readonly supporters = this.store.selectSignal(appFeature.selectSupporters)
+  public readonly supportersCount = computed(() => this.supporters().length)
+  public readonly servers = this.store.selectSignal(appFeature.selectServers)
+
+  public constructor() {
+    addIcons({ calendarOutline, gameControllerOutline, peopleOutline, globeOutline, hammerOutline })
   }
 
   public ngOnInit(): void {
-    this.store.dispatch(AppActions.getLeaderboards())
+    this.store.dispatch(appActions.getLeaderboards())
+  }
+
+  public auth(): void {
+    this.store.dispatch()
   }
 }

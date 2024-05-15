@@ -1,11 +1,11 @@
 import { MemoizedSelector, createFeature, createReducer, createSelector, on } from '@ngrx/store'
 import { KeycloakToken, Profile } from '@models/profile'
-import { AppActions } from '@store/app'
+import { appActions } from '@store/app'
 import { Leaderboards } from '@models/leaderboards'
 import { MinecraftProfile } from '@models/minecraft-profile'
 import { Server } from '@models/server'
 import { StyledText } from '@models/styled-text'
-import { parseUnstyledText, inflateArray, shuffleArray } from '@utils'
+import { parseUnstyledText, shuffleArray } from '@utils'
 import { Role } from '@models/role'
 
 export const appFeatureKey = 'app'
@@ -46,9 +46,9 @@ const getNickname = (state: AppState, profile: Profile): AppState => {
 
 export const reducer = createReducer(
   initialState,
-  on(AppActions.getProfileSuccess, (state, action): AppState => ({ ...getNickname(state, action.profile), initialized: true })),
-  on(AppActions.getProfileFailure, (state): AppState => ({ ...state, initialized: true })),
-  on(AppActions.submittedApplication, (state, action): AppState => ({
+  on(appActions.getProfileSuccess, (state, action): AppState => ({ ...getNickname(state, action.profile), initialized: true })),
+  on(appActions.getProfileFailure, (state): AppState => ({ ...state, initialized: true })),
+  on(appActions.submittedApplication, (state, action): AppState => ({
     ...state,
     profile: {
       ...state.profile as Profile,
@@ -56,14 +56,14 @@ export const reducer = createReducer(
       forename: action.application.forename
     }
   })),
-  on(AppActions.getLeaderboardsSuccess, (state, action): AppState => ({ ...state, leaderboards: action.leaderboards })),
-  on(AppActions.getSupportersSuccess, (state, action): AppState => ({ ...state, supporters: action.supporters })),
-  on(AppActions.getServersSuccess, (state, action): AppState => ({ ...state, servers: action.servers })),
-  on(AppActions.setUnsavedChanges, (state, action): AppState => ({ ...state, changes: action.changes })),
-  on(AppActions.updateNicknameSuccess, (state, action): AppState => getNickname(state, action.profile)),
-  on(AppActions.setAccessToken, (state, action): AppState => ({ ...state, token: action.token })),
-  on(AppActions.refreshAccessToken, (state, action): AppState => ({ ...state, token: action.token })),
-  on(AppActions.logoutDone, (state): AppState => ({ ...state, changes: false, nickname: [], profile: undefined, token: undefined }))
+  on(appActions.getLeaderboardsSuccess, (state, action): AppState => ({ ...state, leaderboards: action.leaderboards })),
+  on(appActions.getSupportersSuccess, (state, action): AppState => ({ ...state, supporters: action.supporters })),
+  on(appActions.getServersSuccess, (state, action): AppState => ({ ...state, servers: action.servers })),
+  on(appActions.setUnsavedChanges, (state, action): AppState => ({ ...state, changes: action.changes })),
+  on(appActions.updateNicknameSuccess, (state, action): AppState => getNickname(state, action.profile)),
+  on(appActions.setAccessToken, (state, action): AppState => ({ ...state, token: action.token })),
+  on(appActions.refreshAccessToken, (state, action): AppState => ({ ...state, token: action.token })),
+  on(appActions.logoutDone, (state): AppState => ({ ...state, changes: false, nickname: [], profile: undefined, token: undefined }))
 )
 
 export const appFeature = createFeature({
@@ -71,8 +71,8 @@ export const appFeature = createFeature({
   reducer,
   extraSelectors: ({ selectProfile, selectAppState }) => ({
     selectIsSignedIn: createSelector(
-      selectProfile,
-      profile => !!profile
+      selectAppState,
+      state => !!state.profile && state.initialized
     ),
     selectIsDisabled: createSelector(
       selectProfile,
@@ -90,9 +90,9 @@ export const appFeature = createFeature({
       selectProfile,
       (profile) => !!profile?.application?.createdAt
     ),
-    selectIsRole: (role: Role): MemoizedSelector<Record<string, any>, boolean, (s1: AppState) => boolean> => createSelector(
+    selectIsRole: (...roles: Role[]): MemoizedSelector<Record<string, any>, boolean, (s1: AppState) => boolean> => createSelector(
       selectAppState,
-      (state) => !!state.profile?.roles.some(r => r === role)
+      (state) => !!state.profile?.roles.some(r => roles.some(role => r === role))
     ),
     selectLeaderboards: createSelector(
       selectAppState,
@@ -101,10 +101,7 @@ export const appFeature = createFeature({
     selectSupporters: createSelector(
       selectAppState,
       (state) => {
-        const shuffledSupporters = shuffleArray<MinecraftProfile>(state.supporters)
-        if (shuffledSupporters.length < 1) return []
-        if (shuffledSupporters.length < 5) return inflateArray<MinecraftProfile>(shuffledSupporters, 10)
-        return inflateArray<MinecraftProfile>(shuffledSupporters, shuffledSupporters.length * 2)
+        return shuffleArray<MinecraftProfile>(state.supporters)
       }
     ),
     selectCustomer: createSelector(

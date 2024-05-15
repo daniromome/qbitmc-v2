@@ -1,13 +1,13 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { IonicModule } from '@ionic/angular'
 import { environment } from '../../../environments/environment'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
+import { IonContent } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'qbit-map',
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [IonContent, CommonModule],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })

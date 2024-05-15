@@ -3,150 +3,177 @@
     <ion-title i18n="@@join-title">Join QbitMC</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true" *ngIf="profile$ | async as profile">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large" i18n="@@join-title">Join QbitMC</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12" size-lg="8">
-        <ion-card>
-          <ion-avatar *ngIf="profile.minecraft">
-            <img [src]="profile.minecraft.id | avatar" alt="user's minecraft avatar">
-          </ion-avatar>
-          <ion-card-header class="ion-card-avatar-header">
-            <ion-card-title *ngIf="!profile.minecraft; else ign" i18n="@@about-title">Hey!</ion-card-title>
-            <ng-template #ign><ion-card-title>{{ profile.minecraft.name }}</ion-card-title></ng-template>
-            <ion-card-subtitle i18n="@@about-subtitle">Tell us about yourself</ion-card-subtitle>
-          </ion-card-header>
-          <ion-card-content [formGroup]="form" class="ion-no-padding form-container">
-            <ion-item lines="full">
-              <ion-label position="floating" i18n="@@about-first-name-label">First name</ion-label>
-              <ion-input [clearInput]="true" formControlName="forename"></ion-input>
-              <qbit-note
-                #forename
-                i18n-helper="@@about-first-name-helper"
-                i18n-error="@@about-first-name-error"
-                [invalid]="form.controls.forename.invalid"
-                [dirty]="form.controls.forename.dirty"
-                helper="How would you like us to call you?"
-                error="First name must be less than 12 characters"
-                [slot]="forename.slot"
-              ></qbit-note>
-            </ion-item>
-            <ion-item lines="full">
-              <ion-label position="floating" i18n="@@about-age-label">Age <ion-text color="danger">*</ion-text></ion-label>
-              <ion-input formControlName="age" inputmode="numeric" clearInput clearOnEdit (keyup)="numbersOnly()"></ion-input>
-              <qbit-note
-                #age
-                i18n-helper="@@about-age-helper"
-                [invalid]="form.controls.age.invalid"
-                [dirty]="form.controls.age.dirty"
-                helper="Numbers only"
-                [slot]="age.slot"
-              ></qbit-note>
-            </ion-item>
-            <ion-item counter="true" lines="full">
-              <ion-label position="floating" i18n="@@about-reasons-label">Reasons <ion-text color="danger">*</ion-text></ion-label>
-              <ion-textarea formControlName="reasons" maxlength="300" autoGrow></ion-textarea>
-              <qbit-note
-                #reasons
-                i18n-helper="@@about-reasons-helper"
-                [invalid]="form.controls.reasons.invalid"
-                [dirty]="form.controls.reasons.dirty"
-                helper="Why would you like to join our community?"
-                [slot]="reasons.slot"
-              ></qbit-note>
-            </ion-item>
-            <ion-item lines="full">
-              <ion-label position="floating" i18n="@@about-experiences-title">Experiences<ion-text color="danger">*</ion-text></ion-label>
-              <ion-textarea formControlName="experience" counter="true" maxlength="300" autoGrow></ion-textarea>
-              <qbit-note
-                #experience
-                i18n-helper="@@about-experiences-helper"
-                [invalid]="form.controls.experience.invalid"
-                [dirty]="form.controls.experience.dirty"
-                helper="Experiences in previous private minecraft servers"
-                [slot]="experience.slot"
-                class="last-card-item"
-              ></qbit-note>
-            </ion-item>
-          </ion-card-content>
-        </ion-card>
-        <div class="card-margin" *ngIf="!profile.minecraft">
-          <ion-button expand="block" color="secondary" (click)="linkMinecraftAccount()">
-            <ion-icon ios="cube-outline" md="cube-sharp"></ion-icon>
-            <ion-label><ion-text i18n="@@link-ms-account-button-label">Connect your Minecraft Account</ion-text><ion-text color="danger">*</ion-text></ion-label>
-          </ion-button>
-        </div>
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title i18n="@@media-title">Media</ion-card-title>
-            <ion-card-subtitle>
-              <ion-text i18n="@@media-subtitle">
-                Upload pictures of minecraft buildings you've done in the past.
-              </ion-text>
-              <ion-text
-                [color]="(filesSizeWithinLimit$ | async) ? '': 'danger'"
-                i18n="@@media-restrictions"
-              >File size limit {{ filesSize$ | async | bytes }} / 25 MiB.</ion-text>
-            </ion-card-subtitle>
-          </ion-card-header>
-          <ion-card-content class="ion-no-padding">
-            <ion-grid>
-              <ng-container *ngIf="media$ | async as files; else noFilesUploaded">
-                <ion-row>
-                  <ion-col *ngFor="let file of files" size="12" size-md="6" size-xl="4">
-                    <div class="image-container">
-                      <img [src]="file.blob" alt="image to be sent in enrollment application">
-                      <ion-button size="small" color="danger" class="delete-button" (click)="deleteImage(file.key)">
-                        <ion-icon name="close" slot="icon-only"></ion-icon>
-                      </ion-button>
-                      <div class="image-container-description">
-                        <ion-chip>{{ file.size | bytes }}</ion-chip>
-                      </div>
-                    </div>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <qbit-file-uploader
-                      *ngIf="filesSizeWithinLimit$ | async"
-                      type="image"
-                      (droppedFiles)="droppedFiles($event)">
-                    </qbit-file-uploader>
-                  </ion-col>
-                </ion-row>
-              </ng-container>
-              <ng-template #noFilesUploaded>
-                <qbit-file-uploader type="image" (droppedFiles)="droppedFiles($event)"></qbit-file-uploader>
-              </ng-template>
-            </ion-grid>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-      <ion-col size="12" size-lg="4">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title i18n="@@rules-title">Rules</ion-card-title>
-            <ion-card-subtitle i18n="@@rules-subtitle">If you fail to comply with the following an immediate ban can be issued without any prior notification</ion-card-subtitle>
-          </ion-card-header>
-          <ion-card-content class="ion-no-padding">
-            <ion-item lines="full" *ngFor="let rule of rules">
-              <ion-label class="ion-text-wrap"><p>{{ rule }}</p></ion-label>
-            </ion-item>
-            <ion-item lines="none" [color]="form.controls.rules.value ? 'secondary' : ''">
-              <ion-label class="ion-text-wrap" i18n="@@rules-agreement-button-label">I've read the rules and I will do my best to follow them</ion-label>
-              <ion-checkbox color="light" [formControl]="form.controls.rules"></ion-checkbox>
-            </ion-item>
-          </ion-card-content>
-        </ion-card>
-        <div class="card-margin">
-          <ion-button expand="block" color="secondary" [disabled]="(filesSizeExceedsLimit$ | async) || form.invalid || !profile.minecraft" (click)="submit()" i18n="@@submit">Submit</ion-button>
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+<ion-content [fullscreen]="true">
+  @if (profile(); as profile) {
+    <ion-header collapse="condense">
+      <ion-toolbar>
+        <ion-title size="large" i18n="@@join-title">Join QbitMC</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-lg="8">
+          <ion-card>
+            @if (profile.minecraft) {
+              <ion-avatar>
+                <img [src]="profile.minecraft.id | avatar:'face'" alt="user's minecraft avatar">
+              </ion-avatar>
+            }
+            <ion-card-header class="ion-card-avatar-header">
+              @if (profile.minecraft) {
+                <ion-card-title>{{ profile.minecraft.name }}</ion-card-title>
+              } @else {
+                <ion-card-title i18n="@@about-title">Hey!</ion-card-title>
+              }
+              <ion-card-subtitle i18n="@@about-subtitle">Tell us about yourself</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content [formGroup]="form" class="ion-no-padding form-container">
+              <ion-list>
+                <ion-item lines="none">
+                  <ion-input
+                    [clearInput]="true"
+                    formControlName="forename"
+                    labelPlacement="floating"
+                    i18n-helperText="@@about-first-name-helper"
+                    helperText="How would you like us to call you?"
+                    i18n-errorText="@@about-first-name-error"
+                    errorText="First name is required and it must be less than 12 characters">
+                    <span slot="label">
+                      <ion-text i18n="@@about-first-name-label">First name </ion-text><ion-text color="danger">*</ion-text>
+                    </span>
+                  </ion-input>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-input
+                    formControlName="age"
+                    inputmode="numeric"
+                    clearInput
+                    clearOnEdit
+                    (keyup)="numbersOnly()"
+                    labelPlacement="floating"
+                    i18n-helperText="@@about-age-helper"
+                    helperText="Numbers only">
+                    <span slot="label">
+                      <ion-text i18n="@@about-age-label">Age </ion-text><ion-text color="danger">*</ion-text>
+                    </span>
+                  </ion-input>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-textarea
+                    formControlName="reasons"
+                    maxlength="300"
+                    autoGrow
+                    counter="true"
+                    labelPlacement="floating"
+                    i18n-helperText="@@about-reasons-helper"
+                    helperText="Why would you like to join our community?">
+                    <span slot="label">
+                      <ion-text i18n="@@about-reasons-label">Reasons </ion-text><ion-text color="danger">*</ion-text>
+                    </span>
+                  </ion-textarea>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-textarea
+                    formControlName="experience"
+                    counter="true"
+                    maxlength="300"
+                    autoGrow
+                    labelPlacement="floating"
+                    i18n-helperText="@@about-experiences-helper"
+                    helperText="Experiences in previous private minecraft servers">
+                    <span slot="label">
+                      <ion-text i18n="@@about-experiences-title">Experiences </ion-text><ion-text color="danger">*</ion-text>
+                    </span>
+                  </ion-textarea>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
+          @if (!profile.minecraft) {
+            <div class="card-margin">
+              <ion-button expand="block" color="secondary" (click)="linkMinecraftAccount()">
+                <ion-icon ios="cube-outline" md="cube-sharp"></ion-icon>
+                <ion-label><ion-text i18n="@@link-ms-account-button-label">Connect your Minecraft Account </ion-text><ion-text color="danger">*</ion-text></ion-label>
+              </ion-button>
+            </div>
+          }
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title i18n="@@media-title">Media</ion-card-title>
+              <ion-card-subtitle>
+                <ion-text i18n="@@media-subtitle">
+                  Upload pictures of minecraft buildings you've done in the past.
+                </ion-text>
+                <ion-text
+                  [color]="(filesSizeWithinLimit()) ? '': 'danger'"
+                  i18n="@@media-restrictions"
+                >File size limit {{ filesSize() | bytes }} / 25 MiB.</ion-text>
+              </ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content class="ion-no-padding">
+              <ion-grid>
+                @if (media(); as files) {
+                  <ion-row>
+                    @for (file of files; track $index) {
+                      <ion-col size="12" size-md="6" size-xl="4">
+                        <div class="image-container">
+                          <img [src]="file.blob" alt="to be sent in enrollment application">
+                          <ion-button size="small" color="danger" class="delete-button" (click)="deleteImage(file.key)">
+                            <ion-icon name="close" slot="icon-only"></ion-icon>
+                          </ion-button>
+                          <div class="image-container-description">
+                            <ion-chip>{{ file.size | bytes }}</ion-chip>
+                          </div>
+                        </div>
+                      </ion-col>
+                    }
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      @if (filesSizeWithinLimit()) {
+                        <qbit-file-uploader
+                          type="image"
+                          (droppedFiles)="droppedFiles($event)">
+                        </qbit-file-uploader>
+                      }
+                    </ion-col>
+                  </ion-row>
+                } @else {
+                  <qbit-file-uploader type="image" (droppedFiles)="droppedFiles($event)"></qbit-file-uploader>
+                }
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" size-lg="4">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title i18n="@@rules-title">Rules</ion-card-title>
+              <ion-card-subtitle i18n="@@rules-subtitle">If you fail to comply with the following an immediate ban can be issued without any prior notification</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content class="ion-no-padding">
+              @for (rule of rules; track $index) {
+                <ion-item lines="full">
+                  <ion-label class="ion-text-wrap"><p>{{ rule }}</p></ion-label>
+                </ion-item>
+              }
+              <ion-item lines="none" [color]="form.controls.rules.value ? 'secondary' : ''">
+                <ion-checkbox
+                  color="light"
+                  [formControl]="form.controls.rules"
+                  i18n="@@rules-agreement-button-label">
+                  <ion-text class="ion-text-wrap">
+                    I've read the rules and I will do my best to follow them
+                  </ion-text>
+                </ion-checkbox>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+          <div class="card-margin">
+            <ion-button expand="block" color="secondary" [disabled]="(filesSizeExceedsLimit()) || form.invalid || !profile.minecraft" (click)="submit()" i18n="@@submit">Submit</ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  }
 </ion-content>

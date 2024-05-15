@@ -1,23 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core'
 
-type AvatarType = 'avatar' | 'render-head' | 'render-body'
+type AvatarType = 'face' | 'head' | 'body'
 
 @Pipe({
   name: 'avatar',
   standalone: true
 })
 export class AvatarPipe implements PipeTransform {
-  public transform(value: string, type: AvatarType = 'avatar'): string {
-    const url = new URL(`https://crafatar.com/${this.getURI(type)}/${value}`)
-    url.searchParams.append('overlay', 'true')
+  public transform(value: string, type: AvatarType = 'head'): string {
+    const url = new URL(`https://api.mineatar.io/${this.getURI(type)}/${value}`)
+    url.searchParams.append('scale', '16')
     return value ? url.toString() : ''
   }
 
   private getURI(type: AvatarType): string {
-    switch (type) {
-      case 'render-head': return 'renders/head'
-      case 'render-body': return 'renders/body'
-      default: return 'avatars'
-    }
+    if (type === 'body') return 'body/full'
+    return type
   }
 }

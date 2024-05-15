@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { IonicModule } from '@ionic/angular'
 import { TicksPipe } from '@pipes/ticks'
 import { StatPipe } from '@pipes/stat'
 import { FormsModule, ReactiveFormsModule, FormControl, NonNullableFormBuilder } from '@angular/forms'
 import { AvatarPipe } from '@pipes/avatar'
 import { PlayerStatistics } from '@models/player-statistics'
+import { IonCard, IonCardHeader, IonItem, IonChip, IonLabel, IonCardContent, IonCardTitle, IonSelect, IonSelectOption, IonAvatar } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'qbit-leaderboard',
   standalone: true,
-  imports: [CommonModule, IonicModule, TicksPipe, StatPipe, AvatarPipe, FormsModule, ReactiveFormsModule],
+  imports: [IonAvatar, IonCardTitle, IonCardContent, IonLabel, IonChip, IonItem, IonCardHeader, IonCard, IonSelect, IonSelectOption, CommonModule, TicksPipe, StatPipe, AvatarPipe, FormsModule, ReactiveFormsModule],
   templateUrl: './leaderboard.component.html',
   styleUrls: ['./leaderboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

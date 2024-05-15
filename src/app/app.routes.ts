@@ -5,7 +5,8 @@ import { applyGuard } from '@guards/apply'
 import { authGuard } from '@guards/auth'
 import { authenticatedGuard } from '@guards/authenticated'
 import { enabledGuard } from '@guards/enabled'
-import { qbitorGuard } from '@guards/qbitor'
+import { roleGuard } from '@guards/role'
+import { ROLE } from '@models/role'
 import { provideEffects } from '@ngrx/effects'
 import { provideState } from '@ngrx/store'
 import { BytesPipe } from '@pipes/bytes'
@@ -17,6 +18,10 @@ export const routes: Routes = [
     path: 'tabs',
     loadComponent: () => import('./components/tabs').then(c => c.TabsComponent),
     children: [
+      {
+        path: 'admin',
+        loadChildren: () => import('./modules/admin/admin.routes').then(m => m.routes)
+      },
       {
         path: 'home',
         loadComponent: () => import('./modules/home/home.component').then(c => c.HomeComponent)
@@ -54,11 +59,11 @@ export const routes: Routes = [
       {
         path: 'map',
         loadComponent: () => import('./modules/map/map.component').then(c => c.MapComponent),
-        canActivate: [qbitorGuard, enabledGuard]
+        canActivate: [roleGuard(ROLE.QBITOR), enabledGuard]
       },
       {
         path: 'profile',
-        canActivate: [qbitorGuard, enabledGuard],
+        canActivate: [roleGuard(ROLE.QBITOR), enabledGuard],
         providers: [
           TitleCasePipe
         ],
@@ -66,12 +71,12 @@ export const routes: Routes = [
           {
             path: '',
             loadComponent: () => import('./modules/profile/profile.component').then(c => c.ProfileComponent),
-            canActivate: [qbitorGuard, enabledGuard]
+            canActivate: [roleGuard(ROLE.QBITOR), enabledGuard]
           },
           {
             path: 'nickname',
             loadComponent: () => import('./modules/profile/nickname-editor/nickname-editor.component').then(c => c.NicknameEditorComponent),
-            canActivate: [qbitorGuard, enabledGuard]
+            canActivate: [roleGuard(ROLE.QBITOR), enabledGuard]
           }
         ]
       },

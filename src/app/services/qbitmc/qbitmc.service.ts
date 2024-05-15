@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { environment } from '../../../environments/environment'
-import { Observable, map } from 'rxjs'
+import { Observable, map, of } from 'rxjs'
 import { Leaderboards } from '@models/leaderboards'
 import { MinecraftProfile } from '@models/minecraft-profile'
 import { PterodactylServer } from '@models/pterodactyl'
@@ -21,12 +21,15 @@ export class QbitmcService {
   }
 
   public supporters(): Observable<MinecraftProfile[]> {
-    const url = new URL(`${environment.API_URL}/supporters`)
-    return this.http.get<MinecraftProfile[]>(url.toString())
+    // const url = new URL(`${environment.API_URL}/supporters`)
+    return of([{ id: '77655fb2-82e7-493f-839c-22870f3fcec9', name: '_Dani' }])
+    // return of(Array.from(Array(6)).map(() => ({ id: '77655fb2-82e7-493f-839c-22870f3fcec9', name: '_Dani' })))
+    // return this.http.get<MinecraftProfile[]>(url.toString())
   }
 
-  public servers(): Observable<Server[]> {
-    const url = new URL(`${environment.API_URL}/pterodactyl`)
+  public servers(unregistered: boolean = false): Observable<Server[]> {
+    const url = new URL(`${environment.API_URL}/server`)
+    url.searchParams.append('unregistered', unregistered.toString())
     return this.http.get<PterodactylServer[]>(url.toString()).pipe(
       map(response => response.map(server => {
         const { id, name, description, status } = server

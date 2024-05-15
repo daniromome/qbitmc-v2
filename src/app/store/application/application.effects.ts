@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core'
+import { Injectable, isDevMode } from '@angular/core'
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects'
 import { EnrollmentService } from '@services/enrollment'
 import { ApplicationActions, applicationFeature } from '@store/application'
-import { catchError, map, switchMap, tap, repeat } from 'rxjs/operators'
+import { catchError, map, switchMap, tap, repeat, filter } from 'rxjs/operators'
 import { forkJoin, of } from 'rxjs'
 import { Store } from '@ngrx/store'
 import { MAX_UPLOAD_SIZE } from '@constants/index'
@@ -38,6 +38,7 @@ export class ApplicationEffects {
 
   public uploadMediaResources$ = createEffect(() => this.actions$.pipe(
     ofType(ApplicationActions.uploadMediaResources),
+    filter(({ files }) => files && files.length > 0),
     concatLatestFrom(() => this.store.select(applicationFeature.selectApplicationMedia)),
     switchMap(([{ files }, media]) => {
       const currentMediaSize = media.map(m => m.size).reduce((accumulator, value) => accumulator + value, 0)
@@ -63,7 +64,7 @@ export class ApplicationEffects {
   public deleteMediaResource$ = createEffect(() => this.actions$.pipe(
     ofType(ApplicationActions.deleteMediaResource),
     switchMap(({ key }) =>
-      this.enrollment.deleteMediaResource(key.split('/')[2]).pipe(
+      this.enrollment.deleteMediaResource(key.split('/').at(-1)!).pipe(
         map(() => key)
       )
     ),
@@ -82,6 +83,7 @@ export class ApplicationEffects {
 
   public submitSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(ApplicationActions.submitSuccess),
+    filter(() => !isDevMode()),
     tap(() => localStorage.removeItem('application'))
   ), { dispatch: false })
 

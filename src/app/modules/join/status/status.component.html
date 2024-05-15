@@ -1,7 +1,7 @@
 <div class="status-container" *ngIf="profile$ | async as profile">
   <ion-card>
     <ion-avatar *ngIf="profile.minecraft.id">
-      <img [src]="profile.minecraft.id | avatar">
+      <img [src]="profile.minecraft.id | avatar:'face'">
     </ion-avatar>
     <ion-card-header class="ion-card-avatar-header">
       <ion-card-title i18n="@@status-title">Hey {{ profile.minecraft.name }},</ion-card-title>

@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing'
 import { CanActivateFn } from '@angular/router'
 
-import { qbitorGuard } from './qbitor.guard'
+import { roleGuard } from './role.guard'
 
-describe('qbitorGuard', () => {
+describe('roleGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) =>
-    TestBed.runInInjectionContext(() => qbitorGuard(...guardParameters))
+    TestBed.runInInjectionContext(() => roleGuard()(...guardParameters))
 
   beforeEach(() => {
     TestBed.configureTestingModule({})

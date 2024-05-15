@@ -2,43 +2,19 @@
 
 ion-content.background {
   --content-background: url('https://i.imgur.com/5B9ygAM.png') no-repeat center center;
-  &.md {
-    --padding-bottom: 5.5rem;
-  }
-  &.ios {
-    --padding-bottom: 4.75rem;
-  }
+  --offset-bottom: 4rem !important;
 }
 
-ion-text {
-  &.description {
-    color: white;
-    margin: 0 1rem;
-    font-size: 1.15rem;
-  }
-  &.section-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    &.ios {
-      font-size: 1.75rem;
-    }
-  }
-}
-
-.leaderboards-container {
-  @include mixins.xl {
-    overflow-y: auto;
-    height: 95%;
-    ion-col:first-of-type {
-      padding-top: 0;
-    }
-  }
+.main-container {
+  height: 100%;
 }
 
 .supporters-list {
-  position: fixed;
+  width: 100%;
+  position: absolute;
+  z-index: 1;
   bottom: 0;
-  &-item{
+  &-item {
     border-radius: 0.25rem;
     transition: 0.3s;
     &:hover {
@@ -46,18 +22,52 @@ ion-text {
     }
   }
   qbit-slider {
-    width: 100dvw;
+    width: 100%;
   }
 }
 
-.server-list-item {
-  position: relative;
-  &-badge {
-    height: 2rem;
-    width: 2rem;
-    position: absolute;
-    top: 0;
-    right: 0;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 0%);
+.content-container {
+  padding-bottom: 5.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0rem 1rem;
+  &-description {
+    color: white;
+    font-size: 1.15rem;
   }
+}
+
+.server-list {
+  position: relative;
+  isolation: isolate;
+  &-title {
+    text-align: center;
+    @include mixins.md {
+      z-index: 1;
+      position: absolute;
+      top: 15rem;
+      left: -2rem;
+      transform-origin: 0 0;
+      transform: rotate(270deg);
+    }
+  }
+  &-container {
+    min-height: 100%;
+  }
+  &-item {
+    position: relative;
+    &-badge {
+      height: 2rem;
+      width: 2rem;
+      position: absolute;
+      top: 0;
+      right: 0;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 0%);
+    }
+  }
+}
+
+.subtitle {
+  padding-top: 0.75rem;
 }

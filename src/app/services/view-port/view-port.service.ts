@@ -1,26 +1,21 @@
-import { Injectable, inject } from '@angular/core'
+import { Injectable, computed, inject } from '@angular/core'
+import { toSignal } from '@angular/core/rxjs-interop'
 import { Platform } from '@ionic/angular'
-import { Observable, map, startWith } from 'rxjs'
+import { map } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
 })
 export class ViewPortService {
   private readonly platform = inject(Platform)
-  public readonly isDesktop$: Observable<boolean>
-  public readonly isTablet$: Observable<boolean>
-  public readonly width$: Observable<number>
 
-  public constructor() {
-    this.width$ = this.platform.resize.pipe(
-      startWith(() => this.platform.width()),
-      map(() => this.platform.width())
-    )
-    this.isDesktop$ = this.width$.pipe(
-      map(width => width > 1200)
-    )
-    this.isTablet$ = this.width$.pipe(
-      map(width => width > 992)
-    )
-  }
+  public readonly width = toSignal(this.platform.resize.asObservable().pipe(
+    map(() => this.platform.width())
+  ), { initialValue: this.platform.width() })
+
+  public readonly isXL = computed(() => this.width() >= 1200)
+  public readonly isLG = computed(() => this.width() >= 992)
+  public readonly isMD = computed(() => this.width() >= 768)
+  public readonly isSM = computed(() => this.width() >= 576)
+  public readonly isXS = computed(() => this.width() >= 0)
 }

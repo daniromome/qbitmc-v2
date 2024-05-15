@@ -1,60 +1,108 @@
-<ion-content class="background">
-  <ion-grid class="full-height main-container">
-    <ion-row class="full-height">
-      <ion-col size="12" size-md="6" size-xl="4" class="center-items-container">
-        <img src="assets/logo.svg">
-      </ion-col>
-      <ion-col size="12" size-md="6" size-xl="4" class="center-items-container">
-        <ion-text i18n="@@site-description" class="description">
-          Founded in 2015 our community qbitmc has focused on bringing a vanilla experiences to its members
-          with a technical & aesthetic turn. Inspired on the hermitcraft server each and one of us have our
-          own base and get involved into trust-based trading on the shopping district of the server. We also
-          come together every now and then to collaborate on big community projects such as automated farms
-          and buildings
-        </ion-text>
-      </ion-col>
-      <ion-col class="full-height">
-        <ion-row>
-          <ion-col class="ion-text-center">
-            <ion-text class="section-title secondary-text" i18n="@@server-list-title">Server List</ion-text>
-          </ion-col>
-        </ion-row>
-        <ng-container *ngIf="servers$ | async as servers">
-          <ion-row>
-            <ion-col size="12" sizeMd="6" sizeLg="4" sizeXl="12" *ngFor="let server of servers">
-              <ion-card class="server-list-item">
-                <ion-card-header>
-                  <ion-card-title><ion-text class="section-title">{{ server.name }}</ion-text></ion-card-title>
-                  <ion-card-subtitle>{{ server.game }} {{ server.version }}</ion-card-subtitle>
-                </ion-card-header>
-                <ion-card-content>
-                  <p *ngIf="server.ip"><ion-text color="dark">{{ server.ip }}</ion-text></p>
-                  <p><ion-text [color]="server.status !== 'running' ? 'medium' : 'success'">{{ server.status | titlecase }}</ion-text></p>
-                  <p *ngIf="server.staffOnly"><ion-text color="danger">Staff Only</ion-text></p>
-                </ion-card-content>
-                <div
-                  class="server-list-item-badge"
-                  [style.background-color]="server.status !== 'running' ? 'var(--ion-color-danger)' : 'var(--ion-color-success)'"
-                ></div>
-              </ion-card>
+<ion-content class="background padding">
+  <ion-grid class="main-container ion-no-padding">
+    <ion-row class="full-height ion-no-padding">
+      <ion-col class="full-height" size="12" size-md="6" size-lg="7">
+        <ion-grid class="full-height ion-no-padding content-container">
+          <ion-row class="ion-padding">
+            <ion-col size="12">
+              <ion-text i18n="@@site-title" class="title">
+                Our community
+              </ion-text>
             </ion-col>
           </ion-row>
-        </ng-container>
+          <ion-row>
+            <ion-col size="12" size-lg="6" size-xl="4">
+              <qbit-bullet-point>
+                <ion-icon name="calendar-outline" size="large" bullet></ion-icon>
+                <div class="subtitle" title>Founded in 2015</div>
+                <ion-text class="content-container-description" description>That's almost 10 years of playing together!</ion-text>
+              </qbit-bullet-point>
+            </ion-col>
+            <ion-col size="12" size-lg="6" size-xl="4">
+              <qbit-bullet-point>
+                <ion-icon name="game-controller-outline" size="large" bullet></ion-icon>
+                <div class="subtitle" title>Game Servers</div>
+                <ion-text class="content-container-description" description>Although our network is mostly compiled of minecraft servers, we may host other games from time to time</ion-text>
+              </qbit-bullet-point>
+            </ion-col>
+            <ion-col size="12" size-lg="6" size-xl="4">
+              <qbit-bullet-point>
+                <ion-icon name="people-outline" size="large" bullet></ion-icon>
+                <div class="subtitle" title>Better Together</div>
+                <ion-text class="content-container-description" description>Have fun participating in a variety of cooperative projects and events</ion-text>
+              </qbit-bullet-point>
+            </ion-col>
+            <ion-col size="12" size-lg="6" size-xl="4">
+              <qbit-bullet-point>
+                <ion-icon name="globe-outline" size="large" bullet></ion-icon>
+                <div class="subtitle" title>Custom Systems</div>
+                <ion-text class="content-container-description" description>These provide our community with an immersive experience across all of our platforms</ion-text>
+              </qbit-bullet-point>
+            </ion-col>
+            <ion-col size="12" size-lg="6" size-xl="4">
+              <qbit-bullet-point>
+                <ion-icon name="hammer-outline" size="large" bullet></ion-icon>
+                <div class="subtitle" title>Built with ♥️</div>
+                <ion-text class="content-container-description" description>It takes a lot of effort to run a community but we'll keep doing it because we love it</ion-text>
+              </qbit-bullet-point>
+            </ion-col>
+          </ion-row>
+          @if (!isSignedIn()) {
+            <ion-row class="ion-justify-content-end ion-padding-top">
+              <ion-col size="12" size-lg="6" size-xl="4">
+                <ion-item button color="secondary" lines="none" class="ion-text-center" [style.border-radius]="'0.25rem'" (click)="auth()">
+                  <ion-label>Join now!</ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          }
+        </ion-grid>
+        @if (supporters(); as supporters) {
+          <div class="supporters-list">
+            @if (elementsInView(); as elementsInView) {
+              <qbit-slider [elementsInView]="elementsInView">
+                @for (supporter of supporters; track $index) {
+                  <ion-item class="blur supporters-list-item" lines="none">
+                    <ion-avatar slot="start">
+                      <img [src]="supporter.id | avatar" [alt]="'Avatar of player ' + supporter.name">
+                    </ion-avatar>
+                    <ion-label>{{ supporter.name }}</ion-label>
+                    <ion-chip color="warning" slot="end">Qbitor+ 💛</ion-chip>
+                  </ion-item>
+                }
+              </qbit-slider>
+            }
+          </div>
+        }
+      </ion-col>
+      <ion-col class="server-list full-height">
+        <div class="server-list-title" i18n="@@server-list-title"><span class="title secondary-text">Server List</span></div>
+        <ion-grid class="server-list-container blur">
+          @if (servers(); as servers) {
+            @for (server of servers; track $index) {
+              <ion-row>
+                <ion-col size="12" sizeMd="6" sizeLg="4" sizeXl="12">
+                  <ion-card class="server-list-item">
+                    <ion-card-header>
+                      <ion-card-title><ion-text class="section-title">{{ server.name }}</ion-text></ion-card-title>
+                      <ion-card-subtitle>{{ server.game }} {{ server.version }}</ion-card-subtitle>
+                    </ion-card-header>
+                    <ion-card-content>
+                      @if (server.ip) { <p><ion-text color="dark">{{ server.ip }}</ion-text></p> }
+                      <p><ion-text [color]="server.status !== 'running' ? 'medium' : 'success'">{{ server.status | titlecase }}</ion-text></p>
+                    </ion-card-content>
+                    <div
+                      class="server-list-item-badge"
+                      [style.background-color]="server.status !== 'running' ? 'var(--ion-color-danger)' : 'var(--ion-color-success)'"
+                    ></div>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            }
+          }
+        </ion-grid>
       </ion-col>
     </ion-row>
   </ion-grid>
-  <div class="supporters-list" *ngIf="supporters$ | async as supporters">
-    <ng-container *ngIf="elementsInView$ | async as elementsInView">
-      <qbit-slider [elementsInView]="elementsInView" [elementsCount]="supporters.length">
-        <ion-item class="blur supporters-list-item" lines="none" *ngFor="let supporter of supporters">
-          <ion-avatar slot="start">
-            <img [src]="supporter.id | avatar" [alt]="'Avatar of player ' + supporter.name">
-          </ion-avatar>
-          <ion-label>{{ supporter.name }}</ion-label>
-          <ion-chip color="warning" slot="end">Qbitor+ 💛</ion-chip>
-        </ion-item>
-      </qbit-slider>
-    </ng-container>
-  </div>
 </ion-content>
 

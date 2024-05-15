@@ -1,18 +1,18 @@
 import { appFeature } from '@store/app'
 import { CommonModule } from '@angular/common'
-import { IonicModule } from '@ionic/angular'
 import { Component, OnInit } from '@angular/core'
 import { Observable } from 'rxjs'
 import { Product } from '@models/product'
 import { Store } from '@ngrx/store'
 import { ShopActions, shopFeature } from '@store/shop'
 import { ROLE } from '@models/role'
+import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonItem, IonRow, IonText } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'qbit-shop',
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.scss'],
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonContent, IonGrid, IonRow, IonCol, IonCard, IonAvatar, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonItem, IonText],
   standalone: true
 })
 export class ShopComponent implements OnInit {

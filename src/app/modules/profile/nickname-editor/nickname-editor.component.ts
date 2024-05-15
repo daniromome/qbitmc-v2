@@ -1,17 +1,19 @@
 import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { StyledTextComponent } from '@components/styled-text/styled-text.component'
-import { IonicModule } from '@ionic/angular'
 import { StyledRolePipe } from '@pipes/styled-role'
 import { Store } from '@ngrx/store'
 import { Observable, finalize, first, map } from 'rxjs'
 import { StyledText, StyledTextForm, TextStyle } from '@models/styled-text'
 import { animate, style, transition, trigger } from '@angular/animations'
-import { AppActions, appFeature } from '@store/app'
+import { appActions, appFeature } from '@store/app'
 import { FormArray, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { stringifyStyledText } from '@utils'
 import { REGEXP } from '@constants/regexp'
+import { IonContent, IonGrid, IonRow, IonCol, IonSegmentButton, IonLabel, IonIcon, IonCard, IonCardContent, IonItem, IonAccordionGroup, IonAccordion, IonButtons, IonButton, IonInput, IonFab, IonFabButton, IonText, IonRange, IonSegment, IonCheckbox } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { ban, sparkles, starHalf, star, add, trash, save } from 'ionicons/icons'
 
 enum SliderLabel {
   SATURATION = 'saturation'
@@ -21,8 +23,28 @@ enum SliderLabel {
   selector: 'qbit-nickname-editor',
   standalone: true,
   imports: [
+    IonText,
+    IonFabButton,
+    IonFab,
+    IonInput,
+    IonButton,
+    IonButtons,
+    IonCheckbox,
+    IonAccordion,
+    IonAccordionGroup,
+    IonItem,
+    IonCardContent,
+    IonCard,
+    IonIcon,
+    IonLabel,
+    IonSegment,
+    IonSegmentButton,
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonContent,
+    IonRange,
     CommonModule,
-    IonicModule,
     StyledTextComponent,
     StyledRolePipe,
     StyledTextComponent,
@@ -64,6 +86,7 @@ export class NicknameEditorComponent implements OnInit {
   private readonly firstChange$: Observable<void>
 
   public constructor() {
+    addIcons({ ban, sparkles, starHalf, star, add, trash, save })
     this.form = this.fb.array<StyledTextForm>([])
     this.nickname$ = this.store.select(appFeature.selectNickname).pipe(
       first(),
@@ -72,7 +95,7 @@ export class NicknameEditorComponent implements OnInit {
     this.firstChange$ = this.form.valueChanges.pipe(
       first(),
       takeUntilDestroyed(),
-      map(() => this.store.dispatch(AppActions.setUnsavedChanges({ changes: true })))
+      map(() => this.store.dispatch(appActions.setUnsavedChanges({ changes: true })))
     )
   }
 
@@ -89,7 +112,7 @@ export class NicknameEditorComponent implements OnInit {
 
   public save(): void {
     const nickname = this.form.controls.map((_, index) => stringifyStyledText(this.convertFormToStyledText(index))).join(' <r>')
-    this.store.dispatch(AppActions.updateNickname({ nickname }))
+    this.store.dispatch(appActions.updateNickname({ nickname }))
   }
 
   public add(index: number): void {

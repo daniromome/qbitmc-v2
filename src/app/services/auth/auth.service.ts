@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { Profile } from '@models/profile'
-import { Observable, first } from 'rxjs'
+import { Observable } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
 
@@ -11,7 +11,7 @@ export class AuthService {
   private readonly http = inject(HttpClient)
 
   public getProfile(): Observable<Profile> {
-    return this.http.get<Profile>(`${environment.API_URL}/profile`).pipe(first())
+    return this.http.get<Profile>(`${environment.API_URL}/profile`)
   }
 
   public async linkMcAccount(accessToken: string): Promise<void> {

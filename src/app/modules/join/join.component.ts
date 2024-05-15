@@ -1,23 +1,47 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, Signal, computed, effect, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
-import { IonicModule } from '@ionic/angular'
 import { FormFrom } from '../../utils/form-from'
 import { EnrollmentApplication } from '@models/application'
-import { Observable, map, Subject } from 'rxjs'
 import { REGEXP } from '@constants/regexp'
 import { NoteComponent } from '@components/note'
 import { FileUploaderComponent } from '@components/file-uploader'
 import { Store } from '@ngrx/store'
-import { takeUntil } from 'rxjs/operators'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
 import { ApplicationActions, applicationFeature } from '@store/application'
 import { BytesPipe } from '@pipes/bytes'
 import { MAX_UPLOAD_SIZE } from '@constants/index'
-import { Profile } from '@models/profile'
 import { AvatarPipe } from '@pipes/avatar'
-import { AppActions, appFeature } from '@store/app'
+import { appActions, appFeature } from '@store/app'
 import { Media } from '@models/media'
+import {
+  IonHeader,
+  IonRow,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonGrid,
+  IonCol,
+  IonCard,
+  IonAvatar,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonItem,
+  IonLabel,
+  IonText,
+  IonButton,
+  IonIcon,
+  IonCardContent,
+  IonChip,
+  IonInput,
+  IonTextarea,
+  IonCheckbox,
+  IonList
+} from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { cubeOutline, cubeSharp, close } from 'ionicons/icons'
+import { toSignal } from '@angular/core/rxjs-interop'
 
 interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'id'>> {}
 
@@ -28,11 +52,32 @@ interface SafeMedia extends Omit<Media, 'blob'> {
 @Component({
   selector: 'qbit-join',
   standalone: true,
-  imports: [
+  imports: [IonList,
+    IonChip,
+    IonCardContent,
+    IonIcon,
+    IonButton,
+    IonText,
+    IonLabel,
+    IonItem,
+    IonCheckbox,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonAvatar,
+    IonCard,
+    IonCol,
+    IonGrid,
+    IonContent,
+    IonTextarea,
+    IonTitle,
+    IonToolbar,
+    IonRow,
+    IonInput,
+    IonHeader,
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    IonicModule,
     NoteComponent,
     FileUploaderComponent,
     BytesPipe,
@@ -42,7 +87,11 @@ interface SafeMedia extends Omit<Media, 'blob'> {
   styleUrls: ['./join.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class JoinComponent implements OnInit, OnDestroy {
+export class JoinComponent implements OnInit {
+  private readonly fb = inject(NonNullableFormBuilder)
+  private readonly store = inject(Store)
+  private readonly sanitizer = inject(DomSanitizer)
+
   public readonly rules = [
     $localize`:@@rule-a:Be respectful toward other members of the community, any verbal abuse or sign of harassment will be sanctioned accordingly`,
     $localize`:@@rule-b:Take care of the environment in the server (not leaving floating trees, when chopping trees down placing saplings on the
@@ -53,42 +102,38 @@ export class JoinComponent implements OnInit, OnDestroy {
     chats and the minecraft server`
   ]
 
-  public readonly form: FormGroup<ApplicationForm>
-  public readonly profile$: Observable<Profile | undefined>
-  public readonly media$: Observable<SafeMedia[]>
-  public readonly filesSize$: Observable<number>
-  public readonly filesSizeWithinLimit$: Observable<boolean>
-  public readonly filesSizeExceedsLimit$: Observable<boolean>
-  private readonly watchFormChanges: Subject<void>
+  public readonly form: FormGroup<ApplicationForm> = this.fb.group({
+    forename: this.fb.control('', [Validators.required, Validators.maxLength(12)]),
+    age: this.fb.control(0, [Validators.required]),
+    experience: this.fb.control('', [Validators.required]),
+    reasons: this.fb.control('', [Validators.required]),
+    rules: this.fb.control(false, [Validators.requiredTrue])
+  })
 
-  public constructor(
-    private readonly fb: NonNullableFormBuilder,
-    private readonly store: Store,
-    private readonly sanitizer: DomSanitizer
-  ) {
-    this.form = this.fb.group({
-      forename: this.fb.control('', [Validators.required, Validators.maxLength(12)]),
-      age: this.fb.control(0, [Validators.required]),
-      experience: this.fb.control('', [Validators.required]),
-      reasons: this.fb.control('', [Validators.required]),
-      rules: this.fb.control(false, [Validators.requiredTrue])
-    })
-    this.profile$ = this.store.select(appFeature.selectProfile)
-    this.media$ = this.store.select(applicationFeature.selectApplicationMedia).pipe(
-      map(media => media.map(m => ({ ...m, blob: m.blob ? this.sanitizer.bypassSecurityTrustUrl(m.blob) : undefined })))
-    )
-    this.filesSize$ = this.store.select(applicationFeature.selectApplicationMediaSize)
-    this.filesSizeWithinLimit$ = this.filesSize$.pipe(
-      map(size => size <= MAX_UPLOAD_SIZE)
-    )
-    this.filesSizeExceedsLimit$ = this.filesSizeWithinLimit$.pipe(
-      map(bool => !bool)
-    )
-    this.watchFormChanges = new Subject()
-    this.form.valueChanges.pipe(
-      takeUntil(this.watchFormChanges)
-    ).subscribe(value => {
-      localStorage.setItem('application', JSON.stringify(value))
+  private readonly formChanges = toSignal(this.form.valueChanges)
+
+  public readonly profile = this.store.selectSignal(appFeature.selectProfile)
+
+  public readonly media: Signal<SafeMedia[]> = computed(() => {
+    const media = this.store.selectSignal(applicationFeature.selectApplicationMedia)()
+    return media.map(m => ({ ...m, blob: m.blob ? this.sanitizer.bypassSecurityTrustUrl(m.blob) : undefined }))
+  })
+
+  public readonly filesSize = this.store.selectSignal(applicationFeature.selectApplicationMediaSize)
+
+  public readonly filesSizeWithinLimit = computed(() => {
+    const filesSize = this.filesSize()
+    return filesSize <= MAX_UPLOAD_SIZE
+  })
+
+  public readonly filesSizeExceedsLimit = computed(() => !this.filesSizeWithinLimit())
+
+  public constructor() {
+    addIcons({ cubeOutline, cubeSharp, close })
+    effect(() => {
+      const form = this.formChanges()
+      if (!form) return
+      localStorage.setItem('application', JSON.stringify(form))
     })
   }
 
@@ -98,25 +143,15 @@ export class JoinComponent implements OnInit, OnDestroy {
     const application = applicationString ? JSON.parse(applicationString) : undefined
     if (!application) return
     this.form.setValue(application)
-    Object.keys(this.form.controls).forEach(k => {
-      if (application[k]) this.form.get(k)?.markAsDirty()
-    })
-  }
-
-  public ngOnDestroy(): void {
-    this.watchFormChanges.next()
-    this.watchFormChanges.complete()
   }
 
   public numbersOnly(): void {
     const age = Array.from(this.form.controls.age.value.toString()).filter(v => REGEXP.DIGITS_ONLY.test(v)).slice(0, 2).join('')
-    this.form.controls.age.setValue(
-      Number(age)
-    )
+    this.form.controls.age.setValue(Number(age))
   }
 
   public linkMinecraftAccount(): void {
-    this.store.dispatch(AppActions.linkMinecraftAccount())
+    this.store.dispatch(appActions.linkMinecraftAccount())
   }
 
   public droppedFiles(files: File[]): void {

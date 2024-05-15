@@ -1,17 +1,17 @@
-<input type="file" class="file-input" (change)="onFilesSelected($event)" #fileInput [multiple]="max !== 1"/>
+<input type="file" class="file-input" (change)="onFilesSelected($event)" #fileInput [multiple]="max() !== 1"/>
 
 <div
   class="dropzone ion-activatable"
   qbitDropzone
-  (hovered)="toggleHover($event)"
-  (dropped)="onDrop($event)"
-  (click)="openPicker(fileInput)"
+  (hovered)="isHovering.set($event)"
+  (dropped)="fileList.set($event)"
+  (click)="fileInput.click()"
   [class.hovering]="isHovering"
   *ngIf="desktop; else mobile"
   >
   <ion-ripple-effect></ion-ripple-effect>
   <ion-icon aria-hidden="false" aria-label="Drop file icon" name="download"></ion-icon>
-  <ion-text class="ion-text-center">{{ label }}</ion-text>
+  <ion-text class="ion-text-center">{{ label() }}</ion-text>
 </div>
 
 <ng-template #mobile>
@@ -20,3 +20,17 @@
     <span i18n="@@image-upload-button-label">Upload Images</span>
   </ion-button>
 </ng-template>
+
+<ion-alert
+  i18n-header="@@error-title"
+  header="Error"
+  i18n-message="@@image-upload-max-exceeded"
+  message="You can upload a maximum of {{max()}} file(s) at a time">
+</ion-alert>
+
+<ion-alert
+  i18n-header="@@error-title"
+  header="Error"
+  i18n-message="@@image-upload-unsupported-file-type"
+  message="The type of file &quot;${file?.name}&quot; is not allowed. Try uploading it in the following format &quot;${this.type}&quot;">
+</ion-alert>
