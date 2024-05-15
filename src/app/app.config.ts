@@ -9,7 +9,8 @@ import { provideEffects } from '@ngrx/effects'
 import { provideState, provideStore } from '@ngrx/store'
 import { provideStoreDevtools } from '@ngrx/store-devtools'
 import { appEffects, appFeature } from '@store/app'
-import { AuthInterceptor, provideAuth } from 'angular-auth-oidc-client'
+import { AuthInterceptor, provideAuth } from 'angular-auth-oidc-client';
+import { provideRouterStore } from '@ngrx/router-store'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
     provideRouter(routes, withComponentInputBinding()),
-    provideAuth(authConfig)
-  ]
+    provideAuth(authConfig),
+    provideRouterStore()
+]
 }
