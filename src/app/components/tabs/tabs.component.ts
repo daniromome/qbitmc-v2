@@ -1,6 +1,25 @@
 import { Component, ChangeDetectionStrategy, inject, computed } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonPopover, IonContent, IonItem, IonLabel, IonTabBar, IonTabs, IonTabButton, IonAvatar, IonText, IonList, IonListHeader, IonBackButton } from '@ionic/angular/standalone'
+import {
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonTitle,
+  IonPopover,
+  IonContent,
+  IonItem,
+  IonLabel,
+  IonTabBar,
+  IonTabs,
+  IonTabButton,
+  IonAvatar,
+  IonText,
+  IonList,
+  IonListHeader,
+  IonBackButton
+} from '@ionic/angular/standalone'
 import { Store } from '@ngrx/store'
 import { filter, map } from 'rxjs'
 import { ROLE, Role } from '@models/role'
@@ -16,16 +35,40 @@ import { chevronBack, person, logOut, home, storefront, compass, people, server 
 import { toSignal } from '@angular/core/rxjs-interop'
 
 interface Tab {
-  icon: string,
-  label: string,
-  path: string,
+  icon: string
+  label: string
+  path: string
   role?: Role
 }
 
 @Component({
   selector: 'qbit-tabs',
   standalone: true,
-  imports: [IonBackButton, IonListHeader, IonList, IonText, IonAvatar, IonTabButton, IonTabs, IonTabBar, IonLabel, IonItem, IonContent, IonPopover, IonTitle, IonIcon, IonButton, IonButtons, IonToolbar, IonHeader, CommonModule, AvatarPipe, RolePipe, RoleColorPipe, RouterLinkWithHref],
+  imports: [
+    IonBackButton,
+    IonListHeader,
+    IonList,
+    IonText,
+    IonAvatar,
+    IonTabButton,
+    IonTabs,
+    IonTabBar,
+    IonLabel,
+    IonItem,
+    IonContent,
+    IonPopover,
+    IonTitle,
+    IonIcon,
+    IonButton,
+    IonButtons,
+    IonToolbar,
+    IonHeader,
+    CommonModule,
+    AvatarPipe,
+    RolePipe,
+    RoleColorPipe,
+    RouterLinkWithHref
+  ],
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -37,10 +80,12 @@ export class TabsComponent {
   public readonly disabled = this.store.selectSignal(appFeature.selectIsDisabled)
   public readonly profile = this.store.selectSignal(appFeature.selectProfile)
   public readonly isAdmin = this.store.selectSignal(appFeature.selectIsRole(ROLE.ADMIN))
-  public readonly route = toSignal(this.router.events.pipe(
-    filter(event => event instanceof NavigationEnd),
-    map(event => (event as NavigationEnd).url.split('/').slice(1))
-  ))
+  public readonly route = toSignal(
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(event => (event as NavigationEnd).url.split('/').slice(1))
+    )
+  )
 
   private readonly _tabs: Tab[] = [
     {
@@ -69,7 +114,11 @@ export class TabsComponent {
 
   public readonly tabs = computed(() => {
     const profile = this.profile()
-    if (!profile || profile.roles.length === 0) return [...this._tabs.filter(tab => !tab.role), { icon: 'people', label: $localize`:@@join-tab-label:Join`, path: 'join', role: ROLE.GUEST }]
+    if (!profile || profile.roles.length === 0)
+      return [
+        ...this._tabs.filter(tab => !tab.role),
+        { icon: 'people', label: $localize`:@@join-tab-label:Join`, path: 'join', role: ROLE.GUEST }
+      ]
     return this._tabs.filter(tab => profile.roles.some(r => r === tab.role || !tab.role))
   })
 

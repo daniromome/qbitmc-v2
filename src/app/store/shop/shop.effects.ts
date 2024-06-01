@@ -6,7 +6,6 @@ import { repeat, switchMap, tap } from 'rxjs/operators'
 import { AlertController, NavController, ToastController } from '@ionic/angular'
 import { StripeService } from '@services/stripe'
 import { Store } from '@ngrx/store'
-import { SpinnerService } from '@services/spinner'
 import { appFeature } from '@store/app'
 import { ROLE } from '@models/role'
 
@@ -14,19 +13,17 @@ import { ROLE } from '@models/role'
 export class ShopEffects {
   public getProducts$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.getProducts),
-    switchMap(() => zip(this.stripe.products(), this.spinner.spin())),
-    map(([response]) => ShopActions.getProductsSuccess({ products: response })),
+    switchMap(() => this.stripe.products()),
+    map((response) => ShopActions.getProductsSuccess({ products: response })),
     catchError(error => of(ShopActions.getProductsFailure({ error })))
   ))
 
   public getProductsSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.getProductsSuccess),
-    switchMap(() => this.spinner.stop())
   ), { dispatch: false })
 
   public getProductsFailure$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.getProductsFailure),
-    switchMap(() => this.spinner.stop()),
     switchMap(() => from(this.alert.create({
       header: $localize`:@@unexpected-error-title:Unexpected Error`,
       message: $localize`:@@unexpected-error-message:Please contact an administrator if this issue persists`,
@@ -38,7 +35,6 @@ export class ShopEffects {
 
   public checkout$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.checkout),
-    tap(() => this.spinner.spin().subscribe()),
     switchMap(({ price }) => this.stripe.checkout(price)),
     map(url => ShopActions.checkoutSuccess({ url })),
     catchError(() => of(ShopActions.checkoutFailure())),
@@ -48,17 +44,14 @@ export class ShopEffects {
   public checkoutSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.checkoutSuccess),
     tap(({ url }) => window.open(url, '_self')),
-    switchMap(() => this.spinner.stop())
   ), { dispatch: false })
 
   public checkoutFailure$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.checkoutFailure),
-    switchMap(() => this.spinner.stop())
   ), { dispatch: false })
 
   public portal$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.portal),
-    tap(() => this.spinner.spin().subscribe()),
     concatLatestFrom(() => this.store.select(appFeature.selectCustomer)),
     switchMap(([_, customer]) => this.stripe.portal(customer)),
     map(url => ShopActions.portalSuccess({ url })),
@@ -69,12 +62,10 @@ export class ShopEffects {
   public portalSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.portalSuccess),
     tap(({ url }) => window.open(url, '_self')),
-    switchMap(() => this.spinner.stop())
   ), { dispatch: false })
 
   public portalFailure$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.portalFailure),
-    switchMap(() => this.spinner.stop())
   ), { dispatch: false })
 
   public subscribe$ = createEffect(() => this.actions$.pipe(
@@ -121,7 +112,6 @@ export class ShopEffects {
     private readonly stripe: StripeService,
     private readonly alert: AlertController,
     private readonly store: Store,
-    private readonly spinner: SpinnerService,
     private readonly nav: NavController,
     private readonly toast: ToastController
   ) {}

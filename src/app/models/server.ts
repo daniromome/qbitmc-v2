@@ -1,8 +1,13 @@
-import { PterodactylServer } from './pterodactyl'
+import { Visibility } from './visibility'
 
-export interface Server extends Omit<PterodactylServer, 'description'> {
-  ip: string
+export interface Server {
+  id: string
+  name: string
+  description: string
   game: string
+  images: string[]
+  ip: string
+  loader: string
   version: string
-  staffOnly: boolean
+  visibility: Visibility
 }

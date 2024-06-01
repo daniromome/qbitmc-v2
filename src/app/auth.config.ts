@@ -17,7 +17,9 @@ export const authConfig: PassedInitialConfig = {
     secureRoutes: [
       `${environment.API_URL}/profile`,
       `${environment.API_URL}/stripe`,
-      `${environment.API_URL}/enrollment`
+      `${environment.API_URL}/enrollment`,
+      `${environment.API_URL}/server`,
+      `${environment.API_URL}/media`
     ],
     maxIdTokenIatOffsetAllowedInSeconds: 30,
     autoUserInfo: false

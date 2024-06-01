@@ -10,7 +10,8 @@ import { ROLE } from '@models/role'
 import { provideEffects } from '@ngrx/effects'
 import { provideState } from '@ngrx/store'
 import { BytesPipe } from '@pipes/bytes'
-import { applicationFeature, ApplicationEffects } from '@store/application'
+import { applicationFeature, applicationEffects } from '@store/application'
+import { mediaFeature, mediaEffects } from '@store/media'
 import { ShopEffects, shopFeature } from '@store/shop'
 
 export const routes: Routes = [
@@ -33,7 +34,8 @@ export const routes: Routes = [
           {
             path: '',
             loadComponent: () => import('./modules/join/join.component').then(c => c.JoinComponent),
-            canActivate: [applyGuard, enabledGuard]
+            canActivate: [applyGuard, enabledGuard],
+            providers: [provideState(mediaFeature), provideEffects(mediaEffects)]
           },
           {
             path: 'status',
@@ -41,20 +43,13 @@ export const routes: Routes = [
             canActivate: [appliedGuard, enabledGuard]
           }
         ],
-        providers: [
-          provideState(applicationFeature),
-          provideEffects(ApplicationEffects),
-          BytesPipe
-        ]
+        providers: [provideState(applicationFeature), provideEffects(applicationEffects), BytesPipe]
       },
       {
         path: 'shop',
         loadComponent: () => import('./modules/shop/shop.component').then(c => c.ShopComponent),
         canActivate: [enabledGuard],
-        providers: [
-          provideState(shopFeature),
-          provideEffects(ShopEffects)
-        ]
+        providers: [provideState(shopFeature), provideEffects(ShopEffects)]
       },
       {
         path: 'map',
@@ -64,9 +59,7 @@ export const routes: Routes = [
       {
         path: 'profile',
         canActivate: [roleGuard(ROLE.QBITOR), enabledGuard],
-        providers: [
-          TitleCasePipe
-        ],
+        providers: [TitleCasePipe],
         children: [
           {
             path: '',
@@ -75,7 +68,8 @@ export const routes: Routes = [
           },
           {
             path: 'nickname',
-            loadComponent: () => import('./modules/profile/nickname-editor/nickname-editor.component').then(c => c.NicknameEditorComponent),
+            loadComponent: () =>
+              import('./modules/profile/nickname-editor/nickname-editor.component').then(c => c.NicknameEditorComponent),
             canActivate: [roleGuard(ROLE.QBITOR), enabledGuard]
           }
         ]

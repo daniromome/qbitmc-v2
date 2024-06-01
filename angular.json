@@ -76,6 +76,9 @@
                 "input": "node_modules/@ionic/angular/css/flex-utils.css"
               },
               {
+                "input": "node_modules/@ionic/angular/css/palettes/dark.system.css"
+              },
+              {
                 "input": "src/theme/variables.css"
               }
             ],

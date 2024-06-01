@@ -1,54 +1,52 @@
-<ion-header id="main-content">
-  <ion-toolbar>
-    <ng-container *ngIf="route() as route">
-      <ion-buttons slot="start" *ngIf="route.length > 2">
-        <ion-back-button></ion-back-button>
-        <!-- <ion-button (click)="navigateBack()">
-          <ion-icon slot="start" name="chevron-back"></ion-icon>
-          <span i18n="@@back-button-label">Back</span>
-        </ion-button> -->
-      </ion-buttons>
-    </ng-container>
-    <img src="assets/logo.svg" alt="" class="logo" slot="start">
-    <ion-title>QbitMC</ion-title>
-    <ion-buttons slot="end">
-      <ion-button id="select-locale" color="dark">{{ localeService.locale | uppercase }}</ion-button>
-      <ng-container *ngIf="profile() as profile">
-        <ion-button class="profile-button" id="profile-menu">
-          <ng-container *ngIf="profile.minecraft; else userIcon">
-            <img [src]="profile.minecraft.id | avatar" alt="" slot="icon-only" class="avatar">
-          </ng-container>
-          <ng-template #userIcon>
-            <ion-icon name="person" slot="icon-only"></ion-icon>
-          </ng-template>
-        </ion-button>
-        <ion-popover trigger="profile-menu" showBackdrop="false">
-          <ng-template>
-            <ion-content>
-              <ion-list class="ion-no-padding" lines="none">
-                @if (isAdmin()) {
-                  <ion-list-header>
-                    <ion-label i18n="@@admin-tools">Admin Tools</ion-label>
-                  </ion-list-header>
-                  <ion-item button [style.--background]="'transparent'" [detail]="false" routerLink="/tabs/admin/server">
-                    <ion-icon name="server" slot="start"></ion-icon>
-                    <ion-label i18n="@@new-server-button-label">Add Server</ion-label>
-                  </ion-item>
-                }
-                <ion-item (click)="logout()" color="danger" button [style.--background]="'transparent'" [detail]="false">
-                  <ion-icon name="log-out" slot="start"></ion-icon>
-                  <ion-label i18n="@@logout-button-label">Logout</ion-label>
-                </ion-item>
-              </ion-list>
-            </ion-content>
-          </ng-template>
-        </ion-popover>
-      </ng-container>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
 <ion-tabs>
+  <ion-header id="main-content" slot="top">
+    <ion-toolbar>
+      <ng-container *ngIf="route() as route">
+        <ion-buttons slot="start" *ngIf="route.length > 2">
+          <ion-button (click)="navigateBack()">
+            <ion-icon slot="start" name="chevron-back"></ion-icon>
+            <span i18n="@@back-button-label">Back</span>
+          </ion-button>
+        </ion-buttons>
+      </ng-container>
+      <img src="assets/logo.svg" alt="" class="logo" slot="start">
+      <ion-title>QbitMC</ion-title>
+      <ion-buttons slot="end">
+        <ion-button id="select-locale" color="dark">{{ localeService.locale | uppercase }}</ion-button>
+        <ng-container *ngIf="profile() as profile">
+          <ion-button class="profile-button" id="profile-menu">
+            <ng-container *ngIf="profile.minecraft; else userIcon">
+              <img [src]="profile.minecraft.id | avatar" alt="" slot="icon-only" class="avatar">
+            </ng-container>
+            <ng-template #userIcon>
+              <ion-icon name="person" slot="icon-only"></ion-icon>
+            </ng-template>
+          </ion-button>
+          <ion-popover trigger="profile-menu" showBackdrop="false">
+            <ng-template>
+              <ion-content>
+                <ion-list class="ion-no-padding" lines="none">
+                  @if (isAdmin()) {
+                    <ion-list-header>
+                      <ion-label i18n="@@admin-tools">Admin Tools</ion-label>
+                    </ion-list-header>
+                    <ion-item button [style.--background]="'transparent'" [detail]="false" routerLink="/tabs/admin/server">
+                      <ion-icon name="server" slot="start"></ion-icon>
+                      <ion-label i18n="@@new-server-button-label">Add Server</ion-label>
+                    </ion-item>
+                  }
+                  <ion-item (click)="logout()" color="danger" button [style.--background]="'transparent'" [detail]="false">
+                    <ion-icon name="log-out" slot="start"></ion-icon>
+                    <ion-label i18n="@@logout-button-label">Logout</ion-label>
+                  </ion-item>
+                </ion-list>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </ng-container>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
   <ion-tab-bar slot="bottom">
     <ion-tab-button *ngFor="let tab of tabs()" [tab]="tab.path" [disabled]="(disabled()) && tab.role">
       <ion-icon [name]="tab.icon"></ion-icon>

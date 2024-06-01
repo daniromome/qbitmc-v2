@@ -107,13 +107,6 @@ ion-item {
   border-radius: 0.25rem;
 }
 
-ion-content.padding {
-  &.ios {
-    --padding-top: 2.75rem;
-  }
-  --padding-top: 3.5rem;
-}
-
 ion-content.background {
   --background: rgba(0,0,0,0.4);
 }
@@ -146,6 +139,12 @@ ion-content.background {
       --border-radius: 0.25rem;
     }
   }
+}
+
+.ion-card-footer {
+  width: 100%;
+  display: flex;
+  justify-content: end;
 }
 
 // ion-input {

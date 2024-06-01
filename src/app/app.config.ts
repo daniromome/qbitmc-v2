@@ -9,13 +9,13 @@ import { provideEffects } from '@ngrx/effects'
 import { provideState, provideStore } from '@ngrx/store'
 import { provideStoreDevtools } from '@ngrx/store-devtools'
 import { appEffects, appFeature } from '@store/app'
-import { AuthInterceptor, provideAuth } from 'angular-auth-oidc-client';
-import { provideRouterStore } from '@ngrx/router-store'
+import { AuthInterceptor, provideAuth } from 'angular-auth-oidc-client'
+import { provideRouterStore, routerReducer } from '@ngrx/router-store'
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideState(appFeature),
-    provideStore(),
+    provideStore({ router: routerReducer }),
     provideEffects(appEffects),
     provideStoreDevtools({ connectInZone: true }),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
@@ -26,5 +26,5 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideAuth(authConfig),
     provideRouterStore()
-]
+  ]
 }

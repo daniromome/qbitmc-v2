@@ -1,0 +1,56 @@
+<ion-content>
+  <ion-card [formGroup]="form">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-input formControlName="name"></ion-input>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-no-padding">
+      <ion-list lines="full">
+        <ion-list-header>Details</ion-list-header>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Description" formControlName="description"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Game" formControlName="game"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="IP Address" formControlName="ip"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Loader" formControlName="loader"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Version" formControlName="version"></ion-input>
+        </ion-item>
+        <ion-list-header>Images</ion-list-header>
+        <qbit-file-uploader></qbit-file-uploader>
+        <ion-list-header>Visibility</ion-list-header>
+        <ion-radio-group formControlName="visibility">
+          @for (v of visibility; track $index) {
+            @if (form.controls.visibility.value === v.value) {
+              <ion-item color="secondary" lines="none">
+                <ion-icon [name]="v.icon" slot="start"></ion-icon>
+                <ion-radio [value]="v.value" color="light">{{ v.value | titlecase }}</ion-radio>
+              </ion-item>
+            } @else {
+              <ion-item>
+                <ion-icon [name]="v.icon" slot="start"></ion-icon>
+                <ion-radio [value]="v.value">{{ v.value | titlecase }}</ion-radio>
+              </ion-item>
+            }
+          }
+        </ion-radio-group>
+      </ion-list>
+    </ion-card-content>
+    <div class="ion-card-footer">
+      <ion-button fill="clear" (click)="upsertServer()">
+        @if (isServerRegistered()) {
+          Save Changes
+        } @else {
+          Register Server
+        }
+      </ion-button>
+    </div>
+  </ion-card>
+</ion-content>

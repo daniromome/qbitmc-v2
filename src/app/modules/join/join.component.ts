@@ -8,12 +8,12 @@ import { NoteComponent } from '@components/note'
 import { FileUploaderComponent } from '@components/file-uploader'
 import { Store } from '@ngrx/store'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
-import { ApplicationActions, applicationFeature } from '@store/application'
+import { applicationActions } from '@store/application'
 import { BytesPipe } from '@pipes/bytes'
-import { MAX_UPLOAD_SIZE } from '@constants/index'
+import { ENROLLMENT_MAX_UPLOAD_SIZE } from '@constants/index'
 import { AvatarPipe } from '@pipes/avatar'
 import { appActions, appFeature } from '@store/app'
-import { Media } from '@models/media'
+import { MEDIA_ENTITY, Media } from '@models/media'
 import {
   IonHeader,
   IonRow,
@@ -42,6 +42,7 @@ import {
 import { addIcons } from 'ionicons'
 import { cubeOutline, cubeSharp, close } from 'ionicons/icons'
 import { toSignal } from '@angular/core/rxjs-interop'
+import { mediaActions, mediaFeature } from '@store/media'
 
 interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'id'>> {}
 
@@ -52,7 +53,8 @@ interface SafeMedia extends Omit<Media, 'blob'> {
 @Component({
   selector: 'qbit-join',
   standalone: true,
-  imports: [IonList,
+  imports: [
+    IonList,
     IonChip,
     IonCardContent,
     IonIcon,
@@ -115,15 +117,21 @@ export class JoinComponent implements OnInit {
   public readonly profile = this.store.selectSignal(appFeature.selectProfile)
 
   public readonly media: Signal<SafeMedia[]> = computed(() => {
-    const media = this.store.selectSignal(applicationFeature.selectApplicationMedia)()
+    const profile = this.profile()
+    if (!profile) return []
+    const media = this.store.selectSignal(mediaFeature.selectMedia({ entity: MEDIA_ENTITY.APPLICATIONS, id: profile.id }))()
     return media.map(m => ({ ...m, blob: m.blob ? this.sanitizer.bypassSecurityTrustUrl(m.blob) : undefined }))
   })
 
-  public readonly filesSize = this.store.selectSignal(applicationFeature.selectApplicationMediaSize)
+  public readonly filesSize = computed(() => {
+    const profile = this.profile()
+    if (!profile) return 0
+    return this.store.selectSignal(mediaFeature.selectMediaSize({ entity: MEDIA_ENTITY.APPLICATIONS, id: profile.id }))()
+  })
 
   public readonly filesSizeWithinLimit = computed(() => {
     const filesSize = this.filesSize()
-    return filesSize <= MAX_UPLOAD_SIZE
+    return filesSize <= ENROLLMENT_MAX_UPLOAD_SIZE
   })
 
   public readonly filesSizeExceedsLimit = computed(() => !this.filesSizeWithinLimit())
@@ -138,7 +146,8 @@ export class JoinComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.store.dispatch(ApplicationActions.getMedia())
+    const profile = this.profile()
+    if (profile) this.store.dispatch(mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.APPLICATIONS, id: profile.id } }))
     const applicationString = localStorage.getItem('application')
     const application = applicationString ? JSON.parse(applicationString) : undefined
     if (!application) return
@@ -146,7 +155,10 @@ export class JoinComponent implements OnInit {
   }
 
   public numbersOnly(): void {
-    const age = Array.from(this.form.controls.age.value.toString()).filter(v => REGEXP.DIGITS_ONLY.test(v)).slice(0, 2).join('')
+    const age = Array.from(this.form.controls.age.value.toString())
+      .filter(v => REGEXP.DIGITS_ONLY.test(v))
+      .slice(0, 2)
+      .join('')
     this.form.controls.age.setValue(Number(age))
   }
 
@@ -155,14 +167,19 @@ export class JoinComponent implements OnInit {
   }
 
   public droppedFiles(files: File[]): void {
-    this.store.dispatch(ApplicationActions.uploadMediaResources({ files }))
+    const profile = this.profile()
+    if (!profile) return
+    const request = { entity: MEDIA_ENTITY.APPLICATIONS, id: profile.id, files, maxUploadSize: ENROLLMENT_MAX_UPLOAD_SIZE }
+    this.store.dispatch(mediaActions.uploadMediaResources({ request }))
   }
 
-  public deleteImage(key: string): void {
-    this.store.dispatch(ApplicationActions.deleteMediaResource({ key }))
+  public deleteImage(path: string): void {
+    const profile = this.profile()
+    if (!profile) return
+    this.store.dispatch(mediaActions.deleteMediaResource({ path }))
   }
 
   public submit(): void {
-    this.store.dispatch(ApplicationActions.submit({ application: { ...this.form.getRawValue() } }))
+    this.store.dispatch(applicationActions.submit({ application: { ...this.form.getRawValue() } }))
   }
 }

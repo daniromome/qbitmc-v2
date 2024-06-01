@@ -5,12 +5,13 @@ import { appActions, appFeature } from '@store/app'
 import { exhaustMap, filter, repeat, switchMap } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
-import { ApplicationActions } from '@store/application'
+import { applicationActions } from '@store/application'
 import { QbitmcService } from '@services/qbitmc'
 import { Store } from '@ngrx/store'
 import { Router } from '@angular/router'
 import { OidcSecurityService } from 'angular-auth-oidc-client'
 import { ROLE } from '@models/role'
+import { ServerService } from '@services/server'
 
 export const initialize$ = createEffect(
   (actions$ = inject(Actions), oidc = inject(OidcSecurityService)) =>
@@ -100,7 +101,7 @@ export const logoutDone$ = createEffect(
 export const applicationSubmit$ = createEffect(
   (actions$ = inject(Actions)) =>
     actions$.pipe(
-      ofType(ApplicationActions.submitSuccess),
+      ofType(applicationActions.submitSuccess),
       map(action => appActions.submittedApplication({ application: action.application }))
     ),
   { functional: true }
@@ -158,10 +159,10 @@ export const getSupportersFailure$ = createEffect(
 )
 
 export const getServers$ = createEffect(
-  (actions$ = inject(Actions), qbitmc = inject(QbitmcService)) =>
+  (actions$ = inject(Actions), serverService = inject(ServerService)) =>
     actions$.pipe(
       ofType(appActions.initialize),
-      switchMap(() => qbitmc.servers()),
+      switchMap(() => serverService.list()),
       map(servers => appActions.getServersSuccess({ servers })),
       catchError(error => of(appActions.getServersFailure({ error })))
     ),

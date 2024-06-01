@@ -36,9 +36,7 @@
       "@constants/*": ["src/app/constants/*"],
       "@utils": ["src/app/utils"],
       "@guards/*": ["src/app/guards/*"],
-      "@directives/*": ["src/app/directives/*"],
-      "@selectors/application": ["src/app/store/application/application.selectors"],
-      "@selectors/shop": ["src/app/store/shop/shop.selectors"]
+      "@directives/*": ["src/app/directives/*"]
     }
   },
   "angularCompilerOptions": {

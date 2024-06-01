@@ -1,56 +1,71 @@
-<ion-content class="background padding">
+<ion-content class="background">
   <ion-grid class="main-container ion-no-padding">
     <ion-row class="full-height ion-no-padding">
       <ion-col class="full-height" size="12" size-md="6" size-lg="7">
         <ion-grid class="full-height ion-no-padding content-container">
           <ion-row class="ion-padding">
             <ion-col size="12">
-              <ion-text i18n="@@site-title" class="title">
-                Our community
-              </ion-text>
+              <ion-text i18n="@@site-title" class="title">Our community</ion-text>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col size="12" size-lg="6" size-xl="4">
               <qbit-bullet-point>
                 <ion-icon name="calendar-outline" size="large" bullet></ion-icon>
-                <div class="subtitle" title>Founded in 2015</div>
-                <ion-text class="content-container-description" description>That's almost 10 years of playing together!</ion-text>
+                <div class="subtitle" title i18n="@@site-subtitle">Founded in 2015</div>
+                <ion-text class="content-container-description" description>
+                  That's almost 10 years of playing together!
+                </ion-text>
               </qbit-bullet-point>
             </ion-col>
             <ion-col size="12" size-lg="6" size-xl="4">
               <qbit-bullet-point>
                 <ion-icon name="game-controller-outline" size="large" bullet></ion-icon>
                 <div class="subtitle" title>Game Servers</div>
-                <ion-text class="content-container-description" description>Although our network is mostly compiled of minecraft servers, we may host other games from time to time</ion-text>
+                <ion-text class="content-container-description" description>
+                  Although our network is mostly compiled of minecraft servers, we may host other games from time to time
+                </ion-text>
               </qbit-bullet-point>
             </ion-col>
             <ion-col size="12" size-lg="6" size-xl="4">
               <qbit-bullet-point>
                 <ion-icon name="people-outline" size="large" bullet></ion-icon>
                 <div class="subtitle" title>Better Together</div>
-                <ion-text class="content-container-description" description>Have fun participating in a variety of cooperative projects and events</ion-text>
+                <ion-text class="content-container-description" description>
+                  Have fun participating in a variety of cooperative projects and events
+                </ion-text>
               </qbit-bullet-point>
             </ion-col>
             <ion-col size="12" size-lg="6" size-xl="4">
               <qbit-bullet-point>
                 <ion-icon name="globe-outline" size="large" bullet></ion-icon>
                 <div class="subtitle" title>Custom Systems</div>
-                <ion-text class="content-container-description" description>These provide our community with an immersive experience across all of our platforms</ion-text>
+                <ion-text class="content-container-description" description>
+                  These provide our community with an immersive experience across all of our platforms
+                </ion-text>
               </qbit-bullet-point>
             </ion-col>
             <ion-col size="12" size-lg="6" size-xl="4">
               <qbit-bullet-point>
                 <ion-icon name="hammer-outline" size="large" bullet></ion-icon>
                 <div class="subtitle" title>Built with ♥️</div>
-                <ion-text class="content-container-description" description>It takes a lot of effort to run a community but we'll keep doing it because we love it</ion-text>
+                <ion-text class="content-container-description" description>
+                  It takes a lot of effort to run a community but we'll keep doing it because we love it
+                </ion-text>
               </qbit-bullet-point>
             </ion-col>
           </ion-row>
           @if (!isSignedIn()) {
             <ion-row class="ion-justify-content-end ion-padding-top">
               <ion-col size="12" size-lg="6" size-xl="4">
-                <ion-item button color="secondary" lines="none" class="ion-text-center" [style.border-radius]="'0.25rem'" (click)="auth()">
+                <ion-item
+                  button
+                  color="secondary"
+                  lines="none"
+                  class="ion-text-center"
+                  [style.border-radius]="'0.25rem'"
+                  (click)="nav.navigateForward('/auth')"
+                >
                   <ion-label>Join now!</ion-label>
                 </ion-item>
               </ion-col>
@@ -64,7 +79,7 @@
                 @for (supporter of supporters; track $index) {
                   <ion-item class="blur supporters-list-item" lines="none">
                     <ion-avatar slot="start">
-                      <img [src]="supporter.id | avatar" [alt]="'Avatar of player ' + supporter.name">
+                      <img [src]="supporter.id | avatar" [alt]="'Avatar of player ' + supporter.name" />
                     </ion-avatar>
                     <ion-label>{{ supporter.name }}</ion-label>
                     <ion-chip color="warning" slot="end">Qbitor+ 💛</ion-chip>
@@ -76,7 +91,9 @@
         }
       </ion-col>
       <ion-col class="server-list full-height">
-        <div class="server-list-title" i18n="@@server-list-title"><span class="title secondary-text">Server List</span></div>
+        <div class="server-list-title" i18n="@@server-list-title">
+          <span class="title secondary-text">Server List</span>
+        </div>
         <ion-grid class="server-list-container blur">
           @if (servers(); as servers) {
             @for (server of servers; track $index) {
@@ -84,17 +101,18 @@
                 <ion-col size="12" sizeMd="6" sizeLg="4" sizeXl="12">
                   <ion-card class="server-list-item">
                     <ion-card-header>
-                      <ion-card-title><ion-text class="section-title">{{ server.name }}</ion-text></ion-card-title>
+                      <ion-card-title>
+                        <ion-text class="section-title">{{ server.name }}</ion-text>
+                      </ion-card-title>
                       <ion-card-subtitle>{{ server.game }} {{ server.version }}</ion-card-subtitle>
                     </ion-card-header>
                     <ion-card-content>
-                      @if (server.ip) { <p><ion-text color="dark">{{ server.ip }}</ion-text></p> }
-                      <p><ion-text [color]="server.status !== 'running' ? 'medium' : 'success'">{{ server.status | titlecase }}</ion-text></p>
+                      @if (server.ip) {
+                        <p>
+                          <ion-text color="dark">{{ server.ip }}</ion-text>
+                        </p>
+                      }
                     </ion-card-content>
-                    <div
-                      class="server-list-item-badge"
-                      [style.background-color]="server.status !== 'running' ? 'var(--ion-color-danger)' : 'var(--ion-color-success)'"
-                    ></div>
                   </ion-card>
                 </ion-col>
               </ion-row>
@@ -105,4 +123,3 @@
     </ion-row>
   </ion-grid>
 </ion-content>
-
