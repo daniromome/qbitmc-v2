@@ -1,17 +1,14 @@
 import { TitleCasePipe } from '@angular/common'
 import { Routes } from '@angular/router'
-import { appliedGuard } from '@guards/applied'
-import { applyGuard } from '@guards/apply'
 import { authGuard } from '@guards/auth'
 import { authenticatedGuard } from '@guards/authenticated'
 import { enabledGuard } from '@guards/enabled'
 import { roleGuard } from '@guards/role'
-import { ROLE } from '@models/role'
+import { USER_LABEL } from '@models/user'
 import { provideEffects } from '@ngrx/effects'
 import { provideState } from '@ngrx/store'
 import { BytesPipe } from '@pipes/bytes'
 import { applicationFeature, applicationEffects } from '@store/application'
-import { mediaFeature, mediaEffects } from '@store/media'
 import { ShopEffects, shopFeature } from '@store/shop'
 
 export const routes: Routes = [
@@ -30,19 +27,7 @@ export const routes: Routes = [
       {
         path: 'join',
         canActivate: [authGuard, enabledGuard],
-        children: [
-          {
-            path: '',
-            loadComponent: () => import('./modules/join/join.component').then(c => c.JoinComponent),
-            canActivate: [applyGuard, enabledGuard],
-            providers: [provideState(mediaFeature), provideEffects(mediaEffects)]
-          },
-          {
-            path: 'status',
-            loadComponent: () => import('./modules/join/status/status.component').then(c => c.StatusComponent),
-            canActivate: [appliedGuard, enabledGuard]
-          }
-        ],
+        loadChildren: () => import('./modules/join/join.routes').then(m => m.routes),
         providers: [provideState(applicationFeature), provideEffects(applicationEffects), BytesPipe]
       },
       {
@@ -54,23 +39,23 @@ export const routes: Routes = [
       {
         path: 'map',
         loadComponent: () => import('./modules/map/map.component').then(c => c.MapComponent),
-        canActivate: [roleGuard(ROLE.QBITOR), enabledGuard]
+        canActivate: [roleGuard(USER_LABEL.QBITOR), enabledGuard]
       },
       {
         path: 'profile',
-        canActivate: [roleGuard(ROLE.QBITOR), enabledGuard],
+        canActivate: [roleGuard(USER_LABEL.QBITOR), enabledGuard],
         providers: [TitleCasePipe],
         children: [
           {
             path: '',
             loadComponent: () => import('./modules/profile/profile.component').then(c => c.ProfileComponent),
-            canActivate: [roleGuard(ROLE.QBITOR), enabledGuard]
+            canActivate: [roleGuard(USER_LABEL.QBITOR), enabledGuard]
           },
           {
             path: 'nickname',
             loadComponent: () =>
               import('./modules/profile/nickname-editor/nickname-editor.component').then(c => c.NicknameEditorComponent),
-            canActivate: [roleGuard(ROLE.QBITOR), enabledGuard]
+            canActivate: [roleGuard(USER_LABEL.QBITOR), enabledGuard]
           }
         ]
       },

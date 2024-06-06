@@ -22,7 +22,7 @@ import {
 } from '@ionic/angular/standalone'
 import { Store } from '@ngrx/store'
 import { filter, map } from 'rxjs'
-import { ROLE, Role } from '@models/role'
+import { USER_LABEL, UserLabel } from '@models/user'
 import { LocaleService } from '@services/locale'
 import { AvatarPipe } from '@pipes/avatar'
 import { Locale } from '@models/locale'
@@ -38,7 +38,7 @@ interface Tab {
   icon: string
   label: string
   path: string
-  role?: Role
+  role?: UserLabel
 }
 
 @Component({
@@ -78,8 +78,9 @@ export class TabsComponent {
   private readonly router = inject(Router)
   public readonly localeService = inject(LocaleService)
   public readonly disabled = this.store.selectSignal(appFeature.selectIsDisabled)
+  public readonly user = this.store.selectSignal(appFeature.selectUser)
   public readonly profile = this.store.selectSignal(appFeature.selectProfile)
-  public readonly isAdmin = this.store.selectSignal(appFeature.selectIsRole(ROLE.ADMIN))
+  public readonly isAdmin = this.store.selectSignal(appFeature.selectIsRole(USER_LABEL.ADMIN))
   public readonly route = toSignal(
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
@@ -102,24 +103,24 @@ export class TabsComponent {
       icon: 'compass',
       label: $localize`:@@map-tab-label:Map`,
       path: 'map',
-      role: ROLE.QBITOR
+      role: USER_LABEL.QBITOR
     },
     {
       icon: 'person',
       label: $localize`:@@profile-tab-label:Profile`,
       path: 'profile',
-      role: ROLE.QBITOR
+      role: USER_LABEL.QBITOR
     }
   ]
 
   public readonly tabs = computed(() => {
-    const profile = this.profile()
-    if (!profile || profile.roles.length === 0)
+    const user = this.user()
+    if (!user || user.labels.length === 0)
       return [
         ...this._tabs.filter(tab => !tab.role),
-        { icon: 'people', label: $localize`:@@join-tab-label:Join`, path: 'join', role: ROLE.GUEST }
+        { icon: 'people', label: $localize`:@@join-tab-label:Join`, path: 'join', role: USER_LABEL.GUEST }
       ]
-    return this._tabs.filter(tab => profile.roles.some(r => r === tab.role || !tab.role))
+    return this._tabs.filter(tab => user.labels.some(r => r === tab.role || !tab.role))
   })
 
   public constructor() {

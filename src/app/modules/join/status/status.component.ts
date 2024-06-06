@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Store } from '@ngrx/store'
 import { Observable, map } from 'rxjs'
@@ -13,25 +13,29 @@ import { logoDiscord } from 'ionicons/icons'
 @Component({
   selector: 'qbit-status',
   standalone: true,
-  imports: [IonIcon, IonLabel, IonItem, IonText, IonCardContent, IonCardSubtitle, IonCardTitle, IonCardHeader, IonAvatar, IonCard, CommonModule, AvatarPipe],
+  imports: [
+    IonIcon,
+    IonLabel,
+    IonItem,
+    IonText,
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonAvatar,
+    IonCard,
+    CommonModule,
+    AvatarPipe
+  ],
   templateUrl: './status.component.html',
   styleUrls: ['./status.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatusComponent {
-  public readonly profile$: Observable<Profile | undefined>
-  public readonly disabled$: Observable<boolean>
+  private readonly store = inject(Store)
+  public readonly profile = this.store.selectSignal(appFeature.selectProfile)
 
-  public constructor(
-    private readonly store: Store
-  ) {
+  public constructor() {
     addIcons({ logoDiscord })
-    this.profile$ = this.store.select(appFeature.selectProfile)
-    this.disabled$ = this.profile$.pipe(
-      map(user => user?.application?.createdAt
-        ? (Date.now() - new Date(user?.application.createdAt).valueOf()) < TWENTY_FOUR_HOURS
-        : true
-      )
-    )
   }
 }

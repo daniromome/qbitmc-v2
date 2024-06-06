@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   private readonly store = inject(Store)
 
   public ngOnInit(): void {
+    console.log(window.location.href)
     this.store.dispatch(appActions.initialize())
   }
 }

@@ -1,6 +1,6 @@
 import { Route } from '@angular/router'
 import { roleGuard } from '@guards/role'
-import { ROLE } from '@models/role'
+import { USER_LABEL } from '@models/user'
 import { provideEffects } from '@ngrx/effects'
 import { provideState } from '@ngrx/store'
 import { adminEffects, adminFeature } from '@store/admin'
@@ -9,7 +9,7 @@ export const routes: Route[] = [
   {
     path: '',
     loadComponent: () => import('./admin.component').then(c => c.AdminComponent),
-    canActivate: [roleGuard(ROLE.ADMIN)],
+    canActivate: [roleGuard(USER_LABEL.ADMIN)],
     providers: [provideState(adminFeature), provideEffects(adminEffects)],
     children: [
       {

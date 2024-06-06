@@ -1,18 +1,29 @@
 import { EnrollmentApplication } from '@models/application'
-import { KeycloakToken, Profile } from '@models/profile'
+import { Profile } from '@models/profile'
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
 import { Leaderboards } from '@models/leaderboards'
 import { MinecraftProfile } from '@models/minecraft-profile'
 import { Server } from '@models/server'
+import { Models } from 'appwrite'
+import { User } from '@models/user'
 
 export const appActions = createActionGroup({
   source: 'App',
   events: {
     Initialize: emptyProps(),
+    'Get Session': emptyProps(),
+    'Get Session Success': props<{ session: Models.Session }>(),
+    'Get Session Failure': props<{ error: Error }>(),
+    'Get User': emptyProps(),
+    'Get User Success': props<{ user: User }>(),
+    'Get User Failure': props<{ error: Error }>(),
     Login: emptyProps(),
-    'Get Profile': emptyProps(),
+    'Get Profile': props<{ id: string }>(),
     'Get Profile Success': props<{ profile: Profile }>(),
     'Get Profile Failure': props<{ error: Error }>(),
+    'Create Profile': emptyProps(),
+    'Create Profile Success': props<{ profile: Profile }>(),
+    'Create Profile Failure': props<{ error: Error }>(),
     'Link Minecraft Account': emptyProps(),
     Logout: emptyProps(),
     'Logout Done': emptyProps(),
@@ -31,8 +42,6 @@ export const appActions = createActionGroup({
     'Navigate Back': emptyProps(),
     'Update Nickname': props<{ nickname: string }>(),
     'Update Nickname Success': props<{ profile: Profile }>(),
-    'Update Nickname Failure': props<{ error: Error }>(),
-    'Set Access Token': props<{ token: KeycloakToken }>(),
-    'Refresh Access Token': props<{ token: KeycloakToken }>()
+    'Update Nickname Failure': props<{ error: Error }>()
   }
 })

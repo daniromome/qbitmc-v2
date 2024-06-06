@@ -5,7 +5,7 @@ import { Observable } from 'rxjs'
 import { Product } from '@models/product'
 import { Store } from '@ngrx/store'
 import { ShopActions, shopFeature } from '@store/shop'
-import { ROLE } from '@models/role'
+import { USER_LABEL } from '@models/user'
 import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonItem, IonRow, IonText } from '@ionic/angular/standalone'
 
 @Component({
@@ -22,7 +22,7 @@ export class ShopComponent implements OnInit {
   public constructor(
     private readonly store: Store
   ) {
-    this.isSupporter$ = this.store.select(appFeature.selectIsRole(ROLE.SUPPORTER))
+    this.isSupporter$ = this.store.select(appFeature.selectIsRole(USER_LABEL.SUPPORTER))
   }
 
   public ngOnInit(): void {

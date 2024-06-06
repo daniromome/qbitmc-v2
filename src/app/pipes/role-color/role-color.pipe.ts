@@ -1,20 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core'
-import { ROLE, Role } from '@models/role'
+import { USER_LABEL, UserLabel } from '@models/user'
 
 @Pipe({
   name: 'roleColor',
   standalone: true
 })
 export class RoleColorPipe implements PipeTransform {
-  public transform(role: Role): unknown {
+  public transform(role: UserLabel): unknown {
     switch (role) {
-      case ROLE.ADMIN:
+      case USER_LABEL.ADMIN:
         return 'danger'
-      case ROLE.MOD:
+      case USER_LABEL.MOD:
         return 'success'
-      case ROLE.QBITOR:
+      case USER_LABEL.QBITOR:
         return 'primary'
-      case ROLE.SUPPORTER:
+      case USER_LABEL.SUPPORTER:
         return 'warning'
       default:
         return 'medium'

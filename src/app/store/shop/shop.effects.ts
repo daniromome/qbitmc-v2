@@ -7,7 +7,7 @@ import { AlertController, NavController, ToastController } from '@ionic/angular'
 import { StripeService } from '@services/stripe'
 import { Store } from '@ngrx/store'
 import { appFeature } from '@store/app'
-import { ROLE } from '@models/role'
+import { USER_LABEL } from '@models/user'
 
 @Injectable()
 export class ShopEffects {
@@ -71,8 +71,8 @@ export class ShopEffects {
   public subscribe$ = createEffect(() => this.actions$.pipe(
     ofType(ShopActions.subscribe),
     concatLatestFrom(() => zip(
-      this.store.select(appFeature.selectIsRole(ROLE.SUPPORTER)),
-      this.store.select(appFeature.selectIsRole(ROLE.QBITOR)),
+      this.store.select(appFeature.selectIsRole(USER_LABEL.SUPPORTER)),
+      this.store.select(appFeature.selectIsRole(USER_LABEL.QBITOR)),
       this.store.select(appFeature.selectIsSignedIn)
     )),
     map(([{ price }, [isSupporter, isQbitor, isSignedIn]]) => {

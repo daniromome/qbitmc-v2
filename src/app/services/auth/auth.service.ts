@@ -1,31 +1,58 @@
 import { Injectable, inject } from '@angular/core'
 import { Profile } from '@models/profile'
-import { Observable } from 'rxjs'
+import { Observable, from, map, of } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
+import { AppwriteService } from '@services/appwrite'
+import { Models, OAuthProvider } from 'appwrite'
+import { User } from '@models/user'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly http = inject(HttpClient)
+  private readonly appwrite = inject(AppwriteService)
 
-  public getProfile(): Observable<Profile> {
-    return this.http.get<Profile>(`${environment.API_URL}/profile`)
+  public getSession(): Observable<Models.Session> {
+    return from(this.appwrite.account.getSession('current'))
   }
 
-  public async linkMcAccount(accessToken: string): Promise<void> {
-    const { session_state: state, azp: clientId } = JSON.parse(decodeURIComponent(window.atob(accessToken.split('.')[1])))
-    const nonce = crypto.randomUUID()
-    const encoder = new TextEncoder()
-    const digest = await crypto.subtle.digest('SHA-256', encoder.encode(nonce + state + clientId + 'azure').buffer)
-    const hash = window.btoa(String.fromCharCode(...new Uint8Array(digest)))
-    const params = new URLSearchParams()
-    params.append('nonce', nonce)
-    params.append('hash', hash)
-    params.append('client_id', clientId)
-    params.append('redirect_uri', environment.SITE_URL)
-    window.location.href = `${environment.KEYCLOAK_URL}/broker/azure/link?${params.toString()}`
+  public authenticate(): Observable<void | URL> {
+    return of(
+      this.appwrite.account.createOAuth2Session(OAuthProvider.Discord, environment.SITE_URL, environment.SITE_URL, [
+        'guilds.join'
+      ])
+    )
+  }
+
+  public getUser(): Observable<User> {
+    return from(this.appwrite.account.get()) as Observable<User>
+  }
+
+  public getProfile(id: string): Observable<Profile> {
+    return from(
+      this.appwrite.databases.getDocument<Profile>(
+        environment.APPWRITE_DATABASE,
+        environment.APPWRITE_COLLECTION_PROFILE,
+        id,
+        []
+      )
+    )
+  }
+
+  public createProfile(accessToken: string): Observable<Profile> {
+    return from(
+      this.appwrite.functions.createExecution(environment.APPWRITE_FUNCTION_REGISTRATION, JSON.stringify({ accessToken }))
+    ).pipe(map(execution => JSON.parse(execution.responseBody) as Profile))
+  }
+
+  public linkMcAccount(): Observable<void | URL> {
+    return of(
+      this.appwrite.account.createOAuth2Token(OAuthProvider.Microsoft, environment.SITE_URL, environment.SITE_URL, [
+        'XboxLive.signin'
+      ])
+    )
   }
 
   public updateProfile(profile: Profile): Observable<Profile> {

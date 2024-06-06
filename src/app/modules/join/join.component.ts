@@ -105,7 +105,6 @@ export class JoinComponent implements OnInit {
   ]
 
   public readonly form: FormGroup<ApplicationForm> = this.fb.group({
-    forename: this.fb.control('', [Validators.required, Validators.maxLength(12)]),
     age: this.fb.control(0, [Validators.required]),
     experience: this.fb.control('', [Validators.required]),
     reasons: this.fb.control('', [Validators.required]),
@@ -119,14 +118,14 @@ export class JoinComponent implements OnInit {
   public readonly media: Signal<SafeMedia[]> = computed(() => {
     const profile = this.profile()
     if (!profile) return []
-    const media = this.store.selectSignal(mediaFeature.selectMedia({ entity: MEDIA_ENTITY.APPLICATIONS, id: profile.id }))()
+    const media = this.store.selectSignal(mediaFeature.selectMedia({ entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id }))()
     return media.map(m => ({ ...m, blob: m.blob ? this.sanitizer.bypassSecurityTrustUrl(m.blob) : undefined }))
   })
 
   public readonly filesSize = computed(() => {
     const profile = this.profile()
     if (!profile) return 0
-    return this.store.selectSignal(mediaFeature.selectMediaSize({ entity: MEDIA_ENTITY.APPLICATIONS, id: profile.id }))()
+    return this.store.selectSignal(mediaFeature.selectMediaSize({ entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id }))()
   })
 
   public readonly filesSizeWithinLimit = computed(() => {
@@ -146,8 +145,9 @@ export class JoinComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    const profile = this.profile()
-    if (profile) this.store.dispatch(mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.APPLICATIONS, id: profile.id } }))
+    this.store.dispatch(applicationActions.get())
+    // const profile = this.profile()
+    // if (profile) this.store.dispatch(mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id } }))
     const applicationString = localStorage.getItem('application')
     const application = applicationString ? JSON.parse(applicationString) : undefined
     if (!application) return
@@ -169,7 +169,7 @@ export class JoinComponent implements OnInit {
   public droppedFiles(files: File[]): void {
     const profile = this.profile()
     if (!profile) return
-    const request = { entity: MEDIA_ENTITY.APPLICATIONS, id: profile.id, files, maxUploadSize: ENROLLMENT_MAX_UPLOAD_SIZE }
+    const request = { entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id, files, maxUploadSize: ENROLLMENT_MAX_UPLOAD_SIZE }
     this.store.dispatch(mediaActions.uploadMediaResources({ request }))
   }
 

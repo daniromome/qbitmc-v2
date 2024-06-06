@@ -3,10 +3,10 @@ import { Router, CanActivateFn } from '@angular/router'
 import { filter, map, switchMap } from 'rxjs'
 import { Store } from '@ngrx/store'
 import { appFeature } from '@store/app'
-import { Role } from '@models/role'
+import { UserLabel } from '@models/user'
 
-export const roleGuard: (...roles: Role[]) => CanActivateFn =
-  (...roles: Role[]) =>
+export const roleGuard: (...roles: UserLabel[]) => CanActivateFn =
+  (...roles: UserLabel[]) =>
     () => {
       const store = inject(Store)
       const router = inject(Router)

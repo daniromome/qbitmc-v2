@@ -9,14 +9,14 @@
           </ion-button>
         </ion-buttons>
       </ng-container>
-      <img src="assets/logo.svg" alt="" class="logo" slot="start">
+      <img src="assets/logo.svg" alt="" class="logo" slot="start" />
       <ion-title>QbitMC</ion-title>
       <ion-buttons slot="end">
         <ion-button id="select-locale" color="dark">{{ localeService.locale | uppercase }}</ion-button>
         <ng-container *ngIf="profile() as profile">
           <ion-button class="profile-button" id="profile-menu">
-            <ng-container *ngIf="profile.minecraft; else userIcon">
-              <img [src]="profile.minecraft.id | avatar" alt="" slot="icon-only" class="avatar">
+            <ng-container *ngIf="profile.player; else userIcon">
+              <img [src]="profile.player.uuid | avatar" alt="" slot="icon-only" class="avatar" />
             </ng-container>
             <ng-template #userIcon>
               <ion-icon name="person" slot="icon-only"></ion-icon>
