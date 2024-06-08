@@ -48,11 +48,14 @@ export class AuthService {
   }
 
   public linkMcAccount(): Observable<void | URL> {
-    return of(
-      this.appwrite.account.createOAuth2Token(OAuthProvider.Microsoft, environment.SITE_URL, environment.SITE_URL, [
-        'XboxLive.signin'
-      ])
-    )
+    const returnUrl = `${environment.SITE_URL}/tabs/join`
+    return of(this.appwrite.account.createOAuth2Session(OAuthProvider.Microsoft, returnUrl, returnUrl, ['XboxLive.signin']))
+  }
+
+  public createPlayer(accessToken: string): Observable<Profile> {
+    return from(
+      this.appwrite.functions.createExecution(environment.APPWRITE_FUNCTION_PLAYER_LINK, JSON.stringify({ accessToken }))
+    ).pipe(map(execution => JSON.parse(execution.responseBody) as Profile))
   }
 
   public updateProfile(profile: Profile): Observable<Profile> {

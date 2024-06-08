@@ -40,7 +40,7 @@ import {
   IonList
 } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
-import { cubeOutline, cubeSharp, close } from 'ionicons/icons'
+import { cubeOutline, cubeSharp, close, copyOutline } from 'ionicons/icons'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { mediaActions, mediaFeature } from '@store/media'
 
@@ -114,6 +114,7 @@ export class JoinComponent implements OnInit {
   private readonly formChanges = toSignal(this.form.valueChanges)
 
   public readonly profile = this.store.selectSignal(appFeature.selectProfile)
+  public readonly player = this.store.selectSignal(appFeature.selectPlayer)
 
   public readonly media: Signal<SafeMedia[]> = computed(() => {
     const profile = this.profile()
@@ -136,7 +137,7 @@ export class JoinComponent implements OnInit {
   public readonly filesSizeExceedsLimit = computed(() => !this.filesSizeWithinLimit())
 
   public constructor() {
-    addIcons({ cubeOutline, cubeSharp, close })
+    addIcons({ cubeOutline, cubeSharp, close, copyOutline })
     effect(() => {
       const form = this.formChanges()
       if (!form) return
@@ -145,13 +146,13 @@ export class JoinComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.store.dispatch(applicationActions.get())
     // const profile = this.profile()
     // if (profile) this.store.dispatch(mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id } }))
     const applicationString = localStorage.getItem('application')
-    const application = applicationString ? JSON.parse(applicationString) : undefined
-    if (!application) return
-    this.form.setValue(application)
+    const applicationFromStorage = applicationString ? (JSON.parse(applicationString) as EnrollmentApplication) : undefined
+    if (!applicationFromStorage) return
+    const { age, experience, reasons, rules } = applicationFromStorage
+    this.form.setValue({ age, experience, reasons, rules })
   }
 
   public numbersOnly(): void {

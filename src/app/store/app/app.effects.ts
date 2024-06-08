@@ -53,26 +53,6 @@ export const getUser$ = createEffect(
   { functional: true }
 )
 
-export const getSessionSuccessEmitGetProfile$ = createEffect(
-  (actions$ = inject(Actions)) =>
-    actions$.pipe(
-      ofType(appActions.getSessionSuccess),
-      map(({ session }) => appActions.getProfile({ id: session.userId }))
-    ),
-  { functional: true }
-)
-
-export const getProfile$ = createEffect(
-  (actions$ = inject(Actions), auth = inject(AuthService)) =>
-    actions$.pipe(
-      ofType(appActions.getProfile),
-      switchMap(({ id }) => auth.getProfile(id)),
-      map(profile => appActions.getProfileSuccess({ profile })),
-      catchError(error => of(appActions.getProfileFailure({ error })))
-    ),
-  { functional: true }
-)
-
 export const getUserSuccess$ = createEffect(
   (actions$ = inject(Actions), alert = inject(AlertController)) =>
     actions$.pipe(
@@ -88,6 +68,27 @@ export const getUserSuccess$ = createEffect(
       switchMap(alert => alert.present())
     ),
   { functional: true, dispatch: false }
+)
+
+export const getSessionSuccessEmitGetProfile$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(appActions.getSessionSuccess),
+      filter(({ session }) => session.provider === 'discord'),
+      map(({ session }) => appActions.getProfile({ id: session.userId }))
+    ),
+  { functional: true }
+)
+
+export const getProfile$ = createEffect(
+  (actions$ = inject(Actions), auth = inject(AuthService)) =>
+    actions$.pipe(
+      ofType(appActions.getProfile),
+      switchMap(({ id }) => auth.getProfile(id)),
+      map(profile => appActions.getProfileSuccess({ profile })),
+      catchError(error => of(appActions.getProfileFailure({ error })))
+    ),
+  { functional: true }
 )
 
 export const getProfileFailure$ = createEffect(
@@ -110,6 +111,27 @@ export const createProfile$ = createEffect(
   { functional: true }
 )
 
+export const getSessionSuccessEmitCreatePlayer$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(appActions.getSessionSuccess),
+      filter(({ session }) => session.provider === 'microsoft'),
+      map(({ session }) => appActions.createPlayer({ token: session.providerAccessToken }))
+    ),
+  { functional: true }
+)
+
+export const createPlayer$ = createEffect(
+  (actions$ = inject(Actions), auth = inject(AuthService)) =>
+    actions$.pipe(
+      ofType(appActions.createPlayer),
+      exhaustMap(({ token }) => auth.createPlayer(token)),
+      map(profile => appActions.createPlayerSuccess({ profile })),
+      catchError(error => of(appActions.createPlayerFailure({ error })))
+    ),
+  { functional: true }
+)
+
 export const login$ = createEffect(
   (actions$ = inject(Actions), auth = inject(AuthService)) =>
     actions$.pipe(
@@ -119,16 +141,14 @@ export const login$ = createEffect(
   { functional: true, dispatch: false }
 )
 
-// export const linkMinecraftAccount$ = createEffect(
-//   (actions$ = inject(Actions), oidc = inject(OidcSecurityService), auth = inject(AuthService)) =>
-//     actions$.pipe(
-//       ofType(appActions.linkMinecraftAccount),
-//       switchMap(() => oidc.getAccessToken()),
-//       filter(token => !!token),
-//       switchMap(token => auth.linkMcAccount())
-//     ),
-//   { functional: true, dispatch: false }
-// )
+export const linkMinecraftAccount$ = createEffect(
+  (actions$ = inject(Actions), auth = inject(AuthService)) =>
+    actions$.pipe(
+      ofType(appActions.linkMinecraftAccount),
+      switchMap(() => auth.linkMcAccount())
+    ),
+  { functional: true, dispatch: false }
+)
 
 // export const logout$ = createEffect(
 //   (actions$ = inject(Actions), oidc = inject(OidcSecurityService)) =>

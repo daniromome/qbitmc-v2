@@ -77,7 +77,7 @@ export const appFeature = createFeature({
   name: appFeatureKey,
   reducer,
   extraSelectors: ({ selectProfile, selectAppState, selectServers, selectSession, selectUser }) => ({
-    selectIsSignedIn: createSelector(selectAppState, state => !!state.profile && state.initialized),
+    selectIsSignedIn: createSelector(selectAppState, state => !!state.session && state.initialized),
     selectIsDisabled: createSelector(selectUser, user => user?.labels.includes(USER_LABEL.DISABLED)),
     selectUserId: createSelector(selectSession, session => session?.$id || ''),
     selectPlayer: createSelector(selectAppState, state => {

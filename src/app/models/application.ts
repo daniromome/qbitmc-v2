@@ -3,6 +3,7 @@ import { Models } from 'appwrite'
 export interface EnrollmentApplicationStatus extends Models.Document {
   status: boolean
   application: string
+  channel: string
 }
 
 export interface EnrollmentApplication {

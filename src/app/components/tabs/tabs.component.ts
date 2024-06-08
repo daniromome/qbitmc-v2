@@ -80,6 +80,7 @@ export class TabsComponent {
   public readonly disabled = this.store.selectSignal(appFeature.selectIsDisabled)
   public readonly user = this.store.selectSignal(appFeature.selectUser)
   public readonly profile = this.store.selectSignal(appFeature.selectProfile)
+  public readonly player = this.store.selectSignal(appFeature.selectPlayer)
   public readonly isAdmin = this.store.selectSignal(appFeature.selectIsRole(USER_LABEL.ADMIN))
   public readonly route = toSignal(
     this.router.events.pipe(

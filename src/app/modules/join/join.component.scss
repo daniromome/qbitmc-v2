@@ -57,3 +57,15 @@ ion-chip {
 ion-item {
   --background: var(--ion-card-background-rgb)
 }
+
+.connect-account-container-subtitle {
+  isolation: isolate;
+  position: relative;
+  &-button {
+    position: absolute;
+    top: -0.5rem;
+    &.ios {
+      top: -0.65rem;
+    }
+  }
+}

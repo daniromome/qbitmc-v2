@@ -15,12 +15,11 @@
         <ion-button id="select-locale" color="dark">{{ localeService.locale | uppercase }}</ion-button>
         <ng-container *ngIf="profile() as profile">
           <ion-button class="profile-button" id="profile-menu">
-            <ng-container *ngIf="profile.player; else userIcon">
-              <img [src]="profile.player.uuid | avatar" alt="" slot="icon-only" class="avatar" />
-            </ng-container>
-            <ng-template #userIcon>
+            @if (player(); as player) {
+              <img [src]="player.uuid | avatar" alt="" slot="icon-only" class="avatar" />
+            } @else {
               <ion-icon name="person" slot="icon-only"></ion-icon>
-            </ng-template>
+            }
           </ion-button>
           <ion-popover trigger="profile-menu" showBackdrop="false">
             <ng-template>
@@ -48,7 +47,7 @@
     </ion-toolbar>
   </ion-header>
   <ion-tab-bar slot="bottom">
-    <ion-tab-button *ngFor="let tab of tabs()" [tab]="tab.path" [disabled]="(disabled()) && tab.role">
+    <ion-tab-button *ngFor="let tab of tabs()" [tab]="tab.path" [disabled]="disabled() && tab.role">
       <ion-icon [name]="tab.icon"></ion-icon>
       <ion-label>{{ tab.label }}</ion-label>
     </ion-tab-button>
@@ -58,8 +57,12 @@
 <ion-popover trigger="select-locale" showBackdrop="false">
   <ng-template>
     <ion-content>
-      <ion-item lines="none" button (click)="changeLocale('es')" [style.--background]="'transparent'" [detail]="false">ES</ion-item>
-      <ion-item lines="none" button (click)="changeLocale('en')" [style.--background]="'transparent'" [detail]="false">EN</ion-item>
+      <ion-item lines="none" button (click)="changeLocale('es')" [style.--background]="'transparent'" [detail]="false"
+        >ES</ion-item
+      >
+      <ion-item lines="none" button (click)="changeLocale('en')" [style.--background]="'transparent'" [detail]="false"
+        >EN</ion-item
+      >
     </ion-content>
   </ng-template>
 </ion-popover>

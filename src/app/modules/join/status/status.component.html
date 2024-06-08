@@ -1,44 +1,45 @@
-<div class="status-container" *ngIf="profile$ | async as profile">
-  <ion-card>
-    <ion-avatar *ngIf="profile.player.uuid">
-      <img [src]="profile.player.uuid | avatar:'face'">
-    </ion-avatar>
-    <ion-card-header class="ion-card-avatar-header">
-      <ion-card-title i18n="@@status-title">Hey {{ profile.player.ign }},</ion-card-title>
-      <ion-card-subtitle i18n="@@status-received" *ngIf="profile.application?.approved === null; else subtitle">We received your request</ion-card-subtitle>
-      <ng-template #subtitle>
-        <ion-card-subtitle i18n="@@status-rejected">Your application has been <ion-text color="danger">rejected</ion-text></ion-card-subtitle>
-      </ng-template>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-text class="ion-text-center" i18n="@@status-pending-approval" *ngIf="profile.application?.approved === null; else rejected">
-        You will receive a message from our chatbot in discord when we either
-        approve or reject your application. If it's been more than 24 hours and
-        you have yet to receive a response, the following button will activate
-        so you can ask for the status of your application on our discord server.
-      </ion-text>
-      <ng-template #rejected>
-        <ion-text class="ion-text-center" i18n="@@status-apology">
-          We're sorry for the inconveniences but we have determined that you are
-          not a good fit for our community. If you think there has been a mistake
-          you can always reach out to us privately. Best regards.
-        </ion-text>
-      </ng-template>
-    </ion-card-content>
-    <ion-item
-      *ngIf="profile.application?.approved === null"
-      href="https://discord.com/channels/917132788753371157/917132788753371159"
-      target="_blank"
-      rel="noreferrer"
-      color="secondary"
-      [disabled]="disabled$ | async"
-      lines="none"
-      class="last-card-item"
-    >
-      <ion-icon name="logo-discord" slot="start"></ion-icon>
-      <ion-label i18n="@@status-contact-us-button-label">
-        Contact us!
-      </ion-label>
-    </ion-item>
-  </ion-card>
-</div>
+@if (player(); as player) {
+  <div class="status-container">
+    <ion-card>
+      <ion-avatar *ngIf="player.uuid">
+        <img [src]="player.uuid | avatar: 'face'" alt="Player's avatar" />
+      </ion-avatar>
+      <ion-card-header class="ion-card-avatar-header">
+        <ion-card-title i18n="@@status-title">Hey {{ player.ign }},</ion-card-title>
+        @if (application()?.status?.status === null) {
+          <ion-card-subtitle i18n="@@status-received">We received your request</ion-card-subtitle>
+        } @else {
+          <ion-card-subtitle i18n="@@status-rejected"
+            >Your application has been <ion-text color="danger">rejected</ion-text>
+          </ion-card-subtitle>
+        }
+      </ion-card-header>
+      <ion-card-content>
+        @if (application()?.status?.status === null) {
+          <ion-text class="ion-text-center" i18n="@@status-pending-approval">
+            You will receive a message from our chatbot in discord when we either approve or reject your application. If it's
+            been more than 24 hours and you have yet to receive a response, the following button will activate so you can ask
+            for the status of your application on our discord server.
+          </ion-text>
+        } @else {
+          <ion-text class="ion-text-center" i18n="@@status-apology">
+            We're sorry for the inconveniences but we have determined that you are not a good fit for our community. If you
+            think there has been a mistake you can always reach out to us privately. Best regards.
+          </ion-text>
+        }
+      </ion-card-content>
+      @if (application()?.status?.channel; as channel) {
+        <ion-item
+          [href]="discord.getChannelURL(channel)"
+          target="_blank"
+          rel="noreferrer"
+          color="secondary"
+          lines="none"
+          class="last-card-item">
+          <ion-icon name="logo-discord" slot="start"></ion-icon>
+          <ion-label i18n="@@status-contact-us-button-label"> Contact us! </ion-label>
+        </ion-item>
+      }
+    </ion-card>
+  </div>
+}
