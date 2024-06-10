@@ -11,7 +11,7 @@ export interface MediaState extends EntityState<Media> {
 }
 
 const adapter: EntityAdapter<Media> = createEntityAdapter<Media>({
-  selectId: (m: Media): string => m.key
+  selectId: (m: Media): string => m.$id
 })
 
 const initialState: MediaState = adapter.getInitialState({
@@ -25,16 +25,12 @@ export const reducer = createReducer(
     const { entity, id } = action.request
     return setMediaState(state, `${entity}/${id}`, MEDIA_STATUS.DOWNLOADING)
   }),
-  on(mediaActions.getMediaFailure, (state, action): MediaState => {
-    const { entity, id } = action.request
-    return setMediaState(state, `${entity}/${id}`, MEDIA_STATUS.LOADED, action.error.message)
-  }),
-  on(mediaActions.getMediaResourcesSuccess, (state, action): MediaState => {
-    const [entity, id] = action.media[0].key.split('/')
+  on(mediaActions.getMediaSuccess, (state, action): MediaState => {
+    const [entity, id] = action.media[0].$id.split('/')
     return adapter.upsertMany(action.media, setMediaState(state, `${entity}/${id}`, MEDIA_STATUS.LOADED))
   }),
-  on(mediaActions.getMediaResourcesFailure, (state, action): MediaState => {
-    const [entity, id] = action.keys[0].split('/')
+  on(mediaActions.getMediaFailure, (state, action): MediaState => {
+    const { entity, id } = action.request
     return setMediaState(state, `${entity}/${id}`, MEDIA_STATUS.LOADED, action.error.message)
   }),
   on(mediaActions.uploadMediaResources, (state, action): MediaState => {
@@ -42,14 +38,7 @@ export const reducer = createReducer(
     return setMediaState(state, `${entity}/${id}`, MEDIA_STATUS.UPLOADING)
   }),
   on(mediaActions.uploadMediaResourcesSuccess, (state, { entity, id, media }): MediaState => {
-    return adapter.upsertMany(
-      media.map(m => ({ ...m, key: `${entity}/${id}/${m.key}` })),
-      setMediaState(state, `${entity}/${id}`, MEDIA_STATUS.LOADED)
-    )
-  }),
-  on(mediaActions.getMediaResourcesFailure, (state, action): MediaState => {
-    const [entity, id] = action.keys[0].split('/')
-    return setMediaState(state, `${entity}/${id}`, MEDIA_STATUS.LOADED, action.error.message)
+    return adapter.upsertMany(media, setMediaState(state, `${entity}/${id}`, MEDIA_STATUS.LOADED))
   }),
   on(mediaActions.deleteMediaResource, (state, { path }): MediaState => {
     const [entity, id] = path.split('/')
@@ -82,7 +71,9 @@ export const mediaFeature = createFeature({
       selectMedia,
       selectMediaSize: (request: GetMediaRequest) =>
         createSelector(selectMedia(request), media =>
-          media.every(m => !!m.size) ? media.map(m => m.size).reduce((accumulator, value) => accumulator + value, 0) : 0
+          media.every(m => !!m.sizeOriginal)
+            ? media.map(m => m.sizeOriginal).reduce((accumulator, value) => accumulator + value, 0)
+            : 0
         ),
       selectLoading: (entity: MediaEntity, id: string) => {
         return createSelector(selectMediaState, state => state.loading[`${entity}/${id}`])

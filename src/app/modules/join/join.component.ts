@@ -128,11 +128,10 @@ export class JoinComponent implements OnInit {
   public readonly verificationLoading = this.store.selectSignal(appFeature.selectLoadingVerification)
   public readonly verificationError = this.store.selectSignal(appFeature.selectErrorVerification)
 
-  public readonly media: Signal<SafeMedia[]> = computed(() => {
+  public readonly media: Signal<Media[]> = computed(() => {
     const profile = this.profile()
     if (!profile) return []
-    const media = this.store.selectSignal(mediaFeature.selectMedia({ entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id }))()
-    return media.map(m => ({ ...m, blob: m.blob ? this.sanitizer.bypassSecurityTrustUrl(m.blob) : undefined }))
+    return this.store.selectSignal(mediaFeature.selectMedia({ entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id }))()
   })
 
   public readonly filesSize = computed(() => {
@@ -163,8 +162,8 @@ export class JoinComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    // const profile = this.profile()
-    // if (profile) this.store.dispatch(mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id } }))
+    const profile = this.profile()
+    if (profile) this.store.dispatch(mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id } }))
     const applicationString = localStorage.getItem('application')
     const applicationFromStorage = applicationString ? (JSON.parse(applicationString) as EnrollmentApplication) : undefined
     if (!applicationFromStorage) return

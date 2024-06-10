@@ -1,9 +1,8 @@
+import { Models } from 'appwrite'
 import { ObjectValues } from '../utils/object-values'
 
-export interface Media {
-  key: string
-  size: number
-  blob: string
+export interface Media extends Models.File {
+  url: string
 }
 
 export const MEDIA_STATUS = {
@@ -24,16 +23,14 @@ export type MediaEntity = ObjectValues<typeof MEDIA_ENTITY>
 
 export interface GetMediaRequest {
   entity: MediaEntity
-  id: string
-}
-
-export interface GetMediaResponse {
-  keys: string[]
-  size: bigint
 }
 
 export interface UploadMediaRequest extends GetMediaRequest {
   files: File[]
+}
+
+export interface DeleteMediaRequest extends GetMediaRequest {
+  id: string
 }
 
 export interface UploadMediaConstraints {

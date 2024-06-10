@@ -1,39 +1,49 @@
-import { HttpClient } from '@angular/common/http'
 import { Injectable, inject } from '@angular/core'
-import { GetMediaRequest, GetMediaResponse, UploadMediaRequest } from '@models/media'
-import { Observable } from 'rxjs'
+import { DeleteMediaRequest, GetMediaRequest, Media, MediaEntity, UploadMediaRequest } from '@models/media'
+import { AppwriteService } from '@services/appwrite'
+import { Observable, forkJoin, from, map } from 'rxjs'
 import { environment } from 'src/environments/environment'
+import { ID } from 'appwrite'
 
 @Injectable({
   providedIn: 'root'
 })
 export class MediaService {
-  private readonly http = inject(HttpClient)
-  private readonly url = `${environment.API_URL}/media`
+  private readonly appwrite = inject(AppwriteService)
+  private readonly buckets: Record<MediaEntity, string> = {
+    applications: environment.APPWRITE_BUCKET_APPLICATION,
+    server: ''
+  } as const
 
-  public uploadMedia(request: UploadMediaRequest): Observable<string[]> {
-    const { entity, id, files } = request
-    const url = `${this.url}/${entity}/${id}`
-    const form = new FormData()
-    files.forEach(f => {
-      form.append('media', f, f.name)
-    })
-    return this.http.post<string[]>(url, form)
+  public uploadMedia(request: UploadMediaRequest): Observable<Media[]> {
+    const { entity, files } = request
+    const bucket = this.buckets[entity]
+    return forkJoin(
+      files.map(file =>
+        from(this.appwrite.storage.createFile(bucket, ID.unique(), file, [])).pipe(
+          map(file => ({ ...file, url: this.appwrite.storage.getFileView(bucket, file.$id).toString() }))
+        )
+      )
+    )
   }
 
-  public getMedia(request: GetMediaRequest): Observable<GetMediaResponse> {
+  public getMedia(request: GetMediaRequest): Observable<Media[]> {
+    const { entity } = request
+    const bucket = this.buckets[entity]
+    return from(this.appwrite.storage.listFiles(bucket)).pipe(
+      map(result => {
+        if (result.total === 0) return []
+        return result.files.map(file => ({
+          ...file,
+          url: this.appwrite.storage.getFileView(bucket, file.$id).toString()
+        }))
+      })
+    )
+  }
+
+  public deleteMediaResource(request: DeleteMediaRequest): Observable<unknown> {
     const { entity, id } = request
-    const url = `${this.url}/${entity}/${id}`
-    return this.http.get<GetMediaResponse>(url)
-  }
-
-  public getMediaResource(key: string): Observable<Blob> {
-    const url = `${environment.MINIO_URL}/${key}`
-    return this.http.get(url, { responseType: 'blob' })
-  }
-
-  public deleteMediaResource(path: string): Observable<void> {
-    const url = `${this.url}/${path}`
-    return this.http.delete<void>(url)
+    const bucket = this.buckets[entity]
+    return from(this.appwrite.storage.deleteFile(bucket, id))
   }
 }

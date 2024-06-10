@@ -135,12 +135,12 @@
                     @for (file of files; track $index) {
                       <ion-col size="12" size-md="6" size-xl="4">
                         <div class="image-container">
-                          <img [src]="file.blob" alt="to be sent in enrollment application" />
-                          <ion-button size="small" color="danger" class="delete-button" (click)="deleteImage(file.key)">
+                          <img [src]="file.url" alt="to be sent in enrollment application" />
+                          <ion-button size="small" color="danger" class="delete-button" (click)="deleteImage(file.$id)">
                             <ion-icon name="close" slot="icon-only"></ion-icon>
                           </ion-button>
                           <div class="image-container-description">
-                            <ion-chip>{{ file.size | bytes }}</ion-chip>
+                            <ion-chip>{{ file.sizeOriginal | bytes }}</ion-chip>
                           </div>
                         </div>
                       </ion-col>
