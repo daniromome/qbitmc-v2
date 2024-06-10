@@ -6,6 +6,7 @@ import { MinecraftProfile } from '@models/minecraft-profile'
 import { Server } from '@models/server'
 import { Models } from 'appwrite'
 import { User } from '@models/user'
+import { Player } from '@models/player'
 
 export const appActions = createActionGroup({
   source: 'App',
@@ -18,16 +19,15 @@ export const appActions = createActionGroup({
     'Get User Success': props<{ user: User }>(),
     'Get User Failure': props<{ error: Error }>(),
     Login: emptyProps(),
-    'Create Player': props<{ token: string }>(),
-    'Create Player Success': props<{ profile: Profile }>(),
-    'Create Player Failure': props<{ error: Error }>(),
     'Get Profile': props<{ id: string }>(),
     'Get Profile Success': props<{ profile: Profile }>(),
     'Get Profile Failure': props<{ error: Error }>(),
     'Create Profile': emptyProps(),
     'Create Profile Success': props<{ profile: Profile }>(),
     'Create Profile Failure': props<{ error: Error }>(),
-    'Link Minecraft Account': emptyProps(),
+    'Minecraft Account Verification': props<{ code: number }>(),
+    'Minecraft Account Verification Success': props<{ player: Player }>(),
+    'Minecraft Account Verification Failure': props<{ error: Error }>(),
     Logout: emptyProps(),
     'Logout Done': emptyProps(),
     'Submitted Application': props<{ application: Required<EnrollmentApplication> }>(),
@@ -45,6 +45,7 @@ export const appActions = createActionGroup({
     'Navigate Back': emptyProps(),
     'Update Nickname': props<{ nickname: string }>(),
     'Update Nickname Success': props<{ profile: Profile }>(),
-    'Update Nickname Failure': props<{ error: Error }>()
+    'Update Nickname Failure': props<{ error: Error }>(),
+    'Dismiss Error': props<{ key: string }>()
   }
 })

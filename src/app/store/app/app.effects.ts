@@ -105,29 +105,8 @@ export const createProfile$ = createEffect(
     actions$.pipe(
       ofType(appActions.createProfile),
       concatLatestFrom(() => store.select(appFeature.selectSession)),
-      exhaustMap(([_, session]) => auth.createProfile(session?.providerAccessToken || '')),
-      map(({ profile }) => appActions.createProfileSuccess({ profile }))
-    ),
-  { functional: true }
-)
-
-export const getSessionSuccessEmitCreatePlayer$ = createEffect(
-  (actions$ = inject(Actions)) =>
-    actions$.pipe(
-      ofType(appActions.getSessionSuccess),
-      filter(({ session }) => session.provider === 'microsoft'),
-      map(({ session }) => appActions.createPlayer({ token: session.providerAccessToken }))
-    ),
-  { functional: true }
-)
-
-export const createPlayer$ = createEffect(
-  (actions$ = inject(Actions), auth = inject(AuthService)) =>
-    actions$.pipe(
-      ofType(appActions.createPlayer),
-      exhaustMap(({ token }) => auth.createPlayer(token)),
-      map(profile => appActions.createPlayerSuccess({ profile })),
-      catchError(error => of(appActions.createPlayerFailure({ error })))
+      exhaustMap(([_, session]) => auth.createProfile(session!.providerAccessToken)),
+      map(profile => appActions.createProfileSuccess({ profile }))
     ),
   { functional: true }
 )
@@ -141,13 +120,16 @@ export const login$ = createEffect(
   { functional: true, dispatch: false }
 )
 
-export const linkMinecraftAccount$ = createEffect(
+export const minecraftAccountVerification$ = createEffect(
   (actions$ = inject(Actions), auth = inject(AuthService)) =>
     actions$.pipe(
-      ofType(appActions.linkMinecraftAccount),
-      switchMap(() => auth.linkMcAccount())
+      ofType(appActions.minecraftAccountVerification),
+      switchMap(({ code }) => auth.minecraftAccountVerification(code)),
+      map(player => appActions.minecraftAccountVerificationSuccess({ player })),
+      catchError(error => of(appActions.minecraftAccountVerificationFailure({ error }))),
+      repeat()
     ),
-  { functional: true, dispatch: false }
+  { functional: true }
 )
 
 // export const logout$ = createEffect(

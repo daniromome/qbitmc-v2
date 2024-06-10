@@ -6,6 +6,8 @@ import { environment } from 'src/environments/environment'
 import { AppwriteService } from '@services/appwrite'
 import { Models, OAuthProvider } from 'appwrite'
 import { User } from '@models/user'
+import { Player } from '@models/player'
+import { ExecutionResponse } from '@models/execution'
 
 @Injectable({
   providedIn: 'root'
@@ -47,15 +49,10 @@ export class AuthService {
     ).pipe(map(execution => JSON.parse(execution.responseBody) as Profile))
   }
 
-  public linkMcAccount(): Observable<void | URL> {
-    const returnUrl = `${environment.SITE_URL}/tabs/join`
-    return of(this.appwrite.account.createOAuth2Session(OAuthProvider.Microsoft, returnUrl, returnUrl, ['XboxLive.signin']))
-  }
-
-  public createPlayer(accessToken: string): Observable<Profile> {
+  public minecraftAccountVerification(code: number): Observable<Player> {
     return from(
-      this.appwrite.functions.createExecution(environment.APPWRITE_FUNCTION_PLAYER_LINK, JSON.stringify({ accessToken }))
-    ).pipe(map(execution => JSON.parse(execution.responseBody) as Profile))
+      this.appwrite.functions.createExecution(environment.APPWRITE_FUNCTION_VERIFICATION_LINK, JSON.stringify({ code }))
+    ).pipe(map(execution => (JSON.parse(execution.responseBody) as ExecutionResponse<Player>).value))
   }
 
   public updateProfile(profile: Profile): Observable<Profile> {

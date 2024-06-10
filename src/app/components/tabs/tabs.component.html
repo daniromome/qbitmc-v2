@@ -16,7 +16,7 @@
         <ng-container *ngIf="profile() as profile">
           <ion-button class="profile-button" id="profile-menu">
             @if (player(); as player) {
-              <img [src]="player.uuid | avatar" alt="" slot="icon-only" class="avatar" />
+              <img [src]="player.$id | avatar" alt="" slot="icon-only" class="avatar" />
             } @else {
               <ion-icon name="person" slot="icon-only"></ion-icon>
             }

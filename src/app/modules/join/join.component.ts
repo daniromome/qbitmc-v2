@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, Signal, computed, effect, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
+import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Validators, FormControl } from '@angular/forms'
 import { FormFrom } from '../../utils/form-from'
 import { EnrollmentApplication } from '@models/application'
 import { REGEXP } from '@constants/regexp'
@@ -37,14 +37,19 @@ import {
   IonInput,
   IonTextarea,
   IonCheckbox,
-  IonList
+  IonList,
+  IonSpinner,
+  IonToast
 } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { cubeOutline, cubeSharp, close, copyOutline } from 'ionicons/icons'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { mediaActions, mediaFeature } from '@store/media'
+import { ClipboardService } from '@services/clipboard/clipboard.service'
 
-interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'id'>> {}
+interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age'>> {
+  age: FormControl<string>
+}
 
 interface SafeMedia extends Omit<Media, 'blob'> {
   blob?: SafeUrl
@@ -54,6 +59,8 @@ interface SafeMedia extends Omit<Media, 'blob'> {
   selector: 'qbit-join',
   standalone: true,
   imports: [
+    IonToast,
+    IonSpinner,
     IonList,
     IonChip,
     IonCardContent,
@@ -93,6 +100,7 @@ export class JoinComponent implements OnInit {
   private readonly fb = inject(NonNullableFormBuilder)
   private readonly store = inject(Store)
   private readonly sanitizer = inject(DomSanitizer)
+  public readonly clipboard = inject(ClipboardService)
 
   public readonly rules = [
     $localize`:@@rule-a:Be respectful toward other members of the community, any verbal abuse or sign of harassment will be sanctioned accordingly`,
@@ -105,16 +113,20 @@ export class JoinComponent implements OnInit {
   ]
 
   public readonly form: FormGroup<ApplicationForm> = this.fb.group({
-    age: this.fb.control(0, [Validators.required]),
+    age: this.fb.control('', [Validators.required]),
     experience: this.fb.control('', [Validators.required]),
     reasons: this.fb.control('', [Validators.required]),
     rules: this.fb.control(false, [Validators.requiredTrue])
   })
 
+  public readonly verification = this.fb.control<string>('')
+
   private readonly formChanges = toSignal(this.form.valueChanges)
 
   public readonly profile = this.store.selectSignal(appFeature.selectProfile)
   public readonly player = this.store.selectSignal(appFeature.selectPlayer)
+  public readonly verificationLoading = this.store.selectSignal(appFeature.selectLoadingVerification)
+  public readonly verificationError = this.store.selectSignal(appFeature.selectErrorVerification)
 
   public readonly media: Signal<SafeMedia[]> = computed(() => {
     const profile = this.profile()
@@ -143,6 +155,11 @@ export class JoinComponent implements OnInit {
       if (!form) return
       localStorage.setItem('application', JSON.stringify(form))
     })
+    effect(() => {
+      const verifying = this.verificationLoading()
+      if (verifying) this.verification.disable()
+      else this.verification.enable()
+    })
   }
 
   public ngOnInit(): void {
@@ -152,19 +169,23 @@ export class JoinComponent implements OnInit {
     const applicationFromStorage = applicationString ? (JSON.parse(applicationString) as EnrollmentApplication) : undefined
     if (!applicationFromStorage) return
     const { age, experience, reasons, rules } = applicationFromStorage
-    this.form.setValue({ age, experience, reasons, rules })
+    this.form.setValue({ age: age.toString(), experience, reasons, rules })
   }
 
-  public numbersOnly(): void {
-    const age = Array.from(this.form.controls.age.value.toString())
+  public numbersOnly(control: FormControl<string>, max: number): void {
+    const val = Array.from(control.value.toString())
       .filter(v => REGEXP.DIGITS_ONLY.test(v))
-      .slice(0, 2)
+      .slice(0, max)
       .join('')
-    this.form.controls.age.setValue(Number(age))
+    control.setValue(val)
   }
 
-  public linkMinecraftAccount(): void {
-    this.store.dispatch(appActions.linkMinecraftAccount())
+  public verificationCodeChange(): void {
+    this.numbersOnly(this.verification, 6)
+    const code = this.verification.getRawValue()
+    if (code.length !== 6) return
+    this.verification.reset()
+    this.store.dispatch(appActions.minecraftAccountVerification({ code: Number(code) }))
   }
 
   public droppedFiles(files: File[]): void {
@@ -181,6 +202,11 @@ export class JoinComponent implements OnInit {
   }
 
   public submit(): void {
-    this.store.dispatch(applicationActions.submit({ application: { ...this.form.getRawValue() } }))
+    const application = this.form.getRawValue()
+    this.store.dispatch(applicationActions.submit({ application: { ...application, age: Number(application.age) } }))
+  }
+
+  public dismissError(): void {
+    this.store.dispatch(appActions.dismissError({ key: 'verification' }))
   }
 }

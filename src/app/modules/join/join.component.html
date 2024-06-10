@@ -16,7 +16,7 @@
           <ion-card>
             @if (player(); as player) {
               <ion-avatar>
-                <img [src]="player.uuid | avatar: 'face'" alt="user's minecraft avatar" />
+                <img [src]="player.$id | avatar: 'face'" alt="user's minecraft avatar" />
               </ion-avatar>
             }
             <ion-card-header class="ion-card-avatar-header">
@@ -28,14 +28,14 @@
               <ion-card-subtitle i18n="@@about-subtitle">Tell us about yourself</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content [formGroup]="form" class="ion-no-padding form-container">
-              <ion-list>
-                <ion-item lines="none">
+              <ion-list lines="none">
+                <ion-item>
                   <ion-input
                     formControlName="age"
                     inputmode="numeric"
                     clearInput
                     clearOnEdit
-                    (keyup)="numbersOnly()"
+                    (keyup)="numbersOnly(form.controls.age, 2)"
                     labelPlacement="floating"
                     i18n-helperText="@@about-age-helper"
                     helperText="Numbers only">
@@ -44,7 +44,7 @@
                     </span>
                   </ion-input>
                 </ion-item>
-                <ion-item lines="none">
+                <ion-item>
                   <ion-textarea
                     formControlName="reasons"
                     maxlength="300"
@@ -58,7 +58,7 @@
                     </span>
                   </ion-textarea>
                 </ion-item>
-                <ion-item lines="none">
+                <ion-item>
                   <ion-textarea
                     formControlName="experience"
                     counter="true"
@@ -84,7 +84,7 @@
                     <ion-row class="ion-align-items-center">
                       <ion-col sizeMd="auto">Join the following minecraft server: verification.qbitmc.com</ion-col>
                       <ion-col size="auto">
-                        <ion-button size="small" fill="none">
+                        <ion-button size="small" fill="none" (click)="clipboard.copyToClipboard('verification.qbitmc.com')">
                           <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
                         </ion-button>
                       </ion-col>
@@ -92,16 +92,31 @@
                   </ion-grid>
                 </ion-card-subtitle>
               </ion-card-header>
+              <ion-card-content class="ion-no-padding">
+                <ion-list lines="none">
+                  <ion-item>
+                    <ion-input
+                      inputmode="numeric"
+                      clearInput
+                      labelPlacement="floating"
+                      [formControl]="verification"
+                      (keyup)="verificationCodeChange()">
+                      <span slot="label">
+                        @if (verificationLoading()) {
+                          <ion-text i18n="@@verification-loading-label">Verifying account</ion-text>
+                        } @else {
+                          <ion-text i18n="@@verification-label">Verification Code </ion-text>
+                          <ion-text color="danger">*</ion-text>
+                        }
+                      </span>
+                    </ion-input>
+                    @if (verificationLoading()) {
+                      <ion-spinner name="dots" slot="end"></ion-spinner>
+                    }
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
             </ion-card>
-            <!-- <div class="card-margin">
-              <ion-button expand="block" color="secondary" (click)="linkMinecraftAccount()">
-                <ion-icon ios="cube-outline" md="cube-sharp"></ion-icon>
-                <ion-label
-                  ><ion-text i18n="@@link-ms-account-button-label">Connect your Minecraft Account </ion-text
-                  ><ion-text color="danger">*</ion-text></ion-label
-                >
-              </ion-button>
-            </div> -->
           }
           <ion-card>
             <ion-card-header>
@@ -175,12 +190,22 @@
               color="secondary"
               [disabled]="filesSizeExceedsLimit() || form.invalid || !player"
               (click)="submit()"
-              i18n="@@submit"
-              >Submit</ion-button
-            >
+              i18n="@@submit">
+              Submit
+            </ion-button>
           </div>
         </ion-col>
       </ion-row>
     </ion-grid>
   }
 </ion-content>
+
+<ion-toast
+  i18n-message="@@verification-invalid"
+  message="Invalid verification code, please try again"
+  [isOpen]="!!verificationError()"
+  [duration]="2500"
+  color="danger"
+  [buttons]="['Dismiss']"
+  (ionToastDidDismiss)="dismissError()">
+</ion-toast>

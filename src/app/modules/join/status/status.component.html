@@ -1,8 +1,8 @@
 @if (player(); as player) {
   <div class="status-container">
     <ion-card>
-      <ion-avatar *ngIf="player.uuid">
-        <img [src]="player.uuid | avatar: 'face'" alt="Player's avatar" />
+      <ion-avatar *ngIf="player.$id">
+        <img [src]="player.$id | avatar: 'face'" alt="Player's avatar" />
       </ion-avatar>
       <ion-card-header class="ion-card-avatar-header">
         <ion-card-title i18n="@@status-title">Hey {{ player.ign }},</ion-card-title>
