@@ -11,6 +11,7 @@ export interface EnrollmentApplication {
   reasons: string
   experience: string
   rules: boolean
+  media: string[]
 }
 
 export interface EnrollmentApplicationDocument extends EnrollmentApplication, Models.Document {

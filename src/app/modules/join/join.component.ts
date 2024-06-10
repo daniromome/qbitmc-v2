@@ -131,13 +131,13 @@ export class JoinComponent implements OnInit {
   public readonly media: Signal<Media[]> = computed(() => {
     const profile = this.profile()
     if (!profile) return []
-    return this.store.selectSignal(mediaFeature.selectMedia({ entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id }))()
+    return this.store.selectSignal(mediaFeature.selectMedia({ entity: MEDIA_ENTITY.APPLICATIONS }))()
   })
 
   public readonly filesSize = computed(() => {
     const profile = this.profile()
     if (!profile) return 0
-    return this.store.selectSignal(mediaFeature.selectMediaSize({ entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id }))()
+    return this.store.selectSignal(mediaFeature.selectMediaSize({ entity: MEDIA_ENTITY.APPLICATIONS }))()
   })
 
   public readonly filesSizeWithinLimit = computed(() => {

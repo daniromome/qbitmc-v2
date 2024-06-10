@@ -59,20 +59,14 @@ export const mediaFeature = createFeature({
   reducer,
   extraSelectors: ({ selectMediaState }) => {
     const entitySelectors = adapter.getSelectors(selectMediaState)
-    const selectMedia = (request: GetMediaRequest) =>
-      createSelector(selectMediaState, state => {
-        const identifiers = state.ids as string[]
-        const { entity, id } = request
-        const entities = identifiers.filter(i => i.startsWith(`${entity}/${id}`))
-        return entities.map(e => state.entities[e]!)
-      })
+    const selectMedia = (media: string[]) => createSelector(selectMediaState, state => media.map(m => state.entities[m]!))
     return {
       ...entitySelectors,
       selectMedia,
-      selectMediaSize: (request: GetMediaRequest) =>
-        createSelector(selectMedia(request), media =>
-          media.every(m => !!m.sizeOriginal)
-            ? media.map(m => m.sizeOriginal).reduce((accumulator, value) => accumulator + value, 0)
+      selectMediaSize: (media: string[]) =>
+        createSelector(selectMedia(media), selectedMedia =>
+          selectedMedia.every(m => !!m.sizeOriginal)
+            ? selectedMedia.map(m => m.sizeOriginal).reduce((accumulator, value) => accumulator + value, 0)
             : 0
         ),
       selectLoading: (entity: MediaEntity, id: string) => {
