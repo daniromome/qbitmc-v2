@@ -1,11 +1,10 @@
 import { inject, isDevMode } from '@angular/core'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { concatLatestFrom } from '@ngrx/operators'
-import { EnrollmentService } from '@services/enrollment'
 import { applicationActions } from '@store/application'
-import { catchError, map, switchMap, tap, repeat, filter } from 'rxjs/operators'
-import { of } from 'rxjs'
-import { ToastController } from '@ionic/angular'
+import { catchError, map, switchMap, repeat, exhaustMap } from 'rxjs/operators'
+import { forkJoin, from, of } from 'rxjs'
+import { NavController, ToastController } from '@ionic/angular'
 import { ApplicationService } from '@services/application'
 import { Store } from '@ngrx/store'
 import { appFeature } from '@store/app/app.reducer'
@@ -27,10 +26,10 @@ export const get$ = createEffect(
 )
 
 export const submit$ = createEffect(
-  (actions$ = inject(Actions), enrollment = inject(EnrollmentService)) =>
+  (actions$ = inject(Actions), application = inject(ApplicationService)) =>
     actions$.pipe(
       ofType(applicationActions.submit),
-      switchMap(action => enrollment.submit(action.application)),
+      switchMap(action => application.submit(action.application)),
       map(response => applicationActions.submitSuccess({ application: response })),
       catchError(error => of(applicationActions.submitFailure({ error }))),
       repeat()
@@ -39,11 +38,13 @@ export const submit$ = createEffect(
 )
 
 export const submitSuccess$ = createEffect(
-  (actions$ = inject(Actions)) =>
+  (actions$ = inject(Actions), nav = inject(NavController)) =>
     actions$.pipe(
       ofType(applicationActions.submitSuccess),
-      filter(() => !isDevMode()),
-      tap(() => localStorage.removeItem('application'))
+      exhaustMap(() => {
+        const navigate = from(nav.navigateForward(['tabs', 'join', 'status']))
+        return isDevMode() ? navigate : forkJoin([of(localStorage.removeItem('application')), navigate])
+      })
     ),
   { dispatch: false, functional: true }
 )

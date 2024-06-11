@@ -65,16 +65,6 @@ export const reducer = createReducer(
   on(appActions.getSessionSuccess, appActions.getSessionFailure, (state): AppState => ({ ...state, initialized: true })),
   on(appActions.getUserSuccess, (state, { user }): AppState => ({ ...state, user })),
   on(appActions.getProfileSuccess, appActions.createProfileSuccess, (state, { profile }): AppState => ({ ...state, profile })),
-  on(
-    appActions.submittedApplication,
-    (state, action): AppState => ({
-      ...state,
-      profile: {
-        ...(state.profile as Profile),
-        application: action.application
-      }
-    })
-  ),
   on(appActions.getLeaderboardsSuccess, (state, action): AppState => ({ ...state, leaderboards: action.leaderboards })),
   on(appActions.getSupportersSuccess, (state, action): AppState => ({ ...state, supporters: action.supporters })),
   on(appActions.getServersSuccess, (state, action): AppState => ({ ...state, servers: action.servers })),

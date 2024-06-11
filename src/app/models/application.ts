@@ -1,4 +1,5 @@
 import { Models } from 'appwrite'
+import { Profile } from './profile'
 
 export interface EnrollmentApplicationStatus extends Models.Document {
   status: boolean
@@ -12,8 +13,10 @@ export interface EnrollmentApplication {
   experience: string
   rules: boolean
   media: string[]
+  profile: string
 }
 
-export interface EnrollmentApplicationDocument extends EnrollmentApplication, Models.Document {
+export interface EnrollmentApplicationDocument extends Omit<EnrollmentApplication, 'profile'>, Models.Document {
   status: EnrollmentApplicationStatus
+  profile: Profile
 }

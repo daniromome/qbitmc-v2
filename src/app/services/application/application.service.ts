@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core'
-import { EnrollmentApplicationDocument } from '@models/application'
+import { EnrollmentApplication, EnrollmentApplicationDocument } from '@models/application'
 import { AppwriteService } from '@services/appwrite'
-import { Query } from 'appwrite'
+import { ID, Query } from 'appwrite'
 import { Observable, from, map } from 'rxjs'
 import { environment } from 'src/environments/environment'
 
@@ -23,6 +23,17 @@ export class ApplicationService {
         if (list.total < 1) return undefined
         return list.documents.at(0)
       })
+    )
+  }
+
+  public submit(application: EnrollmentApplication): Observable<EnrollmentApplicationDocument> {
+    return from(
+      this.appwrite.databases.createDocument<EnrollmentApplicationDocument>(
+        environment.APPWRITE_DATABASE,
+        environment.APPWRITE_COLLECTION_APPLICATION,
+        ID.unique(),
+        application
+      )
     )
   }
 }

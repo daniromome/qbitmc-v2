@@ -8,7 +8,7 @@ export const applicationActions = createActionGroup({
     'Get Success': props<{ application: EnrollmentApplicationDocument }>(),
     'Get Failure': props<{ error: Error }>(),
     Submit: props<{ application: EnrollmentApplication }>(),
-    'Submit Success': props<{ application: EnrollmentApplication }>(),
+    'Submit Success': props<{ application: EnrollmentApplicationDocument }>(),
     'Submit Failure': props<{ error: Error }>()
   }
 })

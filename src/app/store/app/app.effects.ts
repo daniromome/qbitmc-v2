@@ -6,7 +6,6 @@ import { appActions, appFeature } from '@store/app'
 import { exhaustMap, filter, repeat, switchMap } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
-import { applicationActions } from '@store/application'
 import { QbitmcService } from '@services/qbitmc'
 import { Store } from '@ngrx/store'
 import { Router } from '@angular/router'
@@ -147,24 +146,6 @@ export const logoutDone$ = createEffect(
     actions$.pipe(
       ofType(appActions.logoutDone),
       switchMap(() => nav.navigateRoot(['tabs', 'home']))
-    ),
-  { functional: true, dispatch: false }
-)
-
-export const applicationSubmit$ = createEffect(
-  (actions$ = inject(Actions)) =>
-    actions$.pipe(
-      ofType(applicationActions.submitSuccess),
-      map(action => appActions.submittedApplication({ application: action.application }))
-    ),
-  { functional: true }
-)
-
-export const submittedApplication$ = createEffect(
-  (actions$ = inject(Actions), nav = inject(NavController)) =>
-    actions$.pipe(
-      ofType(appActions.submittedApplication),
-      switchMap(() => nav.navigateForward(['tabs', 'join', 'status']))
     ),
   { functional: true, dispatch: false }
 )

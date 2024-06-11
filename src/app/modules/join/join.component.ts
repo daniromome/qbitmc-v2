@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Validators, FormControl } from '@angular/forms'
 import { FormFrom } from '../../utils/form-from'
@@ -47,7 +47,7 @@ import { mediaActions, mediaFeature } from '@store/media'
 import { ClipboardService } from '@services/clipboard/clipboard.service'
 import { ID } from 'appwrite'
 
-interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age' | 'media'>> {
+interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age' | 'media' | 'profile'>> {
   age: FormControl<string>
 }
 
@@ -123,7 +123,6 @@ export class JoinComponent implements OnInit {
   public readonly verificationLoading = this.store.selectSignal(appFeature.selectLoadingVerification)
   public readonly verificationError = this.store.selectSignal(appFeature.selectErrorVerification)
 
-  public readonly mediaIds = signal<string[]>([])
   public readonly media = this.store.selectSignal(mediaFeature.selectEntityMedia(MEDIA_ENTITY.APPLICATIONS))
   public readonly filesSize = this.store.selectSignal(mediaFeature.selectEntityMediaSize(MEDIA_ENTITY.APPLICATIONS))
 
@@ -184,7 +183,6 @@ export class JoinComponent implements OnInit {
       ids: []
     }
     this.store.dispatch(mediaActions.uploadMediaResources({ request }))
-    this.mediaIds.update(m => [...m, ...request.fileIds])
   }
 
   public deleteImage(id: string): void {
@@ -194,9 +192,13 @@ export class JoinComponent implements OnInit {
   }
 
   public submit(): void {
+    const profile = this.profile()
+    if (!profile) return
     const application = this.form.getRawValue()
-    const media = this.mediaIds()
-    this.store.dispatch(applicationActions.submit({ application: { ...application, age: Number(application.age), media } }))
+    const media = this.media().map(m => m.$id) || []
+    this.store.dispatch(
+      applicationActions.submit({ application: { ...application, age: Number(application.age), media, profile: profile.$id } })
+    )
   }
 
   public dismissError(): void {

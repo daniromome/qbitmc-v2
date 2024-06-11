@@ -24,34 +24,6 @@ export const getMedia$ = createEffect(
   { functional: true }
 )
 
-// export const getMediaSuccess$ = createEffect(
-//   (actions$ = inject(Actions)) =>
-//     actions$.pipe(
-//       ofType(mediaActions.getMediaSuccess),
-//       map(({ keys }) => mediaActions.getMediaResources({ keys }))
-//     ),
-//   { functional: true }
-// )
-
-// export const getMediaResources$ = createEffect(
-//   (actions$ = inject(Actions), media = inject(MediaService)) =>
-//     actions$.pipe(
-//       ofType(mediaActions.getMediaResources),
-//       switchMap(({ keys }) =>
-//         forkJoin(
-//           keys.map(key =>
-//             media.getMediaResource(key).pipe(map(media => ({ key, size: media.size, blob: URL.createObjectURL(media) })))
-//           )
-//         ).pipe(
-//           map(media => mediaActions.getMediaResourcesSuccess({ media })),
-//           catchError(error => of(mediaActions.getMediaResourcesFailure({ keys, error })))
-//         )
-//       ),
-//       repeat()
-//     ),
-//   { functional: true }
-// )
-
 export const uploadMediaResources$ = createEffect(
   (actions$ = inject(Actions), mediaService = inject(MediaService), store = inject(Store), bytes = inject(BytesPipe)) =>
     actions$.pipe(

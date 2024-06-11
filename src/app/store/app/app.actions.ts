@@ -30,7 +30,6 @@ export const appActions = createActionGroup({
     'Minecraft Account Verification Failure': props<{ error: Error }>(),
     Logout: emptyProps(),
     'Logout Done': emptyProps(),
-    'Submitted Application': props<{ application: Required<EnrollmentApplication> }>(),
     'Get Leaderboards': emptyProps(),
     'Get Leaderboards Success': props<{ leaderboards: Leaderboards }>(),
     'Get Leaderboards Failure': props<{ error: Error }>(),

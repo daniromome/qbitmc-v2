@@ -36,6 +36,7 @@
       "@constants/*": ["src/app/constants/*"],
       "@utils": ["src/app/utils"],
       "@guards/*": ["src/app/guards/*"],
+      "@resolvers/*": ["src/app/resolvers/*"],
       "@directives/*": ["src/app/directives/*"]
     }
   },
