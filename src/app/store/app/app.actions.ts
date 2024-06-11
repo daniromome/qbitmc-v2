@@ -1,4 +1,3 @@
-import { EnrollmentApplication } from '@models/application'
 import { Profile } from '@models/profile'
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
 import { Leaderboards } from '@models/leaderboards'

@@ -8,7 +8,6 @@ import { USER_LABEL } from '@models/user'
 import { provideEffects } from '@ngrx/effects'
 import { provideState } from '@ngrx/store'
 import { BytesPipe } from '@pipes/bytes'
-import { applicationResolver } from '@resolvers/application/application.resolver'
 import { applicationFeature, applicationEffects } from '@store/application'
 import { ShopEffects, shopFeature } from '@store/shop'
 
@@ -29,8 +28,7 @@ export const routes: Routes = [
         path: 'join',
         canActivate: [authGuard, enabledGuard],
         loadChildren: () => import('./modules/join/join.routes').then(m => m.routes),
-        providers: [provideState(applicationFeature), provideEffects(applicationEffects), BytesPipe],
-        resolve: [applicationResolver]
+        providers: [provideState(applicationFeature), provideEffects(applicationEffects), BytesPipe]
       },
       {
         path: 'shop',

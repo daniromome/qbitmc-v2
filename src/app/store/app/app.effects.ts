@@ -11,6 +11,8 @@ import { Store } from '@ngrx/store'
 import { Router } from '@angular/router'
 import { USER_LABEL } from '@models/user'
 import { ServerService } from '@services/server'
+import { applicationActions } from '@store/application'
+import { selectUrl } from '@store/router'
 
 export const initialize$ = createEffect(
   (actions$ = inject(Actions)) =>
@@ -86,6 +88,17 @@ export const getProfile$ = createEffect(
       switchMap(({ id }) => auth.getProfile(id)),
       map(profile => appActions.getProfileSuccess({ profile })),
       catchError(error => of(appActions.getProfileFailure({ error })))
+    ),
+  { functional: true }
+)
+
+export const getProfileSuccessEmitGetApplication$ = createEffect(
+  (actions$ = inject(Actions), store = inject(Store)) =>
+    actions$.pipe(
+      ofType(appActions.getProfileSuccess),
+      concatLatestFrom(() => store.select(selectUrl)),
+      filter(([_, url]) => url.includes('join')),
+      map(() => applicationActions.get())
     ),
   { functional: true }
 )
