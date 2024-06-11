@@ -15,7 +15,7 @@ export const getMedia$ = createEffect(
       ofType(mediaActions.getMedia),
       switchMap(({ request }) =>
         media.getMedia(request).pipe(
-          map(media => mediaActions.getMediaSuccess({ media })),
+          map(media => mediaActions.getMediaSuccess({ media, request })),
           catchError(error => of(mediaActions.getMediaFailure({ request, error })))
         )
       ),
@@ -57,9 +57,9 @@ export const uploadMediaResources$ = createEffect(
     actions$.pipe(
       ofType(mediaActions.uploadMediaResources),
       filter(({ request: { files } }) => files && files.length > 0),
-      concatLatestFrom(({ request: { entity, id } }) => store.select(mediaFeature.selectMedia({ entity, id }))),
+      concatLatestFrom(({ request: { ids } }) => store.select(mediaFeature.selectMedia(ids))),
       switchMap(([{ request }, media]) => {
-        const { entity, id, files, maxUploadSize } = request
+        const { entity, ids, files, fileIds, maxUploadSize } = request
         const currentMediaSize = media.map(m => m.sizeOriginal).reduce((accumulator, value) => accumulator + value, 0)
         const uploadedMediaSize = files.map(f => f.size).reduce((accumulator, value) => accumulator + value, 0)
         const totalSize = currentMediaSize + uploadedMediaSize
@@ -67,8 +67,8 @@ export const uploadMediaResources$ = createEffect(
           throw new Error(
             $localize`:@@exceeded-media-upload-size:Your upload failed since you went over the ${bytes.transform(maxUploadSize)} MiB limit by ${bytes.transform(totalSize - maxUploadSize)}`
           )
-        return mediaService.uploadMedia({ entity, id, files }).pipe(
-          map(media => mediaActions.uploadMediaResourcesSuccess({ media, entity, id })),
+        return mediaService.uploadMedia({ entity, ids, files, fileIds }).pipe(
+          map(media => mediaActions.uploadMediaResourcesSuccess({ media, entity, ids })),
           catchError(error => of(mediaActions.uploadMediaResourcesFailure({ request, error })))
         )
       }),
@@ -81,11 +81,12 @@ export const deleteMediaResource$ = createEffect(
   (actions$ = inject(Actions), media = inject(MediaService)) =>
     actions$.pipe(
       ofType(mediaActions.deleteMediaResource),
-      switchMap(({ path }) => {
-        return media.deleteMediaResource(path).pipe(
-          map(() => path),
-          map(path => mediaActions.deleteMediaResourceSuccess({ path })),
-          catchError(error => of(mediaActions.deleteMediaResourceFailure({ path, error })))
+      switchMap(({ request }) => {
+        const { id } = request
+        return media.deleteMediaResource(request).pipe(
+          map(() => id),
+          map(id => mediaActions.deleteMediaResourceSuccess({ id })),
+          catchError(error => of(mediaActions.deleteMediaResourceFailure({ id, error })))
         )
       }),
       repeat()

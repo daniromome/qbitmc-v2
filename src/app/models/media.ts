@@ -1,5 +1,6 @@
 import { Models } from 'appwrite'
 import { ObjectValues } from '../utils/object-values'
+import { environment } from 'src/environments/environment'
 
 export interface Media extends Models.File {
   url: string
@@ -21,15 +22,24 @@ export const MEDIA_ENTITY = {
 
 export type MediaEntity = ObjectValues<typeof MEDIA_ENTITY>
 
-export interface GetMediaRequest {
+export const BUCKET: Record<MediaEntity, string> = {
+  applications: environment.APPWRITE_BUCKET_APPLICATION,
+  server: ''
+} as const
+
+export interface MediaRequest {
   entity: MediaEntity
+}
+export interface GetMediaRequest extends MediaRequest {
+  ids: string[]
 }
 
 export interface UploadMediaRequest extends GetMediaRequest {
   files: File[]
+  fileIds: string[]
 }
 
-export interface DeleteMediaRequest extends GetMediaRequest {
+export interface DeleteMediaRequest extends MediaRequest {
   id: string
 }
 

@@ -1,26 +1,21 @@
 import { Injectable, inject } from '@angular/core'
-import { DeleteMediaRequest, GetMediaRequest, Media, MediaEntity, UploadMediaRequest } from '@models/media'
+import { BUCKET, DeleteMediaRequest, GetMediaRequest, Media, UploadMediaRequest } from '@models/media'
 import { AppwriteService } from '@services/appwrite'
+import { Query } from 'appwrite'
 import { Observable, forkJoin, from, map } from 'rxjs'
-import { environment } from 'src/environments/environment'
-import { ID } from 'appwrite'
 
 @Injectable({
   providedIn: 'root'
 })
 export class MediaService {
   private readonly appwrite = inject(AppwriteService)
-  private readonly buckets: Record<MediaEntity, string> = {
-    applications: environment.APPWRITE_BUCKET_APPLICATION,
-    server: ''
-  } as const
 
   public uploadMedia(request: UploadMediaRequest): Observable<Media[]> {
-    const { entity, files } = request
-    const bucket = this.buckets[entity]
+    const { entity, files, fileIds } = request
+    const bucket = BUCKET[entity]
     return forkJoin(
-      files.map(file =>
-        from(this.appwrite.storage.createFile(bucket, ID.unique(), file, [])).pipe(
+      files.map((file, i) =>
+        from(this.appwrite.storage.createFile(bucket, fileIds[i], file, [])).pipe(
           map(file => ({ ...file, url: this.appwrite.storage.getFileView(bucket, file.$id).toString() }))
         )
       )
@@ -28,9 +23,13 @@ export class MediaService {
   }
 
   public getMedia(request: GetMediaRequest): Observable<Media[]> {
-    const { entity } = request
-    const bucket = this.buckets[entity]
-    return from(this.appwrite.storage.listFiles(bucket)).pipe(
+    const { entity, ids } = request
+    const bucket = BUCKET[entity]
+    return from(
+      ids.length > 0
+        ? this.appwrite.storage.listFiles(bucket, [Query.contains('$id', ids)])
+        : this.appwrite.storage.listFiles(bucket)
+    ).pipe(
       map(result => {
         if (result.total === 0) return []
         return result.files.map(file => ({
@@ -43,7 +42,7 @@ export class MediaService {
 
   public deleteMediaResource(request: DeleteMediaRequest): Observable<unknown> {
     const { entity, id } = request
-    const bucket = this.buckets[entity]
+    const bucket = BUCKET[entity]
     return from(this.appwrite.storage.deleteFile(bucket, id))
   }
 }

@@ -1,11 +1,22 @@
-import { ChangeDetectionStrategy, Component, Signal, WritableSignal, computed, effect, inject, input, output, signal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Signal,
+  WritableSignal,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal
+} from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { DropzoneDirective } from '@directives/dropzone'
 import { Platform, IonRippleEffect, IonIcon, IonText, IonButton, IonAlert } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { download, cloudUpload } from 'ionicons/icons'
 
-type FileType = 'image' | 'any';
+type FileType = 'image' | 'any'
 @Component({
   selector: 'qbit-file-uploader',
   standalone: true,
@@ -31,8 +42,7 @@ export class FileUploaderComponent {
       const file = fileList.item(0)
       if (file && this.validFileType(file)) return [file]
     }
-    return Array
-      .from(Array(fileList.length).keys())
+    return Array.from(Array(fileList.length).keys())
       .map(i => fileList.item(i) as File)
       .filter(file => file && this.validFileType(file))
   })

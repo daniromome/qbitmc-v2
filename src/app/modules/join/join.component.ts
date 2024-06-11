@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, Signal, computed, effect, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Validators, FormControl } from '@angular/forms'
 import { FormFrom } from '../../utils/form-from'
@@ -7,13 +7,12 @@ import { REGEXP } from '@constants/regexp'
 import { NoteComponent } from '@components/note'
 import { FileUploaderComponent } from '@components/file-uploader'
 import { Store } from '@ngrx/store'
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
 import { applicationActions } from '@store/application'
 import { BytesPipe } from '@pipes/bytes'
 import { ENROLLMENT_MAX_UPLOAD_SIZE } from '@constants/index'
 import { AvatarPipe } from '@pipes/avatar'
 import { appActions, appFeature } from '@store/app'
-import { MEDIA_ENTITY, Media } from '@models/media'
+import { MEDIA_ENTITY } from '@models/media'
 import {
   IonHeader,
   IonRow,
@@ -46,13 +45,10 @@ import { cubeOutline, cubeSharp, close, copyOutline } from 'ionicons/icons'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { mediaActions, mediaFeature } from '@store/media'
 import { ClipboardService } from '@services/clipboard/clipboard.service'
+import { ID } from 'appwrite'
 
-interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age'>> {
+interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age' | 'media'>> {
   age: FormControl<string>
-}
-
-interface SafeMedia extends Omit<Media, 'blob'> {
-  blob?: SafeUrl
 }
 
 @Component({
@@ -99,7 +95,6 @@ interface SafeMedia extends Omit<Media, 'blob'> {
 export class JoinComponent implements OnInit {
   private readonly fb = inject(NonNullableFormBuilder)
   private readonly store = inject(Store)
-  private readonly sanitizer = inject(DomSanitizer)
   public readonly clipboard = inject(ClipboardService)
 
   public readonly rules = [
@@ -128,17 +123,9 @@ export class JoinComponent implements OnInit {
   public readonly verificationLoading = this.store.selectSignal(appFeature.selectLoadingVerification)
   public readonly verificationError = this.store.selectSignal(appFeature.selectErrorVerification)
 
-  public readonly media: Signal<Media[]> = computed(() => {
-    const profile = this.profile()
-    if (!profile) return []
-    return this.store.selectSignal(mediaFeature.selectMedia({ entity: MEDIA_ENTITY.APPLICATIONS }))()
-  })
-
-  public readonly filesSize = computed(() => {
-    const profile = this.profile()
-    if (!profile) return 0
-    return this.store.selectSignal(mediaFeature.selectMediaSize({ entity: MEDIA_ENTITY.APPLICATIONS }))()
-  })
+  public readonly mediaIds = signal<string[]>([])
+  public readonly media = this.store.selectSignal(mediaFeature.selectEntityMedia(MEDIA_ENTITY.APPLICATIONS))
+  public readonly filesSize = this.store.selectSignal(mediaFeature.selectEntityMediaSize(MEDIA_ENTITY.APPLICATIONS))
 
   public readonly filesSizeWithinLimit = computed(() => {
     const filesSize = this.filesSize()
@@ -162,8 +149,7 @@ export class JoinComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    const profile = this.profile()
-    if (profile) this.store.dispatch(mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id } }))
+    this.store.dispatch(mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.APPLICATIONS, ids: [] } }))
     const applicationString = localStorage.getItem('application')
     const applicationFromStorage = applicationString ? (JSON.parse(applicationString) as EnrollmentApplication) : undefined
     if (!applicationFromStorage) return
@@ -190,19 +176,27 @@ export class JoinComponent implements OnInit {
   public droppedFiles(files: File[]): void {
     const profile = this.profile()
     if (!profile) return
-    const request = { entity: MEDIA_ENTITY.APPLICATIONS, id: profile.$id, files, maxUploadSize: ENROLLMENT_MAX_UPLOAD_SIZE }
+    const request = {
+      entity: MEDIA_ENTITY.APPLICATIONS,
+      files,
+      maxUploadSize: ENROLLMENT_MAX_UPLOAD_SIZE,
+      fileIds: Array.from(Array(files.length)).map(() => ID.unique()),
+      ids: []
+    }
     this.store.dispatch(mediaActions.uploadMediaResources({ request }))
+    this.mediaIds.update(m => [...m, ...request.fileIds])
   }
 
-  public deleteImage(path: string): void {
+  public deleteImage(id: string): void {
     const profile = this.profile()
     if (!profile) return
-    this.store.dispatch(mediaActions.deleteMediaResource({ path }))
+    this.store.dispatch(mediaActions.deleteMediaResource({ request: { entity: MEDIA_ENTITY.APPLICATIONS, id } }))
   }
 
   public submit(): void {
     const application = this.form.getRawValue()
-    this.store.dispatch(applicationActions.submit({ application: { ...application, age: Number(application.age) } }))
+    const media = this.mediaIds()
+    this.store.dispatch(applicationActions.submit({ application: { ...application, age: Number(application.age), media } }))
   }
 
   public dismissError(): void {
