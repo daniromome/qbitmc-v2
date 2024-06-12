@@ -1,9 +1,10 @@
+/* eslint-disable prettier/prettier */
 import { inject } from '@angular/core'
 import { Router, CanActivateFn } from '@angular/router'
 import { filter, map, switchMap } from 'rxjs'
 import { Store } from '@ngrx/store'
 import { appFeature } from '@store/app'
-import { UserLabel } from '@models/user'
+import { UserLabel } from '@qbitmc/common'
 
 export const roleGuard: (...roles: UserLabel[]) => CanActivateFn =
   (...roles: UserLabel[]) =>

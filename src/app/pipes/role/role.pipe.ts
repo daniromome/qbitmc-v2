@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core'
-import { USER_LABEL, UserLabel } from '@models/user'
+import { USER_LABEL, UserLabel } from '@qbitmc/common'
 
 @Pipe({
   name: 'role',

@@ -7,9 +7,9 @@ type AvatarType = 'face' | 'head' | 'body'
   standalone: true
 })
 export class AvatarPipe implements PipeTransform {
-  public transform(value: string, type: AvatarType = 'head'): string {
+  public transform(value: string, type: AvatarType = 'head', scale: number = 16): string {
     const url = new URL(`https://api.mineatar.io/${this.getURI(type)}/${value}`)
-    url.searchParams.append('scale', '16')
+    url.searchParams.append('scale', scale.toString())
     return value ? url.toString() : ''
   }
 

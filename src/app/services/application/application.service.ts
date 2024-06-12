@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core'
-import { EnrollmentApplication, EnrollmentApplicationDocument } from '@models/application'
+import { EnrollmentApplication, EnrollmentApplicationDocument } from '@qbitmc/common'
 import { AppwriteService } from '@services/appwrite'
 import { ID, Query } from 'appwrite'
 import { Observable, from, map } from 'rxjs'

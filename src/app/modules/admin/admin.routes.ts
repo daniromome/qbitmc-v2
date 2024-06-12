@@ -1,6 +1,6 @@
 import { Route } from '@angular/router'
 import { roleGuard } from '@guards/role'
-import { USER_LABEL } from '@models/user'
+import { USER_LABEL } from '@qbitmc/common'
 import { provideEffects } from '@ngrx/effects'
 import { provideState } from '@ngrx/store'
 import { adminEffects, adminFeature } from '@store/admin'

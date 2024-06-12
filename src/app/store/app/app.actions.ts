@@ -1,11 +1,8 @@
-import { Profile } from '@models/profile'
+import { Profile, ServerDocument, PlayerDocument } from '@qbitmc/common'
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
 import { Leaderboards } from '@models/leaderboards'
-import { MinecraftProfile } from '@models/minecraft-profile'
-import { Server } from '@models/server'
 import { Models } from 'appwrite'
 import { User } from '@models/user'
-import { Player } from '@models/player'
 
 export const appActions = createActionGroup({
   source: 'App',
@@ -25,7 +22,7 @@ export const appActions = createActionGroup({
     'Create Profile Success': props<{ profile: Profile }>(),
     'Create Profile Failure': props<{ error: Error }>(),
     'Minecraft Account Verification': props<{ code: number }>(),
-    'Minecraft Account Verification Success': props<{ player: Player }>(),
+    'Minecraft Account Verification Success': props<{ player: PlayerDocument }>(),
     'Minecraft Account Verification Failure': props<{ error: Error }>(),
     Logout: emptyProps(),
     'Logout Done': emptyProps(),
@@ -33,16 +30,16 @@ export const appActions = createActionGroup({
     'Get Leaderboards Success': props<{ leaderboards: Leaderboards }>(),
     'Get Leaderboards Failure': props<{ error: Error }>(),
     'Get Supporters': emptyProps(),
-    'Get Supporters Success': props<{ supporters: MinecraftProfile[] }>(),
+    'Get Supporters Success': props<{ supporters: PlayerDocument[] }>(),
     'Get Supporters Failure': props<{ error: Error }>(),
     'Get Servers': emptyProps(),
-    'Get Servers Success': props<{ servers: Server[] }>(),
+    'Get Servers Success': props<{ servers: ServerDocument[] }>(),
     'Get Servers Failure': props<{ error: Error }>(),
     'Navigate to Nickname Editor': emptyProps(),
     'Set Unsaved Changes': props<{ changes: boolean }>(),
     'Navigate Back': emptyProps(),
     'Update Nickname': props<{ nickname: string }>(),
-    'Update Nickname Success': props<{ profile: Profile }>(),
+    'Update Nickname Success': props<{ user: User }>(),
     'Update Nickname Failure': props<{ error: Error }>(),
     'Dismiss Error': props<{ key: string }>()
   }

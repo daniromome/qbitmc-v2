@@ -9,7 +9,7 @@ import { AuthService } from '@services/auth'
 import { QbitmcService } from '@services/qbitmc'
 import { Store } from '@ngrx/store'
 import { Router } from '@angular/router'
-import { USER_LABEL } from '@models/user'
+import { USER_LABEL } from '@qbitmc/common'
 import { ServerService } from '@services/server'
 import { applicationActions } from '@store/application'
 import { selectUrl } from '@store/router'
@@ -288,11 +288,11 @@ export const updateNickname$ = createEffect(
   (actions$ = inject(Actions), auth = inject(AuthService), store = inject(Store)) =>
     actions$.pipe(
       ofType(appActions.updateNickname),
-      concatLatestFrom(() => store.select(appFeature.selectProfile)),
-      switchMap(([action, profile]) => {
-        return auth.updateProfile({ ...profile!, nickname: action.nickname })
+      concatLatestFrom(() => store.select(appFeature.selectUser)),
+      switchMap(([action, user]) => {
+        return auth.updatePreferences({ ...user!.prefs, nickname: action.nickname })
       }),
-      map(profile => appActions.updateNicknameSuccess({ profile })),
+      map(user => appActions.updateNicknameSuccess({ user })),
       catchError(error => of(appActions.updateNicknameFailure({ error }))),
       repeat()
     ),

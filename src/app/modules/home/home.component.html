@@ -64,8 +64,7 @@
                   lines="none"
                   class="ion-text-center"
                   [style.border-radius]="'0.25rem'"
-                  (click)="nav.navigateForward('/auth')"
-                >
+                  (click)="nav.navigateForward('/auth')">
                   <ion-label>Join now!</ion-label>
                 </ion-item>
               </ion-col>
@@ -79,9 +78,9 @@
                 @for (supporter of supporters; track $index) {
                   <ion-item class="blur supporters-list-item" lines="none">
                     <ion-avatar slot="start">
-                      <img [src]="supporter.id | avatar" [alt]="'Avatar of player ' + supporter.name" />
+                      <img [src]="supporter.$id | avatar" [alt]="'Avatar of player ' + supporter.ign" />
                     </ion-avatar>
-                    <ion-label>{{ supporter.name }}</ion-label>
+                    <ion-label>{{ supporter.ign }}</ion-label>
                     <ion-chip color="warning" slot="end">Qbitor+ 💛</ion-chip>
                   </ion-item>
                 }

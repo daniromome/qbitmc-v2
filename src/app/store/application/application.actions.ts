@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
-import { EnrollmentApplication, EnrollmentApplicationDocument } from '@models/application'
+import { EnrollmentApplication, EnrollmentApplicationDocument } from '@qbitmc/common'
 
 export const applicationActions = createActionGroup({
   source: 'Application',

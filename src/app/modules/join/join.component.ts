@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject } 
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Validators, FormControl } from '@angular/forms'
 import { FormFrom } from '../../utils/form-from'
-import { EnrollmentApplication } from '@models/application'
+import { EnrollmentApplication } from '@qbitmc/common'
 import { REGEXP } from '@constants/regexp'
 import { NoteComponent } from '@components/note'
 import { FileUploaderComponent } from '@components/file-uploader'

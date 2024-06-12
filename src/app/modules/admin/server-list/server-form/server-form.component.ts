@@ -23,8 +23,7 @@ import {
 import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import { FileUploaderComponent } from '@components/file-uploader'
 import { FormFrom } from '@utils'
-import { Server } from '@models/server'
-import { VISIBILITY, Visibility } from '@models/visibility'
+import { Server, VISIBILITY, Visibility } from '@qbitmc/common'
 import { addIcons } from 'ionicons'
 import { lockClosed, earth, ban, eyeOff } from 'ionicons/icons'
 
@@ -83,10 +82,9 @@ export class ServerFormComponent implements OnInit {
     return registeredServer || unregisteredServer
   })
   public readonly form: FormGroup<FormFrom<Server>> = this.fb.group({
-    id: this.fb.control(''),
     description: this.fb.control(''),
     game: this.fb.control('', [Validators.required]),
-    images: this.fb.array<string>([]),
+    media: this.fb.array<string>([]),
     ip: this.fb.control(''),
     loader: this.fb.control('', [Validators.required]),
     name: this.fb.control(''),

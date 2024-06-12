@@ -1,10 +1,10 @@
-import { Server } from '@models/server'
+import { ServerDocument } from '@qbitmc/common'
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store'
 import { adminActions } from './admin.actions'
 import { LoadingState, setLoadingGeneric } from 'src/app/utils/loading.state'
 
 export interface IAdminState {
-  servers: Server[]
+  servers: ServerDocument[]
 }
 
 const setLoading = setLoadingGeneric<IAdminState>
@@ -31,6 +31,6 @@ export const adminFeature = createFeature({
   ),
   extraSelectors: ({ selectLoading, selectServers }) => ({
     selectLoadingServers: createSelector(selectLoading, loading => loading.servers),
-    selectServer: (id: string) => createSelector(selectServers, servers => servers.find(server => server.id === id))
+    selectServer: (id: string) => createSelector(selectServers, servers => servers.find(server => server.$id === id))
   })
 })

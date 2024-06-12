@@ -1,6 +1,6 @@
 import { TitleCasePipe } from '@angular/common'
 import { Pipe, PipeTransform, inject } from '@angular/core'
-import { USER_LABEL, UserLabel } from '@models/user'
+import { USER_LABEL, UserLabel } from '@qbitmc/common'
 import { StyledText, TextStyle } from '@models/styled-text'
 
 @Pipe({

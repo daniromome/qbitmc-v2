@@ -37,7 +37,8 @@
       "@utils": ["src/app/utils"],
       "@guards/*": ["src/app/guards/*"],
       "@resolvers/*": ["src/app/resolvers/*"],
-      "@directives/*": ["src/app/directives/*"]
+      "@directives/*": ["src/app/directives/*"],
+      "@qbitmc/common": ["node_modules/@qbitmc/common/_dist/mod"]
     }
   },
   "angularCompilerOptions": {

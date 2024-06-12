@@ -1,6 +1,6 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store'
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity'
-import { EnrollmentApplicationDocument } from '@models/application'
+import { EnrollmentApplicationDocument } from '@qbitmc/common'
 import { applicationActions } from './application.actions'
 
 export const applicationFeatureKey = 'application'
@@ -20,6 +20,7 @@ export const reducer = createReducer(
   initialState,
   on(
     applicationActions.getSuccess,
+    applicationActions.submitSuccess,
     (state, action): ApplicationState => ({
       ...adapter.addOne(action.application, state),
       id: action.application.$id,

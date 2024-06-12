@@ -1,13 +1,11 @@
 import { MemoizedSelector, createFeature, createReducer, createSelector, on } from '@ngrx/store'
-import { Profile } from '@models/profile'
 import { appActions } from '@store/app'
 import { Leaderboards } from '@models/leaderboards'
-import { MinecraftProfile } from '@models/minecraft-profile'
-import { Server } from '@models/server'
 import { StyledText } from '@models/styled-text'
 import { shuffleArray } from '@utils'
 import { Models } from 'appwrite'
-import { USER_LABEL, UserLabel, User } from '@models/user'
+import { USER_LABEL, UserLabel, ServerDocument, Profile, PlayerDocument } from '@qbitmc/common'
+import { User } from '@models/user'
 
 export const appFeatureKey = 'app'
 
@@ -16,8 +14,8 @@ export interface AppState {
   user: User | undefined
   profile: Profile | undefined
   leaderboards: Leaderboards | undefined
-  supporters: MinecraftProfile[]
-  servers: Server[]
+  supporters: PlayerDocument[]
+  servers: ServerDocument[]
   initialized: boolean
   nickname: StyledText[]
   changes: boolean
@@ -120,10 +118,10 @@ export const appFeature = createFeature({
       createSelector(selectAppState, state => !!state.user?.labels.some(l => labels.includes(l))),
     selectLeaderboards: createSelector(selectAppState, state => (state.leaderboards ? Object.entries(state.leaderboards) : [])),
     selectSupporters: createSelector(selectAppState, state => {
-      return shuffleArray<MinecraftProfile>(state.supporters)
+      return shuffleArray<PlayerDocument>(state.supporters)
     }),
     selectCustomer: createSelector(selectProfile, profile => profile?.customer),
-    selectServer: (id: string) => createSelector(selectServers, servers => servers.find(server => server.id === id)),
+    selectServer: (id: string) => createSelector(selectServers, servers => servers.find(server => server.$id === id)),
     selectLoadingVerification: createSelector(selectLoading, loading => loading['verification']),
     selectErrorVerification: createSelector(selectError, error => error['verification'])
   })

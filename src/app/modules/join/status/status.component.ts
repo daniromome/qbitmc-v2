@@ -13,7 +13,11 @@ import {
   IonText,
   IonItem,
   IonLabel,
-  IonIcon
+  IonIcon,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonContent
 } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { logoDiscord } from 'ionicons/icons'
@@ -24,6 +28,10 @@ import { applicationFeature } from '@store/application'
   selector: 'qbit-status',
   standalone: true,
   imports: [
+    IonContent,
+    IonCol,
+    IonRow,
+    IonGrid,
     IonIcon,
     IonLabel,
     IonItem,
