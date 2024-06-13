@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, OnInit, computed, effect, inject, signal } from '@angular/core'
+import { Component, OnInit, computed, effect, inject } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { serverActions, serverFeature } from '@store/server'
 import { appFeature } from '@store/app'
@@ -21,7 +21,6 @@ import {
   IonButton,
   IonRow,
   IonCol,
-  IonChip,
   IonGrid
 } from '@ionic/angular/standalone'
 import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
@@ -29,18 +28,20 @@ import { FileUploaderComponent } from '@components/file-uploader'
 import { FormFrom } from '@utils'
 import { Server, VISIBILITY, Visibility } from '@qbitmc/common'
 import { addIcons } from 'ionicons'
-import { lockClosed, earth, ban, eyeOff, close } from 'ionicons/icons'
+import { lockClosed, earth, ban, eyeOff, close, create } from 'ionicons/icons'
 import { MEDIA_ENTITY } from '@models/media'
 import { ID } from 'appwrite'
 import { mediaActions, mediaFeature } from '@store/media'
-import { ImageContainerComponent } from '@components/image-container/image-container.component'
+import { ImageContainerComponent } from '@components/image-container'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { debounceTime, filter, skip, switchMap, tap } from 'rxjs'
+import { concatLatestFrom } from '@ngrx/operators'
 
 @Component({
   selector: 'qbit-server-form',
   standalone: true,
   imports: [
     IonGrid,
-    IonChip,
     IonCol,
     IonRow,
     IonButton,
@@ -80,74 +81,71 @@ export class ServerFormComponent implements OnInit {
     { value: VISIBILITY.PRIVATE, icon: 'lock-closed' },
     { value: VISIBILITY.PUBLIC, icon: 'earth' },
     { value: VISIBILITY.RESTRICTED, icon: 'ban' },
-    { value: VISIBILITY.UNLISTED, icon: 'eye-off' }
+    { value: VISIBILITY.UNLISTED, icon: 'eye-off' },
+    { value: VISIBILITY.DRAFT, icon: 'create' }
   ]
-  public readonly isServerRegistered = computed(() => {
-    const servers = this.servers()
-    if (!servers) return undefined
-    const [registeredServer] = servers
-    return !!registeredServer
-  })
   public readonly server = computed(() => {
     const servers = this.servers()
     if (!servers) return undefined
     const [registeredServer, unregisteredServer] = servers
     return registeredServer || unregisteredServer
   })
-  public readonly mediaList = signal<string[]>([])
-  public readonly media = computed(() => {
-    const mediaList = this.mediaList()
-    return this.store.selectSignal(mediaFeature.selectMedia(mediaList))()
-  })
   public readonly form: FormGroup<FormFrom<Server>> = this.fb.group({
-    $id: this.fb.control(''),
     description: this.fb.control(''),
     game: this.fb.control('', [Validators.required]),
     media: this.fb.array<string>([]),
     ip: this.fb.control(''),
-    loader: this.fb.control('', [Validators.required]),
     name: this.fb.control(''),
     version: this.fb.control('', [Validators.required]),
-    visibility: this.fb.control<Visibility>(VISIBILITY.PUBLIC)
+    visibility: this.fb.control<Visibility>(VISIBILITY.DRAFT)
+  })
+  public readonly changes$ = this.form.valueChanges.pipe(
+    debounceTime(3000),
+    skip(1),
+    concatLatestFrom(() =>
+      this.store.select(selectRouteParam('id')).pipe(switchMap(id => this.store.select(serverFeature.selectServer(id!))))
+    ),
+    filter(([_, server]) => !!server && server.visibility === VISIBILITY.DRAFT),
+    tap(([_, server]) => {
+      this.store.dispatch(
+        serverActions.updateServer({ id: server!.$id, server: { ...this.form.getRawValue(), visibility: VISIBILITY.DRAFT } })
+      )
+    }),
+    takeUntilDestroyed()
+  )
+  public readonly media = computed(() => {
+    const server = this.server()
+    if (!server) return []
+    return this.store.selectSignal(mediaFeature.selectMedia(server.media))()
   })
 
   public constructor() {
-    addIcons({ lockClosed, earth, ban, eyeOff, close })
+    addIcons({ lockClosed, earth, ban, eyeOff, close, create })
     effect(() => {
       const server = this.server()
       if (!server) return
       Object.entries(server)
-        .filter(([_k, v]) => !!v)
+        .filter(([k, v]) => Object.keys(this.form.getRawValue()).includes(k) && !!v)
         .forEach(([k, v]) => {
+          if (k === 'media' && Array.isArray(v)) {
+            v.forEach(id => this.form.controls.media.push(this.fb.control<string>(id)))
+          }
           const key = k as keyof Server
           this.form.controls[key].setValue(v)
         })
     })
-    effect(() => {
-      const id = this.id()
-      const mediaList = this.mediaList()
-      const stringifiedList = mediaList.join(',')
-      if (stringifiedList === localStorage.getItem(`server-images-${id}`)) return
-      localStorage.setItem(`server-images-${id}`, stringifiedList)
-    })
-  }
-
-  public ionViewWillEnter(): void {
-    const id = this.id()
-    const mediaListString = localStorage.getItem(`server-images-${id}`)
-    const mediaList = mediaListString ? mediaListString.split(',') : []
-    this.mediaList.set(mediaList)
-    if (mediaList.length > 0)
-      this.store.dispatch(mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.SERVER, ids: mediaList } }))
   }
 
   public ngOnInit(): void {
+    this.changes$.subscribe()
     if (this.server()) return
     this.store.dispatch(serverActions.getServers())
   }
 
-  public upsertServer(): void {
-    this.store.dispatch(serverActions.upsertServer({ server: this.form.getRawValue() }))
+  public updateServer(): void {
+    const id = this.id()
+    if (!id) return
+    this.store.dispatch(serverActions.updateServer({ id, server: this.form.getRawValue() }))
   }
 
   public droppedFiles(files: File[]): void {
@@ -157,16 +155,13 @@ export class ServerFormComponent implements OnInit {
       fileIds: Array.from(Array(files.length)).map(() => ID.unique()),
       ids: []
     }
-    this.mediaList.update(value => [...value, ...request.fileIds])
+    request.fileIds.forEach(id => this.form.controls.media.push(this.fb.control(id)))
     this.store.dispatch(mediaActions.uploadMediaResources({ request }))
   }
 
   public deleteImage(id: string): void {
-    this.mediaList.update(value => {
-      const index = value.findIndex(v => v === id)
-      value.splice(index)
-      return value
-    })
+    const index = this.form.controls.media.value.findIndex(m => m === id)
+    if (index !== -1) this.form.controls.media.removeAt(index)
     this.store.dispatch(
       mediaActions.deleteMediaResource({
         request: {

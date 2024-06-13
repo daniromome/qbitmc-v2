@@ -18,9 +18,6 @@
           <ion-input labelPlacement="floating" label="IP Address" formControlName="ip"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-input labelPlacement="floating" label="Loader" formControlName="loader"></ion-input>
-        </ion-item>
-        <ion-item>
           <ion-input labelPlacement="floating" label="Version" formControlName="version"></ion-input>
         </ion-item>
         <ion-list-header>Images</ion-list-header>
@@ -35,8 +32,6 @@
                     (delete)="deleteImage(file.$id)"></qbit-image-container>
                 </ion-col>
               }
-            </ion-row>
-            <ion-row>
               <ion-col>
                 <qbit-file-uploader type="image" (droppedFiles)="droppedFiles($event)"> </qbit-file-uploader>
               </ion-col>
@@ -62,13 +57,15 @@
       </ion-list>
     </ion-card-content>
     <div class="ion-card-footer">
-      <ion-button fill="clear" (click)="upsertServer()">
-        @if (isServerRegistered()) {
-          Save Changes
-        } @else {
-          Register Server
-        }
-      </ion-button>
+      @if (form.controls.visibility.value !== 'draft') {
+        <ion-button fill="clear" (click)="updateServer()">
+          @if (server()?.visibility === 'draft') {
+            Publish
+          } @else {
+            Update Server
+          }
+        </ion-button>
+      }
     </div>
   </ion-card>
 </ion-content>

@@ -45,7 +45,7 @@ import { toSignal } from '@angular/core/rxjs-interop'
 import { mediaActions, mediaFeature } from '@store/media'
 import { ClipboardService } from '@services/clipboard/clipboard.service'
 import { ID } from 'appwrite'
-import { ImageContainerComponent } from '@components/image-container/image-container.component'
+import { ImageContainerComponent } from '@components/image-container'
 
 interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age' | 'media' | 'profile'>> {
   age: FormControl<string>

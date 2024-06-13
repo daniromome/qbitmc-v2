@@ -24,18 +24,18 @@ export class ServerService {
     ).pipe(map(list => list.documents))
   }
 
-  public upsert(server: Server): Observable<ServerDocument> {
+  public update(id: string, server: Server): Observable<ServerDocument> {
     return from(
-      this.appwrite.databases.createDocument<ServerDocument>(
+      this.appwrite.databases.updateDocument<ServerDocument>(
         environment.APPWRITE_DATABASE,
         environment.APPWRITE_COLLECTION_SERVER,
-        server.$id,
+        id,
         server
       )
     )
   }
 
-  public getNewDrafts(): Observable<ServerDocument[]> {
+  public sync(): Observable<ServerDocument[]> {
     return from(this.appwrite.functions.createExecution(environment.APPWRITE_FUNCTION_LIST_UNREGISTERED_SERVERS)).pipe(
       map(result => {
         return JSON.parse(result.responseBody)

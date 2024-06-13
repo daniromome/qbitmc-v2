@@ -7,8 +7,11 @@ export const serverActions = createActionGroup({
     'Get Servers': emptyProps(),
     'Get Servers Success': props<{ servers: ServerDocument[] }>(),
     'Get Servers Failure': props<{ error: Error }>(),
-    'Upsert Server': props<{ server: Server }>(),
-    'Upsert Server Success': props<{ server: ServerDocument }>(),
-    'Upsert Server Failure': props<{ error: Error }>()
+    'Update Server': props<{ id: string; server: Server }>(),
+    'Update Server Success': props<{ server: ServerDocument }>(),
+    'Update Server Failure': props<{ error: Error }>(),
+    'Sync Database': emptyProps(),
+    'Sync Database Success': props<{ servers: ServerDocument[] }>(),
+    'Sync Database Failure': props<{ error: Error }>()
   }
 })

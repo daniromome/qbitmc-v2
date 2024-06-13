@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core'
 import {
   IonContent,
   IonItem,
@@ -14,8 +14,11 @@ import {
   IonCard,
   IonCardTitle,
   IonCardHeader,
-  IonButton
+  IonButton,
+  IonIcon
 } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { sync } from 'ionicons/icons'
 import { Store } from '@ngrx/store'
 import { serverActions, serverFeature } from '@store/server'
 import { appFeature } from '@store/app'
@@ -24,6 +27,7 @@ import { appFeature } from '@store/app'
   selector: 'qbit-server',
   standalone: true,
   imports: [
+    IonIcon,
     IonButton,
     IonCardHeader,
     IonCardTitle,
@@ -43,15 +47,24 @@ import { appFeature } from '@store/app'
   styleUrl: './server-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ServerListComponent {
+export class ServerListComponent implements OnInit {
   private readonly store = inject(Store)
   public readonly nav = inject(NavController)
   public readonly skeleton = Array.from(Array(8)).map((_, i) => i)
   public readonly registeredServers = this.store.selectSignal(appFeature.selectServers)
-  public readonly servers = this.store.selectSignal(serverFeature.selectServers)
+  public readonly servers = this.store.selectSignal(serverFeature.selectAll)
   public readonly serversLoading = this.store.selectSignal(serverFeature.selectLoadingServers)
+  public readonly syncing = this.store.selectSignal(serverFeature.selectSyncing)
 
-  public ionViewWillEnter(): void {
+  public constructor() {
+    addIcons({ sync })
+  }
+
+  public ngOnInit(): void {
     this.store.dispatch(serverActions.getServers())
+  }
+
+  public sync(): void {
+    this.store.dispatch(serverActions.syncDatabase())
   }
 }
