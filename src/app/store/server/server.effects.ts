@@ -1,18 +1,18 @@
 import { inject } from '@angular/core'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { ServerService } from '@services/server'
-import { adminActions } from '@store/admin'
+import { serverActions } from '@store/server'
 import { switchMap, map, catchError, of, repeat } from 'rxjs'
 
 export const getServers$ = createEffect(
   (actions$ = inject(Actions), serverService = inject(ServerService)) =>
     actions$.pipe(
-      ofType(adminActions.getServers),
+      ofType(serverActions.getServers),
       switchMap(() => serverService.list(true)),
-      map(servers => adminActions.getServersSuccess({ servers })),
+      map(servers => serverActions.getServersSuccess({ servers })),
       catchError(error => {
         console.error(error)
-        return of(adminActions.getServersFailure({ error }))
+        return of(serverActions.getServersFailure({ error }))
       }),
       repeat()
     ),
@@ -22,12 +22,12 @@ export const getServers$ = createEffect(
 export const upsertServer$ = createEffect(
   (actions$ = inject(Actions), serverService = inject(ServerService)) =>
     actions$.pipe(
-      ofType(adminActions.upsertServer),
+      ofType(serverActions.upsertServer),
       switchMap(({ server }) => serverService.upsert(server)),
-      map(server => adminActions.upsertServerSuccess({ server })),
+      map(server => serverActions.upsertServerSuccess({ server })),
       catchError(error => {
         console.error(error)
-        return of(adminActions.upsertServerFailure({ error }))
+        return of(serverActions.upsertServerFailure({ error }))
       }),
       repeat()
     ),

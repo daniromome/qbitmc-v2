@@ -32,7 +32,6 @@ import {
   IonButton,
   IonIcon,
   IonCardContent,
-  IonChip,
   IonInput,
   IonTextarea,
   IonCheckbox,
@@ -41,11 +40,12 @@ import {
   IonToast
 } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
-import { cubeOutline, cubeSharp, close, copyOutline } from 'ionicons/icons'
+import { cubeOutline, cubeSharp, copyOutline } from 'ionicons/icons'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { mediaActions, mediaFeature } from '@store/media'
 import { ClipboardService } from '@services/clipboard/clipboard.service'
 import { ID } from 'appwrite'
+import { ImageContainerComponent } from '@components/image-container/image-container.component'
 
 interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age' | 'media' | 'profile'>> {
   age: FormControl<string>
@@ -58,7 +58,6 @@ interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age' | '
     IonToast,
     IonSpinner,
     IonList,
-    IonChip,
     IonCardContent,
     IonIcon,
     IonButton,
@@ -86,7 +85,8 @@ interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age' | '
     NoteComponent,
     FileUploaderComponent,
     BytesPipe,
-    AvatarPipe
+    AvatarPipe,
+    ImageContainerComponent
   ],
   templateUrl: './join.component.html',
   styleUrls: ['./join.component.scss'],
@@ -134,7 +134,7 @@ export class JoinComponent implements OnInit {
   public readonly filesSizeExceedsLimit = computed(() => !this.filesSizeWithinLimit())
 
   public constructor() {
-    addIcons({ cubeOutline, cubeSharp, close, copyOutline })
+    addIcons({ cubeOutline, cubeSharp, copyOutline })
     effect(() => {
       const form = this.formChanges()
       if (!form) return

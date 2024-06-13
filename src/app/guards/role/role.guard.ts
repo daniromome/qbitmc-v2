@@ -11,8 +11,8 @@ export const roleGuard: (...roles: UserLabel[]) => CanActivateFn =
     () => {
       const store = inject(Store)
       const router = inject(Router)
-      return store.select(appFeature.selectInitialized).pipe(
-        filter(initialized => initialized),
+      return store.select(appFeature.selectUser).pipe(
+        filter(user => !!user),
         switchMap(() => store.select(appFeature.selectIsRole(...roles))),
         map(is => is || router.createUrlTree(['tabs', 'home']))
       )

@@ -24,7 +24,25 @@
           <ion-input labelPlacement="floating" label="Version" formControlName="version"></ion-input>
         </ion-item>
         <ion-list-header>Images</ion-list-header>
-        <qbit-file-uploader></qbit-file-uploader>
+        <ion-grid>
+          @if (media(); as files) {
+            <ion-row>
+              @for (file of files; track $index) {
+                <ion-col size="12" size-md="6" size-xl="4">
+                  <qbit-image-container
+                    [src]="file.url"
+                    [size]="file.sizeOriginal"
+                    (delete)="deleteImage(file.$id)"></qbit-image-container>
+                </ion-col>
+              }
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <qbit-file-uploader type="image" (droppedFiles)="droppedFiles($event)"> </qbit-file-uploader>
+              </ion-col>
+            </ion-row>
+          }
+        </ion-grid>
         <ion-list-header>Visibility</ion-list-header>
         <ion-radio-group formControlName="visibility">
           @for (v of visibility; track $index) {

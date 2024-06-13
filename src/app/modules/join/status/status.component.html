@@ -10,6 +10,10 @@
               <ion-card-title i18n="@@status-title">Hey {{ player.ign }},</ion-card-title>
               @if (application()?.status?.approved === null) {
                 <ion-card-subtitle i18n="@@status-received">We received your request to join our community</ion-card-subtitle>
+              } @else if (application()?.status?.approved) {
+                <ion-card-subtitle i18n="@@status-rejected">
+                  Your application has been <ion-text color="success">accepted</ion-text>!
+                </ion-card-subtitle>
               } @else {
                 <ion-card-subtitle i18n="@@status-rejected"
                   >Your application has been <ion-text color="danger">rejected</ion-text>
@@ -21,6 +25,12 @@
                 <ion-text class="ion-text-center" i18n="@@status-pending-approval">
                   You will receive a message from our discord bot when we either approve or reject your application. Please keep
                   in mind that this process might take up to 24 hours.
+                </ion-text>
+              } @else if (application()?.status?.approved) {
+                <ion-text class="ion-text-center" i18n="@@status-approved">
+                  Welcome to the community. If you're seeing this message, it means that your application is still processing.
+                  Refresh the website in a few minutes and you'll have your access ready. If the issue persists please contact
+                  us in discord.
                 </ion-text>
               } @else {
                 <ion-text class="ion-text-center" i18n="@@status-apology">

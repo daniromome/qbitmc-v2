@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
-import { Component, OnInit, computed, effect, inject } from '@angular/core'
+import { Component, OnInit, computed, effect, inject, signal } from '@angular/core'
 import { Store } from '@ngrx/store'
-import { adminActions, adminFeature } from '@store/admin'
+import { serverActions, serverFeature } from '@store/server'
 import { appFeature } from '@store/app'
 import { selectRouteParam } from '@store/router'
 import {
@@ -18,19 +18,31 @@ import {
   IonCardTitle,
   IonCardSubtitle,
   IonCardHeader,
-  IonButton
+  IonButton,
+  IonRow,
+  IonCol,
+  IonChip,
+  IonGrid
 } from '@ionic/angular/standalone'
 import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import { FileUploaderComponent } from '@components/file-uploader'
 import { FormFrom } from '@utils'
 import { Server, VISIBILITY, Visibility } from '@qbitmc/common'
 import { addIcons } from 'ionicons'
-import { lockClosed, earth, ban, eyeOff } from 'ionicons/icons'
+import { lockClosed, earth, ban, eyeOff, close } from 'ionicons/icons'
+import { MEDIA_ENTITY } from '@models/media'
+import { ID } from 'appwrite'
+import { mediaActions, mediaFeature } from '@store/media'
+import { ImageContainerComponent } from '@components/image-container/image-container.component'
 
 @Component({
   selector: 'qbit-server-form',
   standalone: true,
   imports: [
+    IonGrid,
+    IonChip,
+    IonCol,
+    IonRow,
     IonButton,
     IonCardHeader,
     IonCardSubtitle,
@@ -47,7 +59,8 @@ import { lockClosed, earth, ban, eyeOff } from 'ionicons/icons'
     IonList,
     CommonModule,
     FileUploaderComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ImageContainerComponent
   ],
   templateUrl: './server-form.component.html',
   styleUrl: './server-form.component.scss'
@@ -59,7 +72,7 @@ export class ServerFormComponent implements OnInit {
   private readonly servers = computed(() => {
     const id = this.id()
     if (!id) return undefined
-    const unregisteredServer = this.store.selectSignal(adminFeature.selectServer(id))()
+    const unregisteredServer = this.store.selectSignal(serverFeature.selectServer(id))()
     const registeredServer = this.store.selectSignal(appFeature.selectServer(id))()
     return [registeredServer, unregisteredServer]
   })
@@ -81,7 +94,13 @@ export class ServerFormComponent implements OnInit {
     const [registeredServer, unregisteredServer] = servers
     return registeredServer || unregisteredServer
   })
+  public readonly mediaList = signal<string[]>([])
+  public readonly media = computed(() => {
+    const mediaList = this.mediaList()
+    return this.store.selectSignal(mediaFeature.selectMedia(mediaList))()
+  })
   public readonly form: FormGroup<FormFrom<Server>> = this.fb.group({
+    $id: this.fb.control(''),
     description: this.fb.control(''),
     game: this.fb.control('', [Validators.required]),
     media: this.fb.array<string>([]),
@@ -93,7 +112,7 @@ export class ServerFormComponent implements OnInit {
   })
 
   public constructor() {
-    addIcons({ lockClosed, earth, ban, eyeOff })
+    addIcons({ lockClosed, earth, ban, eyeOff, close })
     effect(() => {
       const server = this.server()
       if (!server) return
@@ -104,14 +123,57 @@ export class ServerFormComponent implements OnInit {
           this.form.controls[key].setValue(v)
         })
     })
+    effect(() => {
+      const id = this.id()
+      const mediaList = this.mediaList()
+      const stringifiedList = mediaList.join(',')
+      if (stringifiedList === localStorage.getItem(`server-images-${id}`)) return
+      localStorage.setItem(`server-images-${id}`, stringifiedList)
+    })
+  }
+
+  public ionViewWillEnter(): void {
+    const id = this.id()
+    const mediaListString = localStorage.getItem(`server-images-${id}`)
+    const mediaList = mediaListString ? mediaListString.split(',') : []
+    this.mediaList.set(mediaList)
+    if (mediaList.length > 0)
+      this.store.dispatch(mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.SERVER, ids: mediaList } }))
   }
 
   public ngOnInit(): void {
     if (this.server()) return
-    this.store.dispatch(adminActions.getServers())
+    this.store.dispatch(serverActions.getServers())
   }
 
   public upsertServer(): void {
-    this.store.dispatch(adminActions.upsertServer({ server: this.form.getRawValue() }))
+    this.store.dispatch(serverActions.upsertServer({ server: this.form.getRawValue() }))
+  }
+
+  public droppedFiles(files: File[]): void {
+    const request = {
+      entity: MEDIA_ENTITY.SERVER,
+      files,
+      fileIds: Array.from(Array(files.length)).map(() => ID.unique()),
+      ids: []
+    }
+    this.mediaList.update(value => [...value, ...request.fileIds])
+    this.store.dispatch(mediaActions.uploadMediaResources({ request }))
+  }
+
+  public deleteImage(id: string): void {
+    this.mediaList.update(value => {
+      const index = value.findIndex(v => v === id)
+      value.splice(index)
+      return value
+    })
+    this.store.dispatch(
+      mediaActions.deleteMediaResource({
+        request: {
+          entity: MEDIA_ENTITY.SERVER,
+          id
+        }
+      })
+    )
   }
 }

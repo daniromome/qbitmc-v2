@@ -24,7 +24,7 @@ export type MediaEntity = ObjectValues<typeof MEDIA_ENTITY>
 
 export const BUCKET: Record<MediaEntity, string> = {
   applications: environment.APPWRITE_BUCKET_APPLICATION,
-  server: ''
+  server: environment.APPWRITE_BUCKET_SERVER
 } as const
 
 export interface MediaRequest {
@@ -44,5 +44,5 @@ export interface DeleteMediaRequest extends MediaRequest {
 }
 
 export interface UploadMediaConstraints {
-  maxUploadSize: number
+  maxUploadSize?: number
 }

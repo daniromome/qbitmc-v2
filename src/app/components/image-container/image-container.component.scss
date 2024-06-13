@@ -1,0 +1,32 @@
+.image-container {
+  isolation: isolate;
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  .delete-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    margin: 0;
+    --padding-start: 0.125rem;
+    --padding-end: 0.125rem;
+    --border-radius: 0.5rem;
+    z-index: 1;
+  }
+  img {
+    border-radius: 0.5rem;
+  }
+  &-description {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0 0 0.5rem 0.5rem;
+  }
+}
+
+ion-chip {
+  --background: rgba(var(--ion-color-medium-rgb),0.7);
+  --color: var(--ion-color-medium-contrast);
+}

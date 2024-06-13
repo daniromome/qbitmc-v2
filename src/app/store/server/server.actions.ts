@@ -1,8 +1,8 @@
 import { Server, ServerDocument } from '@qbitmc/common'
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
 
-export const adminActions = createActionGroup({
-  source: 'Admin',
+export const serverActions = createActionGroup({
+  source: 'Server',
   events: {
     'Get Servers': emptyProps(),
     'Get Servers Success': props<{ servers: ServerDocument[] }>(),

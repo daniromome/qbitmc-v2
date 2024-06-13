@@ -3,17 +3,26 @@ import { roleGuard } from '@guards/role'
 import { USER_LABEL } from '@qbitmc/common'
 import { provideEffects } from '@ngrx/effects'
 import { provideState } from '@ngrx/store'
-import { adminEffects, adminFeature } from '@store/admin'
+import { serverEffects, serverFeature } from '@store/server'
+import { mediaEffects, mediaFeature } from '@store/media'
+import { BytesPipe } from '@pipes/bytes'
 
 export const routes: Route[] = [
   {
     path: '',
     loadComponent: () => import('./admin.component').then(c => c.AdminComponent),
     canActivate: [roleGuard(USER_LABEL.ADMIN)],
-    providers: [provideState(adminFeature), provideEffects(adminEffects)],
+    providers: [],
     children: [
       {
         path: 'server',
+        providers: [
+          provideState(serverFeature),
+          provideEffects(serverEffects),
+          provideState(mediaFeature),
+          provideEffects(mediaEffects),
+          BytesPipe
+        ],
         children: [
           {
             path: '',

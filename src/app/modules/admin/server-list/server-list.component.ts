@@ -9,15 +9,36 @@ import {
   IonGrid,
   IonRow,
   IonSkeletonText,
-  NavController, IonCardContent, IonCard } from '@ionic/angular/standalone'
+  NavController,
+  IonCardContent,
+  IonCard,
+  IonCardTitle,
+  IonCardHeader,
+  IonButton
+} from '@ionic/angular/standalone'
 import { Store } from '@ngrx/store'
-import { adminActions, adminFeature } from '@store/admin'
+import { serverActions, serverFeature } from '@store/server'
 import { appFeature } from '@store/app'
 
 @Component({
   selector: 'qbit-server',
   standalone: true,
-  imports: [IonCard, IonCardContent, IonSkeletonText, IonRow, IonGrid, IonCol, IonListHeader, IonSpinner, IonList, IonItem, IonContent],
+  imports: [
+    IonButton,
+    IonCardHeader,
+    IonCardTitle,
+    IonCard,
+    IonCardContent,
+    IonSkeletonText,
+    IonRow,
+    IonGrid,
+    IonCol,
+    IonListHeader,
+    IonSpinner,
+    IonList,
+    IonItem,
+    IonContent
+  ],
   templateUrl: './server-list.component.html',
   styleUrl: './server-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -27,10 +48,10 @@ export class ServerListComponent {
   public readonly nav = inject(NavController)
   public readonly skeleton = Array.from(Array(8)).map((_, i) => i)
   public readonly registeredServers = this.store.selectSignal(appFeature.selectServers)
-  public readonly servers = this.store.selectSignal(adminFeature.selectServers)
-  public readonly serversLoading = this.store.selectSignal(adminFeature.selectLoadingServers)
+  public readonly servers = this.store.selectSignal(serverFeature.selectServers)
+  public readonly serversLoading = this.store.selectSignal(serverFeature.selectLoadingServers)
 
   public ionViewWillEnter(): void {
-    this.store.dispatch(adminActions.getServers())
+    this.store.dispatch(serverActions.getServers())
   }
 }

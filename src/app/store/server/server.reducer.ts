@@ -1,30 +1,30 @@
 import { ServerDocument } from '@qbitmc/common'
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store'
-import { adminActions } from './admin.actions'
+import { serverActions } from './server.actions'
 import { LoadingState, setLoadingGeneric } from 'src/app/utils/loading.state'
 
-export interface IAdminState {
+export interface IServerState {
   servers: ServerDocument[]
 }
 
-const setLoading = setLoadingGeneric<IAdminState>
+const setLoading = setLoadingGeneric<IServerState>
 
-export type AdminState = IAdminState & LoadingState<IAdminState>
+export type ServerState = IServerState & LoadingState<IServerState>
 
-export const initialState: AdminState = {
+export const initialState: ServerState = {
   servers: [],
   loading: {
     servers: false
   }
 }
 
-export const adminFeature = createFeature({
+export const serverFeature = createFeature({
   name: 'admin',
   reducer: createReducer(
     initialState,
-    on(adminActions.getServers, state => ({ ...state, loading: setLoading(state, 'servers', true) })),
-    on(adminActions.getServersSuccess, (state, { servers }): AdminState => ({ ...state, servers })),
-    on(adminActions.getServersSuccess, adminActions.getServersFailure, state => ({
+    on(serverActions.getServers, state => ({ ...state, loading: setLoading(state, 'servers', true) })),
+    on(serverActions.getServersSuccess, (state, { servers }): ServerState => ({ ...state, servers })),
+    on(serverActions.getServersSuccess, serverActions.getServersFailure, state => ({
       ...state,
       loading: setLoading(state, 'servers', false)
     }))
