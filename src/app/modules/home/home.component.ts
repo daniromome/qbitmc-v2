@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, inject, computed } from '@angular/core'
+import { Component, ChangeDetectionStrategy, OnInit, inject, computed, Signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Store } from '@ngrx/store'
 import { appActions, appFeature } from '@store/app'
@@ -28,6 +28,10 @@ import { addIcons } from 'ionicons'
 import { calendarOutline, gameControllerOutline, peopleOutline, globeOutline, hammerOutline } from 'ionicons/icons'
 import { BulletPointComponent } from '@components/bullet-point'
 import { RouterLinkWithHref } from '@angular/router'
+import { mediaFeature } from '@store/media'
+import { Media } from '@models/media'
+import { ServerDocument } from '@qbitmc/common/_dist/mod'
+import { ServerComponent } from '@components/server'
 
 @Component({
   selector: 'qbit-home',
@@ -56,7 +60,8 @@ import { RouterLinkWithHref } from '@angular/router'
     AvatarPipe,
     SliderComponent,
     BulletPointComponent,
-    RouterLinkWithHref
+    RouterLinkWithHref,
+    ServerComponent
   ]
 })
 export class HomeComponent implements OnInit {
@@ -86,5 +91,9 @@ export class HomeComponent implements OnInit {
 
   public ngOnInit(): void {
     this.store.dispatch(appActions.getLeaderboards())
+  }
+
+  public serverMedia(server: ServerDocument): Signal<Media[]> {
+    return this.store.selectSignal(mediaFeature.selectMedia(server.media))
   }
 }

@@ -14,7 +14,7 @@ export class ServerService {
   public list(drafts: boolean = false): Observable<ServerDocument[]> {
     const queries = drafts
       ? [Query.equal('visibility', VISIBILITY.DRAFT)]
-      : [Query.contains('visibility', [VISIBILITY.PUBLIC, VISIBILITY.PRIVATE])]
+      : [Query.contains('visibility', [VISIBILITY.PUBLIC, VISIBILITY.PRIVATE, VISIBILITY.RESTRICTED])]
     return from(
       this.appwrite.databases.listDocuments<ServerDocument>(
         environment.APPWRITE_DATABASE,
@@ -24,7 +24,7 @@ export class ServerService {
     ).pipe(map(list => list.documents))
   }
 
-  public update(id: string, server: Server): Observable<ServerDocument> {
+  public update(id: string, server: Partial<Server>): Observable<ServerDocument> {
     return from(
       this.appwrite.databases.updateDocument<ServerDocument>(
         environment.APPWRITE_DATABASE,

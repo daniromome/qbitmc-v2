@@ -13,6 +13,8 @@ import { USER_LABEL } from '@qbitmc/common'
 import { ServerService } from '@services/server'
 import { applicationActions } from '@store/application'
 import { selectUrl } from '@store/router'
+import { mediaActions } from '@store/media'
+import { MEDIA_ENTITY } from '@models/media'
 
 export const initialize$ = createEffect(
   (actions$ = inject(Actions)) =>
@@ -214,6 +216,17 @@ export const getServers$ = createEffect(
       switchMap(() => serverService.list()),
       map(servers => appActions.getServersSuccess({ servers })),
       catchError(error => of(appActions.getServersFailure({ error })))
+    ),
+  { functional: true }
+)
+
+export const getServersSuccess$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(appActions.getServersSuccess),
+      map(({ servers }) =>
+        mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.SERVER, ids: servers.flatMap(s => s.media) } })
+      )
     ),
   { functional: true }
 )

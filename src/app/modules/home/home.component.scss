@@ -39,6 +39,23 @@ ion-content.background {
 }
 
 .server-list {
+  qbit-server {
+    min-height: 15rem;
+    height: calc((100dvh - 112px) / 3);
+  }
+  @include mixins.md {
+    max-height: calc(100dvh - 112px);
+    overflow-y: scroll;
+  }
+  &.ios {
+    @include mixins.md {
+      max-height: calc(100dvh - 88px);
+      overflow-y: scroll;
+    }
+    qbit-server {
+      height: calc((100dvh - 88px) / 3);
+    }
+  }
   position: relative;
   isolation: isolate;
   &-title {
@@ -46,25 +63,15 @@ ion-content.background {
     @include mixins.md {
       z-index: 1;
       position: absolute;
-      top: 15rem;
-      left: -2rem;
+      top: 60%;
+      right: -15%;
       transform-origin: 0 0;
       transform: rotate(270deg);
     }
   }
   &-container {
-    min-height: 100%;
-  }
-  &-item {
-    position: relative;
-    &-badge {
-      height: 2rem;
-      width: 2rem;
-      position: absolute;
-      top: 0;
-      right: 0;
-      clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 0%);
-    }
+    display: flex;
+    flex-direction: column;
   }
 }
 

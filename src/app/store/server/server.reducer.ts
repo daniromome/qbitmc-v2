@@ -1,4 +1,4 @@
-import { ServerDocument } from '@qbitmc/common'
+import { ServerDocument, VISIBILITY } from '@qbitmc/common'
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store'
 import { serverActions } from './server.actions'
 import { EntityAdapter, EntityState, createEntityAdapter } from '@ngrx/entity'
@@ -56,7 +56,11 @@ export const serverFeature = createFeature({
       ...entitySelectors,
       selectLoadingServers: createSelector(selectLoading, loading => loading.servers),
       selectSyncing: createSelector(selectLoading, loading => loading.syncing),
-      selectServer: (id: string) => createSelector(selectEntities, entities => entities[id])
+      selectServer: (id: string) => createSelector(selectEntities, entities => entities[id]),
+      selectServers: createSelector(entitySelectors.selectAll, servers =>
+        servers.filter(s => s.visibility !== VISIBILITY.DRAFT)
+      ),
+      selectDrafts: createSelector(entitySelectors.selectAll, servers => servers.filter(s => s.visibility === VISIBILITY.DRAFT))
     }
   }
 })

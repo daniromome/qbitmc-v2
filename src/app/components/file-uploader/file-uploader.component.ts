@@ -58,6 +58,7 @@ export class FileUploaderComponent {
     addIcons({ download, cloudUpload })
     effect(() => {
       const files = this.uploaded()
+      if (files.length === 0) return
       this.droppedFiles.emit(files)
     })
   }

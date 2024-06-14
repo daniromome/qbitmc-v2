@@ -4,8 +4,6 @@ import { USER_LABEL } from '@qbitmc/common'
 import { provideEffects } from '@ngrx/effects'
 import { provideState } from '@ngrx/store'
 import { serverEffects, serverFeature } from '@store/server'
-import { mediaEffects, mediaFeature } from '@store/media'
-import { BytesPipe } from '@pipes/bytes'
 
 export const routes: Route[] = [
   {
@@ -16,13 +14,7 @@ export const routes: Route[] = [
     children: [
       {
         path: 'server',
-        providers: [
-          provideState(serverFeature),
-          provideEffects(serverEffects),
-          provideState(mediaFeature),
-          provideEffects(mediaEffects),
-          BytesPipe
-        ],
+        providers: [provideState(serverFeature), provideEffects(serverEffects)],
         children: [
           {
             path: '',

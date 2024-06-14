@@ -10,11 +10,13 @@ import { provideState } from '@ngrx/store'
 import { BytesPipe } from '@pipes/bytes'
 import { applicationFeature, applicationEffects } from '@store/application'
 import { ShopEffects, shopFeature } from '@store/shop'
+import { mediaFeature, mediaEffects } from '@store/media'
 
 export const routes: Routes = [
   {
     path: 'tabs',
     loadComponent: () => import('./components/tabs').then(c => c.TabsComponent),
+    providers: [BytesPipe, provideState(mediaFeature), provideEffects(mediaEffects)],
     children: [
       {
         path: 'admin',

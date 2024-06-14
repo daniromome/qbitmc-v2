@@ -1,6 +1,9 @@
 <ion-content class="background">
   <ion-grid class="main-container ion-no-padding">
     <ion-row class="full-height ion-no-padding">
+      <!-- <div class="server-list-title" i18n="@@server-list-title">
+        <span class="title">Server List</span>
+      </div> -->
       <ion-col class="full-height" size="12" size-md="6" size-lg="7">
         <ion-grid class="full-height ion-no-padding content-container">
           <ion-row class="ion-padding">
@@ -89,35 +92,14 @@
           </div>
         }
       </ion-col>
-      <ion-col class="server-list full-height">
-        <div class="server-list-title" i18n="@@server-list-title">
-          <span class="title secondary-text">Server List</span>
-        </div>
-        <ion-grid class="server-list-container blur">
+      <ion-col size="12" size-md="6" size-lg="5" class="server-list">
+        <div class="server-list-container blur">
           @if (servers(); as servers) {
             @for (server of servers; track $index) {
-              <ion-row>
-                <ion-col size="12" sizeMd="6" sizeLg="4" sizeXl="12">
-                  <ion-card class="server-list-item">
-                    <ion-card-header>
-                      <ion-card-title>
-                        <ion-text class="section-title">{{ server.name }}</ion-text>
-                      </ion-card-title>
-                      <ion-card-subtitle>{{ server.game }} {{ server.version }}</ion-card-subtitle>
-                    </ion-card-header>
-                    <ion-card-content>
-                      @if (server.ip) {
-                        <p>
-                          <ion-text color="dark">{{ server.ip }}</ion-text>
-                        </p>
-                      }
-                    </ion-card-content>
-                  </ion-card>
-                </ion-col>
-              </ion-row>
+              <qbit-server [server]="server" [media]="serverMedia(server)()"></qbit-server>
             }
           }
-        </ion-grid>
+        </div>
       </ion-col>
     </ion-row>
   </ion-grid>

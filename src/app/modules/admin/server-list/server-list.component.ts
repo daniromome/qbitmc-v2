@@ -52,7 +52,7 @@ export class ServerListComponent implements OnInit {
   public readonly nav = inject(NavController)
   public readonly skeleton = Array.from(Array(8)).map((_, i) => i)
   public readonly registeredServers = this.store.selectSignal(appFeature.selectServers)
-  public readonly servers = this.store.selectSignal(serverFeature.selectAll)
+  public readonly servers = this.store.selectSignal(serverFeature.selectDrafts)
   public readonly serversLoading = this.store.selectSignal(serverFeature.selectLoadingServers)
   public readonly syncing = this.store.selectSignal(serverFeature.selectSyncing)
 
