@@ -2,15 +2,18 @@
   @if (background(); as background) {
     <div class="server-container background" [style.--content-background]="background">
       <div class="server-container-content light-blur ion-padding">
-        <div>
-          <div class="title">{{ server.name }}</div>
-          <div>{{ server.description }}</div>
-        </div>
+        <div class="title">{{ server.name }}</div>
+        <div>{{ server.description }}</div>
+        <span class="server-container-content-separator"></span>
         <div class="server-container-content-footer">
           <div>
             <ion-button color="primary" fill="outline" size="small">{{ server.game }} {{ server.version }}</ion-button>
           </div>
-          <div>
+          <div class="server-container-content-footer-buttons">
+            <ion-button fill="none" color="light" size="small">
+              <ion-icon slot="start" [name]="icon()"></ion-icon>
+              {{ server.visibility | uppercase }}
+            </ion-button>
             <ion-button color="secondary" size="small" (click)="clipboard.copyToClipboard(server.ip)">
               {{ server.ip }}
               <ion-icon name="copy-outline" slot="end"></ion-icon>

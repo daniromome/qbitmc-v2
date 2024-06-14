@@ -1,19 +1,27 @@
 .server-container {
-  isolation: isolate;
-  min-height: 100%;
+  justify-content: end;
+  display: flex;
+  min-height: inherit;
   &-content {
-    border-radius: 0 0.5rem 0.5rem 0;
+    text-align: end;
     flex-direction: column;
     display: flex;
-    justify-content: space-between;
-    position: absolute;
-    top: 0; left: 0;
-    width: 75%; height: 100%;
+    width: 75%;
+    min-height: inherit;
     font-size: 1.15rem;
+    gap: 1rem;
+    &-separator {
+      flex: 1;
+    }
     &-footer {
       display: flex;
       flex-direction: column;
-      justify-content: end;
+      align-items: end;
+      &-buttons {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
     }
   }
 }

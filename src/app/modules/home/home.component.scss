@@ -5,10 +5,6 @@ ion-content.background {
   --offset-bottom: 4rem !important;
 }
 
-.main-container {
-  height: 100%;
-}
-
 .supporters-list {
   width: 100%;
   position: absolute;
@@ -27,6 +23,12 @@ ion-content.background {
 }
 
 .content-container {
+  &-parent {
+    @include mixins.md {
+      max-height: calc(100dvh - 112px);
+      overflow-y: scroll;
+    }
+  }
   padding-bottom: 5.5rem;
   display: flex;
   flex-direction: column;
@@ -40,8 +42,7 @@ ion-content.background {
 
 .server-list {
   qbit-server {
-    min-height: 15rem;
-    height: calc((100dvh - 112px) / 3);
+    min-height: max(calc((100dvh - 112px) / 3), 15rem);
   }
   @include mixins.md {
     max-height: calc(100dvh - 112px);
@@ -53,7 +54,7 @@ ion-content.background {
       overflow-y: scroll;
     }
     qbit-server {
-      height: calc((100dvh - 88px) / 3);
+      min-height: max(calc((100dvh - 88px) / 3), 15rem);
     }
   }
   position: relative;
