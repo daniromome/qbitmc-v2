@@ -16,6 +16,8 @@ import {
 } from '@ionic/angular/standalone'
 import { Store } from '@ngrx/store'
 import { selectUrl } from '@store/router'
+import { addIcons } from 'ionicons'
+import { language, server, pricetag } from 'ionicons/icons'
 
 @Component({
   selector: 'qbit-admin',
@@ -42,6 +44,27 @@ export class AdminComponent {
   public readonly url = this.store.selectSignal(selectUrl)
   public readonly nav = inject(NavController)
   public readonly routes = [
-    { icon: 'server', label: $localize`:@@admin-panel-label-create-server:Manage Servers`, url: '/tabs/admin/server' }
+    {
+      icon: 'server',
+      label: $localize`:@@admin-panel-label-manage-server:Manage Servers`,
+      url: '/tabs/admin/server',
+      disabled: false
+    },
+    {
+      icon: 'pricetag',
+      label: $localize`:@@admin-panel-label-manage-server:Manage Products`,
+      url: '/tabs/admin/product',
+      disabled: true
+    },
+    {
+      icon: 'language',
+      label: $localize`:@@admin-panel-label-manage-translation:Manage Translations`,
+      url: '/tabs/admin/translation',
+      disabled: false
+    }
   ] as const
+
+  public constructor() {
+    addIcons({ language, server, pricetag })
+  }
 }

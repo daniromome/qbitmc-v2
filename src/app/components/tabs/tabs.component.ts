@@ -21,17 +21,15 @@ import {
   IonBackButton
 } from '@ionic/angular/standalone'
 import { Store } from '@ngrx/store'
-import { filter, map } from 'rxjs'
 import { USER_LABEL, UserLabel, Locale } from '@qbitmc/common'
 import { LocaleService } from '@services/locale'
 import { AvatarPipe } from '@pipes/avatar'
 import { RolePipe } from '@pipes/role'
 import { RoleColorPipe } from '@pipes/role-color'
 import { appActions, appFeature } from '@store/app'
-import { NavigationEnd, Router, RouterLinkWithHref } from '@angular/router'
+import { RouterLinkWithHref } from '@angular/router'
 import { addIcons } from 'ionicons'
-import { chevronBack, person, logOut, home, storefront, compass, people, server } from 'ionicons/icons'
-import { toSignal } from '@angular/core/rxjs-interop'
+import { chevronBack, person, logOut, home, storefront, compass, people, apps } from 'ionicons/icons'
 
 interface Tab {
   icon: string
@@ -74,20 +72,11 @@ interface Tab {
 })
 export class TabsComponent {
   private readonly store = inject(Store)
-  private readonly router = inject(Router)
   public readonly localeService = inject(LocaleService)
   public readonly disabled = this.store.selectSignal(appFeature.selectIsDisabled)
   public readonly user = this.store.selectSignal(appFeature.selectUser)
   public readonly profile = this.store.selectSignal(appFeature.selectProfile)
   public readonly player = this.store.selectSignal(appFeature.selectPlayer)
-  public readonly isAdmin = this.store.selectSignal(appFeature.selectIsRole(USER_LABEL.ADMIN))
-  public readonly route = toSignal(
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
-      map(event => (event as NavigationEnd).url.split('/').slice(1))
-    )
-  )
-
   private readonly _tabs: Tab[] = [
     {
       icon: 'home',
@@ -100,16 +89,16 @@ export class TabsComponent {
       path: 'shop'
     },
     {
-      icon: 'compass',
-      label: $localize`:@@map-tab-label:Map`,
-      path: 'map',
-      role: USER_LABEL.QBITOR
-    },
-    {
       icon: 'person',
       label: $localize`:@@profile-tab-label:Profile`,
       path: 'profile',
       role: USER_LABEL.QBITOR
+    },
+    {
+      icon: 'apps',
+      label: $localize`:@@profile-tab-label:Admin`,
+      path: 'admin',
+      role: USER_LABEL.ADMIN
     }
   ]
 
@@ -124,7 +113,7 @@ export class TabsComponent {
   })
 
   public constructor() {
-    addIcons({ chevronBack, person, logOut, home, storefront, compass, people, server })
+    addIcons({ chevronBack, person, logOut, home, storefront, compass, people, apps })
   }
 
   public changeLocale(locale: Locale): void {
@@ -133,9 +122,5 @@ export class TabsComponent {
 
   public logout(): void {
     this.store.dispatch(appActions.logout())
-  }
-
-  public navigateBack(): void {
-    this.store.dispatch(appActions.navigateBack())
   }
 }

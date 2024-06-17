@@ -4,6 +4,7 @@ import { USER_LABEL } from '@qbitmc/common'
 import { provideEffects } from '@ngrx/effects'
 import { provideState } from '@ngrx/store'
 import { serverEffects, serverFeature } from '@store/server'
+import { translationEffects, translationFeature } from '@store/translation'
 
 export const routes: Route[] = [
   {
@@ -23,6 +24,27 @@ export const routes: Route[] = [
           {
             path: ':id',
             loadComponent: () => import('./server-list/server-form/server-form.component').then(c => c.ServerFormComponent)
+          }
+        ]
+      },
+      {
+        path: 'translation',
+        providers: [provideState(translationFeature), provideEffects(translationEffects)],
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./translation-list/translation-list.component').then(c => c.TranslationListComponent)
+          },
+          {
+            path: ':key',
+            loadComponent: () =>
+              import('./translation-list/translation-form/translation-form.component').then(c => c.TranslationFormComponent)
+          },
+          {
+            path: 'new/server',
+            providers: [provideState(serverFeature), provideEffects(serverEffects)],
+            loadComponent: () =>
+              import('./translation-list/translation-form/translation-form.component').then(c => c.TranslationFormComponent)
           }
         ]
       }

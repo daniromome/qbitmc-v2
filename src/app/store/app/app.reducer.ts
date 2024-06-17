@@ -92,7 +92,8 @@ export const reducer = createReducer(
     const error = { ...state.error }
     delete error[action.key]
     return { ...state, error }
-  })
+  }),
+  on(appActions.logoutDone, (state): AppState => ({ ...state, user: undefined, profile: undefined, session: undefined }))
 )
 
 export const appFeature = createFeature({

@@ -8,7 +8,6 @@ import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
 import { QbitmcService } from '@services/qbitmc'
 import { Store } from '@ngrx/store'
-import { Router } from '@angular/router'
 import { USER_LABEL } from '@qbitmc/common'
 import { ServerService } from '@services/server'
 import { applicationActions } from '@store/application'
@@ -146,15 +145,15 @@ export const minecraftAccountVerification$ = createEffect(
   { functional: true }
 )
 
-// export const logout$ = createEffect(
-//   (actions$ = inject(Actions), oidc = inject(OidcSecurityService)) =>
-//     actions$.pipe(
-//       ofType(appActions.logout),
-//       switchMap(() => oidc.logoffAndRevokeTokens()),
-//       map(() => appActions.logoutDone())
-//     ),
-//   { functional: true }
-// )
+export const logout$ = createEffect(
+  (actions$ = inject(Actions), auth = inject(AuthService)) =>
+    actions$.pipe(
+      ofType(appActions.logout),
+      switchMap(() => auth.logout()),
+      map(() => appActions.logoutDone())
+    ),
+  { functional: true }
+)
 
 export const logoutDone$ = createEffect(
   (actions$ = inject(Actions), nav = inject(NavController)) =>
@@ -259,44 +258,6 @@ export const navigateToNicknameEditor$ = createEffect(
   { functional: true, dispatch: false }
 )
 
-export const navigateBack$ = createEffect(
-  (
-    actions$ = inject(Actions),
-    nav = inject(NavController),
-    store = inject(Store),
-    router = inject(Router),
-    alert = inject(AlertController)
-  ) =>
-    actions$.pipe(
-      ofType(appActions.navigateBack),
-      concatLatestFrom(() => store.select(appFeature.selectChanges)),
-      switchMap(([_action, pendingChanges]) => {
-        const route = router.url.split('/').slice(1, -1)
-        const back = from(nav.navigateBack(route)).pipe(map(() => appActions.setUnsavedChanges({ changes: false })))
-        if (pendingChanges) {
-          return from(
-            alert.create({
-              buttons: [
-                { text: 'Confirm', role: 'confirm' },
-                { text: 'Cancel', role: 'cancel' }
-              ],
-              header: 'Warning',
-              message: 'You have unsaved changes, are you sure you want to go back?'
-            })
-          ).pipe(
-            switchMap(alert => from(alert.present()).pipe(switchMap(() => alert.onWillDismiss()))),
-            switchMap(event => {
-              if (event.role === 'cancel') return of(appActions.setUnsavedChanges({ changes: true }))
-              return back
-            })
-          )
-        }
-        return back
-      })
-    ),
-  { functional: true }
-)
-
 export const updateNickname$ = createEffect(
   (actions$ = inject(Actions), auth = inject(AuthService), store = inject(Store)) =>
     actions$.pipe(
@@ -308,15 +269,6 @@ export const updateNickname$ = createEffect(
       map(user => appActions.updateNicknameSuccess({ user })),
       catchError(error => of(appActions.updateNicknameFailure({ error }))),
       repeat()
-    ),
-  { functional: true }
-)
-
-export const updateNicknameSuccess$ = createEffect(
-  (actions$ = inject(Actions)) =>
-    actions$.pipe(
-      ofType(appActions.updateNicknameSuccess),
-      map(() => appActions.navigateBack())
     ),
   { functional: true }
 )

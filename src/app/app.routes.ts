@@ -39,7 +39,7 @@ export const routes: Routes = [
         providers: [provideState(shopFeature), provideEffects(ShopEffects)]
       },
       {
-        path: 'map',
+        path: 'map/:id',
         loadComponent: () => import('./modules/map/map.component').then(c => c.MapComponent),
         canActivate: [roleGuard(USER_LABEL.QBITOR), enabledGuard]
       },

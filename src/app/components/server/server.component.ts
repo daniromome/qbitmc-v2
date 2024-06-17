@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { Media } from '@models/media'
 import { ServerDocument } from '@qbitmc/common'
 import { interval, tap } from 'rxjs'
-import { IonChip, IonButton, IonIcon, IonText } from '@ionic/angular/standalone'
+import { IonChip, IonButton, IonIcon, IonText, NavController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { copyOutline, lockClosed, earth, ban, eyeOff } from 'ionicons/icons'
 import { ClipboardService } from '@services/clipboard'
@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ServerComponent {
+  public readonly nav = inject(NavController)
   public readonly clipboard = inject(ClipboardService)
   public server = input.required<ServerDocument>()
   public readonly icon = computed(() => VISIBILITY_ICON[this.server().visibility])
@@ -42,9 +43,18 @@ export class ServerComponent {
     }),
     takeUntilDestroyed()
   )
+  public readonly map = computed(() => {
+    const server = this.server()
+    return server.metadata.find(data => data.key === 'map')?.value
+  })
 
   public constructor() {
     addIcons({ copyOutline, lockClosed, earth, ban, eyeOff })
     this.timer.subscribe()
+  }
+
+  public navigateToMap(): void {
+    const server = this.server()
+    this.nav.navigateForward('/tabs/map/' + server.$id)
   }
 }

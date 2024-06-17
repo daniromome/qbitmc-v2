@@ -39,7 +39,7 @@
     "@ngrx/router-store": "^17.2.0",
     "@ngrx/store": "^17.2.0",
     "@ngrx/store-devtools": "^17.2.0",
-    "@qbitmc/common": "npm:@jsr/qbitmc__common@^0.0.10",
+    "@qbitmc/common": "npm:@jsr/qbitmc__common@^0.0.14",
     "appwrite": "^15.0.0",
     "rxjs": "^7.8.1",
     "tslib": "^2.3.0",

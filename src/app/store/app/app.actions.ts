@@ -37,7 +37,6 @@ export const appActions = createActionGroup({
     'Get Servers Failure': props<{ error: Error }>(),
     'Navigate to Nickname Editor': emptyProps(),
     'Set Unsaved Changes': props<{ changes: boolean }>(),
-    'Navigate Back': emptyProps(),
     'Update Nickname': props<{ nickname: string }>(),
     'Update Nickname Success': props<{ user: User }>(),
     'Update Nickname Failure': props<{ error: Error }>(),

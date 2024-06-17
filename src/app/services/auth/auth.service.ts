@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { Preferences, Profile, PlayerDocument } from '@qbitmc/common'
 import { Observable, from, map, of } from 'rxjs'
-import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
 import { AppwriteService } from '@services/appwrite'
 import { Models, OAuthProvider } from 'appwrite'
@@ -12,7 +11,6 @@ import { ExecutionResponse } from '@models/execution'
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly http = inject(HttpClient)
   private readonly appwrite = inject(AppwriteService)
 
   public getSession(): Observable<Models.Session> {
@@ -56,5 +54,9 @@ export class AuthService {
 
   public updatePreferences(prefs: Preferences): Observable<User> {
     return from(this.appwrite.account.updatePrefs(prefs)) as Observable<User>
+  }
+
+  public logout(): Observable<unknown> {
+    return from(this.appwrite.account.deleteSession('current'))
   }
 }
