@@ -104,7 +104,7 @@ export class TabsComponent {
 
   public readonly tabs = computed(() => {
     const user = this.user()
-    if (!user || user.labels.length === 0)
+    if (!user || !user.labels.includes(USER_LABEL.QBITOR))
       return [
         ...this._tabs.filter(tab => !tab.role),
         { icon: 'people', label: $localize`:@@join-tab-label:Join`, path: 'join', role: USER_LABEL.GUEST }
