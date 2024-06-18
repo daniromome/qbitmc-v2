@@ -56,7 +56,7 @@ export const serverFeature = createFeature({
       ...entitySelectors,
       selectLoadingServers: createSelector(selectLoading, loading => loading.servers),
       selectSyncing: createSelector(selectLoading, loading => loading.syncing),
-      selectServer: (id: string) => createSelector(selectEntities, entities => entities[id]),
+      selectServer: (id: string) => createSelector(selectEntities, entities => (entities ? entities[id] : undefined)),
       selectServers: createSelector(entitySelectors.selectAll, servers =>
         servers.filter(s => s.visibility !== VISIBILITY.DRAFT)
       ),

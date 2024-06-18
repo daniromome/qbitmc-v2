@@ -14,11 +14,13 @@
                 }
               } @else {
                 @for (translation of translations(); track $index) {
-                  <ion-item
-                    button
-                    (click)="nav.navigateForward('/tabs/admin/translation/' + translation.$id)"
-                    [lines]="$last ? 'none' : ''">
-                    {{ translation.key }}
+                  <ion-item button (click)="goToTranslation(translation)" [lines]="$last ? 'none' : ''">
+                    <ion-chip color="primary">{{ translation.entity | titlecase }}</ion-chip>
+                    @if (getEntity(translation)(); as entity) {
+                      {{ entity.name }}
+                    } @else {
+                      {{ translation.$id }}
+                    }
                   </ion-item>
                 } @empty {
                   <ion-item lines="none">There are no translations created, when you add one you'll see it here.</ion-item>
@@ -38,7 +40,7 @@
       <ion-fab-button color="light" (click)="nav.navigateForward('/tabs/admin/translation/new/server')">
         <ion-icon name="server"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button color="medium" (click)="nav.navigateForward('/tabs/admin/translation/new/pricetag')" [disabled]="true">
+      <ion-fab-button color="medium" (click)="nav.navigateForward('/tabs/admin/translation/new/product')" [disabled]="true">
         <ion-icon name="pricetag"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>

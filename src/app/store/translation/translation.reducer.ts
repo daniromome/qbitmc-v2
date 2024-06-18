@@ -1,4 +1,4 @@
-import { TranslationDocument } from '@qbitmc/common'
+import { Locale, TranslationDocument } from '@qbitmc/common'
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store'
 import { translationActions } from './translation.actions'
 import { EntityAdapter, EntityState, createEntityAdapter } from '@ngrx/entity'
@@ -40,8 +40,8 @@ export const translationFeature = createFeature({
       })
     ),
     on(
-      translationActions.updateTranslationSuccess,
-      (state, { translation }): TranslationState => adapter.upsertOne(translation, state)
+      translationActions.upsertTranslationsSuccess,
+      (state, { translations }): TranslationState => adapter.upsertMany(translations, state)
     )
   ),
   extraSelectors: ({ selectTranslationState, selectLoading }) => {
@@ -49,9 +49,24 @@ export const translationFeature = createFeature({
     return {
       ...entitySelectors,
       selectLoadingTranslations: createSelector(selectLoading, loading => loading.translations),
-      selectTranslationKeys: createSelector(entitySelectors.selectAll, translations =>
-        Array.from(new Set(translations.map(t => t.key)))
-      )
+      selectTranslationEntities: createSelector(entitySelectors.selectAll, translations =>
+        Array.from(
+          new Set(
+            translations.map(t => {
+              const splitKey = t.key.split('.')
+              return JSON.stringify({ entity: splitKey.at(0), $id: splitKey.at(-1) })
+            })
+          )
+        ).map(e => JSON.parse(e) as { entity: string; $id: string })
+      ),
+      selectTranslationByKey: (key: string, locale: Locale) =>
+        createSelector(entitySelectors.selectAll, translations => translations.find(t => t.key === key && t.locale === locale)),
+      selectTranslationByEntityId: ($id: string, locale: Locale) =>
+        createSelector(entitySelectors.selectAll, translations =>
+          translations
+            .filter(t => t.key.endsWith($id) && t.locale === locale)
+            .reduce<Record<string, string>>((acc, cur) => ({ ...acc, [cur.key.split('.')[1]]: cur.message }), {})
+        )
     }
   }
 })

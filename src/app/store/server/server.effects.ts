@@ -7,6 +7,7 @@ import { ServerService } from '@services/server'
 import { appFeature } from '@store/app'
 import { mediaActions } from '@store/media'
 import { serverActions } from '@store/server'
+import { translationActions } from '@store/translation'
 import { switchMap, map, catchError, of, repeat } from 'rxjs'
 
 export const getServers$ = createEffect(
@@ -25,13 +26,22 @@ export const getServers$ = createEffect(
   { functional: true }
 )
 
-export const getServersSuccess$ = createEffect(
+export const getServersSuccessEmitGetMedia$ = createEffect(
   (actions$ = inject(Actions)) =>
     actions$.pipe(
       ofType(serverActions.getServersSuccess),
       map(({ servers }) =>
         mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.SERVER, ids: servers.flatMap(s => s.media) } })
       )
+    ),
+  { functional: true }
+)
+
+export const getServersEmitGetTranslations$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(serverActions.getServers),
+      map(() => translationActions.getTranslations({ locale: false, namespace: 'server' }))
     ),
   { functional: true }
 )

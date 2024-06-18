@@ -32,6 +32,8 @@ import { mediaFeature } from '@store/media'
 import { Media } from '@models/media'
 import { ServerDocument } from '@qbitmc/common/_dist/mod'
 import { ServerComponent } from '@components/server'
+import { translationFeature } from '@store/translation'
+import { LocaleService } from '@services/locale'
 
 @Component({
   selector: 'qbit-home',
@@ -66,6 +68,7 @@ import { ServerComponent } from '@components/server'
 })
 export class HomeComponent implements OnInit {
   private readonly store = inject(Store)
+  private readonly locale = inject(LocaleService)
   public readonly nav = inject(NavController)
   public readonly view = inject(ViewPortService)
   public readonly elementsInView = computed(() => {
@@ -77,7 +80,20 @@ export class HomeComponent implements OnInit {
   public readonly isSignedIn = this.store.selectSignal(appFeature.selectIsSignedIn)
   public readonly supporters = this.store.selectSignal(appFeature.selectSupporters)
   public readonly supportersCount = computed(() => this.supporters().length)
-  public readonly servers = this.store.selectSignal(appFeature.selectServers)
+  public readonly serversWithTranslations = computed(() => {
+    const servers = this.store.selectSignal(appFeature.selectServers)()
+    if (servers.length === 0) return []
+    return servers.map(server => {
+      const translation = this.store.selectSignal(
+        translationFeature.selectTranslationByEntityId(server.$id, this.locale.locale)
+      )()
+      return {
+        ...server,
+        name: translation['name'] || server.name,
+        description: translation['description'] || server.description
+      }
+    })
+  })
 
   public constructor() {
     addIcons({

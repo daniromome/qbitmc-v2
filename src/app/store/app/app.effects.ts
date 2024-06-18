@@ -14,6 +14,7 @@ import { applicationActions } from '@store/application'
 import { selectUrl } from '@store/router'
 import { mediaActions } from '@store/media'
 import { MEDIA_ENTITY } from '@models/media'
+import { translationActions } from '@store/translation'
 
 export const initialize$ = createEffect(
   (actions$ = inject(Actions)) =>
@@ -206,6 +207,15 @@ export const getSupportersFailure$ = createEffect(
       switchMap(toast => from(toast.present()))
     ),
   { functional: true, dispatch: false }
+)
+
+export const getTranslations$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(appActions.getServersSuccess),
+      map(() => translationActions.getTranslations({ locale: true, namespace: 'server' }))
+    ),
+  { functional: true }
 )
 
 export const getServers$ = createEffect(

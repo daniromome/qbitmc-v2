@@ -1,9 +1,6 @@
 <ion-content class="background" [scrollY]="!view.isMD()">
   <ion-grid class="main-container ion-no-padding">
     <ion-row class="full-height ion-no-padding">
-      <!-- <div class="server-list-title" i18n="@@server-list-title">
-        <span class="title">Server List</span>
-      </div> -->
       <ion-col class="content-container-parent full-height" size="12" size-md="6" size-lg="7">
         <ion-grid class="full-height ion-no-padding content-container">
           <ion-row class="ion-padding">
@@ -94,7 +91,7 @@
       </ion-col>
       <ion-col size="12" size-md="6" size-lg="5" class="server-list">
         <div class="server-list-container blur">
-          @if (servers(); as servers) {
+          @if (serversWithTranslations(); as servers) {
             @for (server of servers; track $index) {
               <qbit-server [server]="server" [media]="serverMedia(server)()"></qbit-server>
             }

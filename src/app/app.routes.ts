@@ -11,12 +11,19 @@ import { BytesPipe } from '@pipes/bytes'
 import { applicationFeature, applicationEffects } from '@store/application'
 import { ShopEffects, shopFeature } from '@store/shop'
 import { mediaFeature, mediaEffects } from '@store/media'
+import { translationEffects, translationFeature } from '@store/translation'
 
 export const routes: Routes = [
   {
     path: 'tabs',
     loadComponent: () => import('./components/tabs').then(c => c.TabsComponent),
-    providers: [BytesPipe, provideState(mediaFeature), provideEffects(mediaEffects)],
+    providers: [
+      BytesPipe,
+      provideState(mediaFeature),
+      provideEffects(mediaEffects),
+      provideState(translationFeature),
+      provideEffects(translationEffects)
+    ],
     children: [
       {
         path: 'admin',

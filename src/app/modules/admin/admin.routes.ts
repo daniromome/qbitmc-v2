@@ -36,7 +36,8 @@ export const routes: Route[] = [
             loadComponent: () => import('./translation-list/translation-list.component').then(c => c.TranslationListComponent)
           },
           {
-            path: ':key',
+            path: ':id/server',
+            providers: [provideState(serverFeature), provideEffects(serverEffects)],
             loadComponent: () =>
               import('./translation-list/translation-form/translation-form.component').then(c => c.TranslationFormComponent)
           },

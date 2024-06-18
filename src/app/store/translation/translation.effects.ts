@@ -1,14 +1,16 @@
 import { inject } from '@angular/core'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
+import { concatLatestFrom } from '@ngrx/operators'
+import { Store } from '@ngrx/store'
 import { LocaleService } from '@services/locale'
-import { translationActions } from '@store/translation'
-import { switchMap, map, catchError, of, repeat } from 'rxjs'
+import { translationActions, translationFeature } from '@store/translation'
+import { switchMap, map, catchError, of, repeat, forkJoin } from 'rxjs'
 
 export const getTranslations$ = createEffect(
-  (actions$ = inject(Actions), locale = inject(LocaleService)) =>
+  (actions$ = inject(Actions), localeService = inject(LocaleService)) =>
     actions$.pipe(
       ofType(translationActions.getTranslations),
-      switchMap(({ namespace }) => locale.get(namespace)),
+      switchMap(({ locale, namespace }) => localeService.get({ locale, namespace })),
       map(translations => translationActions.getTranslationsSuccess({ translations })),
       catchError(error => {
         return of(translationActions.getTranslationsFailure({ error }))
@@ -18,13 +20,22 @@ export const getTranslations$ = createEffect(
   { functional: true }
 )
 
-export const updateTranslation$ = createEffect(
-  (actions$ = inject(Actions), locale = inject(LocaleService)) =>
+export const updateTranslations$ = createEffect(
+  (actions$ = inject(Actions), locale = inject(LocaleService), store = inject(Store)) =>
     actions$.pipe(
-      ofType(translationActions.updateTranslation),
-      switchMap(({ $id: id, translation }) => locale.update(id, translation)),
-      map(translation => translationActions.updateTranslationSuccess({ translation })),
-      catchError(error => of(translationActions.updateTranslationFailure({ error }))),
+      ofType(translationActions.upsertTranslations),
+      concatLatestFrom(() => store.select(translationFeature.selectAll)),
+      switchMap(([{ translations }, existingTranslations]) =>
+        forkJoin(
+          translations.map(translation => {
+            const index = existingTranslations.findIndex(t => t.key === translation.key && t.locale === translation.locale)
+            if (index === -1) return locale.create(translation)
+            return locale.update(existingTranslations[index].$id, translation)
+          })
+        )
+      ),
+      map(translations => translationActions.upsertTranslationsSuccess({ translations })),
+      catchError(error => of(translationActions.upsertTranslationsFailure({ error }))),
       repeat()
     ),
   { functional: true }
