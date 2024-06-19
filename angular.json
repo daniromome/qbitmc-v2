@@ -40,8 +40,7 @@
                 "glob": "**/*.svg",
                 "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"
-              },
-              "src/silent-renew.html"
+              }
             ],
             "styles": [
               "src/styles.scss",
@@ -189,7 +188,8 @@
         "sourceLocale": "en",
         "locales": {
           "es": {
-            "translation": "src/locale/messages.es.json"
+            "translation": "src/locale/messages.es.json",
+            "baseHref": ""
           }
         }
       }
