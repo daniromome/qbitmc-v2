@@ -188,8 +188,7 @@
         "sourceLocale": "en",
         "locales": {
           "es": {
-            "translation": "src/locale/messages.es.json",
-            "baseHref": ""
+            "translation": "src/locale/messages.es.json"
           }
         }
       }
