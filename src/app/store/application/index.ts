@@ -1,5 +1,3 @@
-import * as ApplicationActions from './application.actions'
-import { ApplicationState, applicationFeature } from './application.reducer'
-import { ApplicationEffects } from './application.effects'
-
-export { ApplicationActions, ApplicationState, applicationFeature, ApplicationEffects }
+export { applicationActions } from './application.actions'
+export { ApplicationState, applicationFeature } from './application.reducer'
+export * as applicationEffects from './application.effects'

@@ -2,43 +2,15 @@
 
 ion-content.background {
   --content-background: url('https://i.imgur.com/5B9ygAM.png') no-repeat center center;
-  &.md {
-    --padding-bottom: 5.5rem;
-  }
-  &.ios {
-    --padding-bottom: 4.75rem;
-  }
-}
-
-ion-text {
-  &.description {
-    color: white;
-    margin: 0 1rem;
-    font-size: 1.15rem;
-  }
-  &.section-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    &.ios {
-      font-size: 1.75rem;
-    }
-  }
-}
-
-.leaderboards-container {
-  @include mixins.xl {
-    overflow-y: auto;
-    height: 95%;
-    ion-col:first-of-type {
-      padding-top: 0;
-    }
-  }
+  --offset-bottom: 4rem !important;
 }
 
 .supporters-list {
-  position: fixed;
+  width: 100%;
+  position: absolute;
+  z-index: 1;
   bottom: 0;
-  &-item{
+  &-item {
     border-radius: 0.25rem;
     transition: 0.3s;
     &:hover {
@@ -46,18 +18,64 @@ ion-text {
     }
   }
   qbit-slider {
-    width: 100dvw;
+    width: 100%;
   }
 }
 
-.server-list-item {
-  position: relative;
-  &-badge {
-    height: 2rem;
-    width: 2rem;
-    position: absolute;
-    top: 0;
-    right: 0;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 0%);
+.content-container {
+  &-parent {
+    @include mixins.md {
+      max-height: calc(100dvh - 112px);
+      overflow-y: scroll;
+    }
   }
+  padding-bottom: 5.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0rem 1rem;
+  &-description {
+    color: white;
+    font-size: 1.15rem;
+  }
+}
+
+.server-list {
+  qbit-server {
+    min-height: max(calc((100dvh - 112px) / 3), 15rem);
+  }
+  @include mixins.md {
+    max-height: calc(100dvh - 112px);
+    overflow-y: scroll;
+  }
+  &.ios {
+    @include mixins.md {
+      max-height: calc(100dvh - 88px);
+      overflow-y: scroll;
+    }
+    qbit-server {
+      min-height: max(calc((100dvh - 88px) / 3), 15rem);
+    }
+  }
+  position: relative;
+  isolation: isolate;
+  &-title {
+    text-align: center;
+    @include mixins.md {
+      z-index: 1;
+      position: absolute;
+      top: 60%;
+      right: -15%;
+      transform-origin: 0 0;
+      transform: rotate(270deg);
+    }
+  }
+  &-container {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.subtitle {
+  padding-top: 0.75rem;
 }

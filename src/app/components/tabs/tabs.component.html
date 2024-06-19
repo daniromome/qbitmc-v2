@@ -1,54 +1,56 @@
-<ion-header id="main-content">
-  <ion-toolbar>
-    <ng-container *ngIf="route$ | async as route">
-      <ion-buttons slot="start" *ngIf="route.length > 2">
-        <ion-button (click)="navigateBack()">
-          <ion-icon slot="start" name="chevron-back"></ion-icon>
-          <span i18n="@@back-button-label">Back</span>
-        </ion-button>
-      </ion-buttons>
-    </ng-container>
-    <ion-title>QbitMC</ion-title>
-    <ion-buttons slot="end">
-      <ion-button id="select-locale" color="dark">{{ locale | uppercase }}</ion-button>
-      <ng-container *ngIf="profile$ | async as profile">
-        <ion-button class="profile-button" id="profile-menu">
-          <ng-container *ngIf="profile.minecraft; else userIcon">
-            <img [src]="profile.minecraft.id | avatar" alt="" slot="icon-only" class="avatar">
-          </ng-container>
-          <ng-template #userIcon>
-            <ion-icon name="person" slot="icon-only"></ion-icon>
-          </ng-template>
-        </ion-button>
-        <ion-popover trigger="profile-menu" showBackdrop="false">
-          <ng-template>
-            <ion-content>
-              <ion-item (click)="logout()" color="danger" button [style.--background]="'transparent'" [detail]="false">
-                <ion-icon name="log-out" slot="start"></ion-icon>
-                <ion-label i18n="@@logout-button-label">Logout</ion-label>
-              </ion-item>
-            </ion-content>
-          </ng-template>
-        </ion-popover>
-      </ng-container>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
 <ion-tabs>
+  <ion-header id="main-content" slot="top">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <img src="assets/logo.svg" alt="" class="logo" slot="start" />
+      <ion-title>QbitMC</ion-title>
+      <ion-buttons slot="end">
+        <ion-button id="select-locale" color="dark">{{ localeService.locale | uppercase }}</ion-button>
+        @if (profile(); as profile) {
+          <ion-button class="profile-button" id="profile-menu">
+            @if (player(); as player) {
+              <img [src]="player.$id | avatar" alt="" slot="icon-only" class="avatar" />
+            } @else {
+              <ion-icon name="person" slot="icon-only"></ion-icon>
+            }
+          </ion-button>
+          <ion-popover trigger="profile-menu" showBackdrop="false">
+            <ng-template>
+              <ion-content>
+                <ion-list class="ion-no-padding" lines="none">
+                  <ion-item (click)="logout()" color="danger" button [style.--background]="'transparent'" [detail]="false">
+                    <ion-icon name="log-out" slot="start"></ion-icon>
+                    <ion-label i18n="@@logout-button-label">Logout</ion-label>
+                  </ion-item>
+                </ion-list>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        }
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
   <ion-tab-bar slot="bottom">
-    <ion-tab-button *ngFor="let tab of tabs$ | async" [tab]="tab.path" [disabled]="(disabled$ | async) && tab.role">
-      <ion-icon [name]="tab.icon"></ion-icon>
-      <ion-label>{{ tab.label }}</ion-label>
-    </ion-tab-button>
+    @for (tab of tabs(); track $index) {
+      <ion-tab-button [tab]="tab.path" [disabled]="disabled() && tab.role">
+        <ion-icon [name]="tab.icon"></ion-icon>
+        <ion-label>{{ tab.label }}</ion-label>
+      </ion-tab-button>
+    }
   </ion-tab-bar>
 </ion-tabs>
 
 <ion-popover trigger="select-locale" showBackdrop="false">
   <ng-template>
     <ion-content>
-      <ion-item lines="none" button (click)="changeLocale('es')" [style.--background]="'transparent'" [detail]="false">ES</ion-item>
-      <ion-item lines="none" button (click)="changeLocale('en')" [style.--background]="'transparent'" [detail]="false">EN</ion-item>
+      <ion-item lines="none" button (click)="changeLocale('es')" [style.--background]="'transparent'" [detail]="false"
+        >ES</ion-item
+      >
+      <ion-item lines="none" button (click)="changeLocale('en')" [style.--background]="'transparent'" [detail]="false"
+        >EN</ion-item
+      >
     </ion-content>
   </ng-template>
 </ion-popover>

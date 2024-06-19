@@ -1,0 +1,11 @@
+<div class="image-container">
+  <img [src]="src()" alt="to be sent in enrollment application" />
+  <ion-button size="small" color="danger" class="delete-button" (click)="delete.emit()">
+    <ion-icon name="close" slot="icon-only"></ion-icon>
+  </ion-button>
+  @if (size(); as size) {
+    <div class="image-container-description">
+      <ion-chip>{{ size | bytes }}</ion-chip>
+    </div>
+  }
+</div>

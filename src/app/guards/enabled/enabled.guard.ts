@@ -7,7 +7,7 @@ import { map } from 'rxjs'
 export const enabledGuard: CanActivateFn = () => {
   const store = inject(Store)
   const router = inject(Router)
-  return store.select(appFeature.selectIsDisabled).pipe(
-    map(isDisabled => !isDisabled || router.createUrlTree(['tabs', 'home']))
-  )
+  return store
+    .select(appFeature.selectIsDisabled)
+    .pipe(map(isDisabled => !isDisabled || router.createUrlTree(['tabs', 'home'])))
 }

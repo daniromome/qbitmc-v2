@@ -1,10 +1,10 @@
-<div class="slider"
-  [style.--slide-width]="slideWidth"
-  [style.--slide-width-negative]="'-' + slideWidth"
-  [style.--slide-total-elements]="elementsCount"
-  [style.--slide-animation-speed]="slideAnimationSpeed"
+<div class="slider" #slider
+  [style.--slide-width]="slideWidth()"
+  [style.--slide-width-negative]="'-' + slideWidth()"
+  [style.--slide-total-elements]="elementsCount()"
+  [style.--slide-animation-speed]="slideAnimationSpeed()"
 >
-  <div class="slider-track">
+  <div class="slider-track" #sliderTrack>
     <ng-content></ng-content>
   </div>
 </div>

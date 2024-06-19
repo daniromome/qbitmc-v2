@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core'
-import { environment } from '../../../environments/environment'
 import { HttpClient } from '@angular/common/http'
-import { Product } from '@models/product'
+import { Product } from '@qbitmc/common'
 import { Observable } from 'rxjs'
 
 @Injectable({
@@ -11,10 +10,8 @@ import { Observable } from 'rxjs'
 export class StripeService {
   private readonly baseUrl: string
 
-  public constructor(
-    private http: HttpClient
-  ) {
-    this.baseUrl = `${environment.API_URL}/stripe`
+  public constructor(private http: HttpClient) {
+    this.baseUrl = '/stripe'
   }
 
   public products(): Observable<Product[]> {

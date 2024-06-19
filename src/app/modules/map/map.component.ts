@@ -1,43 +1,58 @@
-import { Component } from '@angular/core'
+import { Component, ElementRef, Renderer2, computed, effect, inject, viewChild } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { IonicModule } from '@ionic/angular'
-import { environment } from '../../../environments/environment'
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
+import { DomSanitizer } from '@angular/platform-browser'
+import { IonContent } from '@ionic/angular/standalone'
+import { Store } from '@ngrx/store'
+import { appFeature } from '@store/app'
+import { selectRouteParam } from '@store/router'
 
 @Component({
   selector: 'qbit-map',
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [IonContent, CommonModule],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent {
-  public map: SafeUrl
-  private first: boolean
+  private readonly sanitizer = inject(DomSanitizer)
+  private readonly store = inject(Store)
+  private readonly renderer = inject(Renderer2)
 
-  public constructor(
-    private readonly sanitizer: DomSanitizer
-  ) {
-    this.map = this.sanitizer.bypassSecurityTrustResourceUrl(environment.MAP_URL)
-    this.first = true
+  private readonly container = viewChild.required<ElementRef<HTMLDivElement>>('container')
+
+  private readonly id = this.store.selectSignal(selectRouteParam('id'))
+  private readonly server = computed(() => {
+    const id = this.id()
+    if (!id) return undefined
+    return this.store.selectSignal(appFeature.selectServer(id))()
+  })
+  private readonly url = computed(() => {
+    const url = this.server()?.metadata.find(({ key }) => key === 'map')?.value
+    return url
+  })
+
+  public constructor() {
+    effect(() => {
+      const url = this.url()
+      if (!url) return
+      this.sanitizer.bypassSecurityTrustUrl(url)
+    })
   }
 
   public ionViewWillLeave(): void {
-    const container = document.getElementById('container')
-    if (!container?.firstChild) return
-    container.removeChild(container.firstChild)
-    this.first = false
+    const container = this.container()
+    if (container.nativeElement.firstChild === null) return
+    this.renderer.removeChild(container.nativeElement, container.nativeElement.firstChild)
   }
 
   public ionViewWillEnter(): void {
-    if (this.first) return
-    const container = document.getElementById('container')
-    const frame = document.getElementById('frame')
-    if (frame || !container) return
-    const iframe = document.createElement('iframe')
-    iframe.setAttribute('src', environment.MAP_URL)
-    iframe.setAttribute('frameBorder', '0')
-    iframe.setAttribute('load', 'lazy')
-    container.appendChild(iframe)
+    const container = this.container()
+    const url = this.url()
+    if (!url) return
+    const iframe = this.renderer.createElement('iframe')
+    this.renderer.setAttribute(iframe, 'src', url)
+    this.renderer.setAttribute(iframe, 'frameBorder', '0')
+    this.renderer.setAttribute(iframe, 'load', 'lazy')
+    this.renderer.appendChild(container, iframe)
   }
 }

@@ -4,13 +4,19 @@
   display: grid;
   align-content: center;
   justify-items: center;
-  border: 0.034375rem dashed var(--ion-border-color);
   border-radius: 0.5rem;
   padding: 1em .75em;
   cursor: pointer;
   height: 100%;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 }
 
 .file-input {
   display: none;
+}
+
+.hovering {
+  border: 0.034375rem dashed var(--ion-color-medium);
 }

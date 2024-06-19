@@ -1,11 +1,11 @@
 import { createFeature, createReducer, on } from '@ngrx/store'
-import { Product } from '@models/product'
+import { Product } from '@qbitmc/common'
 import { ShopActions } from '@store/shop'
 
 export const shopFeatureKey = 'shop'
 
 export interface ShopState {
-  products: Product[],
+  products: Product[]
   loading: boolean
 }
 

@@ -1,0 +1,21 @@
+<ion-grid>
+  <ion-row>
+    <ion-col size="auto" class="ion-padding" #bulletContainer>
+      <ng-content select="[bullet]"></ng-content>
+    </ion-col>
+    <ion-col>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ng-content select="[title]"></ng-content>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ng-content select="[description]"></ng-content>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-col>
+  </ion-row>
+</ion-grid>

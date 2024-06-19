@@ -1,60 +1,40 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store'
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity'
-import { EnrollmentApplication } from '@models/application'
-import { Media } from '@models/media'
-import { ApplicationActions } from '.'
+import { EnrollmentApplicationDocument } from '@qbitmc/common'
+import { applicationActions } from './application.actions'
 
 export const applicationFeatureKey = 'application'
 
-export interface ApplicationState extends EntityState<EnrollmentApplication> {
-  media: Record<string, Media> | undefined
+export interface ApplicationState extends EntityState<EnrollmentApplicationDocument> {
+  id: string | undefined
+  hasApplied: boolean | undefined
 }
 
-export const adapter: EntityAdapter<EnrollmentApplication> = createEntityAdapter<EnrollmentApplication>()
+export const adapter: EntityAdapter<EnrollmentApplicationDocument> = createEntityAdapter<EnrollmentApplicationDocument>({
+  selectId: application => application.$id
+})
 
-export const initialState: ApplicationState = { ...adapter.getInitialState(), media: undefined }
-
-const {
-  selectAll
-} = adapter.getSelectors()
+export const initialState: ApplicationState = { ...adapter.getInitialState(), id: undefined, hasApplied: undefined }
 
 export const reducer = createReducer(
   initialState,
-  on(ApplicationActions.getMediaResourcesSuccess, (state, action): ApplicationState => {
-    const media = { ...state.media }
-    action.media.forEach(m => { media[m.key] = m })
-    return { ...state, media }
-  }),
-  on(ApplicationActions.uploadMediaResourcesSuccess, (state, action): ApplicationState => {
-    const media = { ...state.media }
-    action.media.forEach(m => { media[m.key] = m })
-    return { ...state, media }
-  }),
-  on(ApplicationActions.deleteMediaResourceSuccess, (state, action): ApplicationState => {
-    const media = { ...state.media }
-    delete media[action.key]
-    return { ...state, media }
-  })
+  on(
+    applicationActions.getSuccess,
+    applicationActions.submitSuccess,
+    (state, action): ApplicationState => ({
+      ...adapter.addOne(action.application, state),
+      id: action.application.$id,
+      hasApplied: true
+    })
+  ),
+  on(applicationActions.getFailure, (state): ApplicationState => ({ ...state, hasApplied: false }))
 )
 
 export const applicationFeature = createFeature({
   name: applicationFeatureKey,
   reducer,
-  extraSelectors: ({ selectApplicationState, selectMedia }) => {
-    const selectApplicationMedia = createSelector(
-      selectMedia,
-      media => media ? Object.values(media) : []
-    )
-    return {
-      selectApplicationMedia,
-      selectApplicationMediaSize: createSelector(
-        selectApplicationMedia,
-        media => media.every(m => !!m.size) ? media.map(m => m.size).reduce((accumulator, value) => accumulator + value, 0) : 0
-      ),
-      selectAllCareers: createSelector(
-        selectApplicationState,
-        selectAll
-      )
-    }
-  }
+  extraSelectors: ({ selectApplicationState }) => ({
+    ...adapter.getSelectors(selectApplicationState),
+    selectOwnApplication: createSelector(selectApplicationState, state => (state.id ? state.entities[state.id] : undefined))
+  })
 })

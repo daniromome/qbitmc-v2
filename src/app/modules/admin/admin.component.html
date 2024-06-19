@@ -1,0 +1,29 @@
+<ion-content>
+  <ion-split-pane when="md">
+    <ion-menu contentId="admin-outlet">
+      <ion-content>
+        <ion-list class="full-height" lines="full">
+          @for (route of routes; track $index) {
+            @if (url().includes(route.url)) {
+              <ion-item color="secondary" button (click)="nav.navigateBack('/tabs/admin')" lines="none">
+                <ion-icon [name]="route.icon" slot="start"></ion-icon>
+                <ion-label>{{ route.label }}</ion-label>
+              </ion-item>
+            } @else {
+              <ion-item button (click)="nav.navigateForward(route.url)" [disabled]="route.disabled">
+                <ion-icon [name]="route.icon" slot="start"></ion-icon>
+                <ion-label>{{ route.label }}</ion-label>
+              </ion-item>
+            }
+          }
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-content id="admin-outlet">
+      @if (url() === '/tabs/admin') {
+      } @else {
+        <ion-router-outlet></ion-router-outlet>
+      }
+    </ion-content>
+  </ion-split-pane>
+</ion-content>

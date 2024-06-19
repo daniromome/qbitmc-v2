@@ -8,4 +8,4 @@ export type FormFrom<T extends Record<string, any>> = {
       : NonNullable<T[K]> extends Record<any, any>
         ? FormGroup<FormFrom<T[K]>>
         : FormControl<T[K]>
-};
+}

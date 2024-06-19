@@ -1,48 +1,102 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
-import { IonicModule } from '@ionic/angular'
+import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Validators, FormControl } from '@angular/forms'
 import { FormFrom } from '../../utils/form-from'
-import { EnrollmentApplication } from '@models/application'
-import { Observable, map, Subject } from 'rxjs'
+import { EnrollmentApplication } from '@qbitmc/common'
 import { REGEXP } from '@constants/regexp'
 import { NoteComponent } from '@components/note'
 import { FileUploaderComponent } from '@components/file-uploader'
 import { Store } from '@ngrx/store'
-import { takeUntil } from 'rxjs/operators'
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
-import { ApplicationActions, applicationFeature } from '@store/application'
+import { applicationActions } from '@store/application'
 import { BytesPipe } from '@pipes/bytes'
-import { MAX_UPLOAD_SIZE } from '@constants/index'
-import { Profile } from '@models/profile'
+import { ENROLLMENT_MAX_UPLOAD_SIZE } from '@constants/index'
 import { AvatarPipe } from '@pipes/avatar'
-import { AppActions, appFeature } from '@store/app'
-import { Media } from '@models/media'
+import { appActions, appFeature } from '@store/app'
+import { MEDIA_ENTITY } from '@models/media'
+import {
+  IonHeader,
+  IonRow,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonGrid,
+  IonCol,
+  IonCard,
+  IonAvatar,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonItem,
+  IonLabel,
+  IonText,
+  IonButton,
+  IonIcon,
+  IonCardContent,
+  IonInput,
+  IonTextarea,
+  IonCheckbox,
+  IonList,
+  IonSpinner,
+  IonToast
+} from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { cubeOutline, cubeSharp, copyOutline } from 'ionicons/icons'
+import { toSignal } from '@angular/core/rxjs-interop'
+import { mediaActions, mediaFeature } from '@store/media'
+import { ClipboardService } from '@services/clipboard/clipboard.service'
+import { ID } from 'appwrite'
+import { ImageContainerComponent } from '@components/image-container'
 
-interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'id'>> {}
-
-interface SafeMedia extends Omit<Media, 'blob'> {
-  blob?: SafeUrl
+interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age' | 'media' | 'profile'>> {
+  age: FormControl<string>
 }
 
 @Component({
   selector: 'qbit-join',
   standalone: true,
   imports: [
+    IonToast,
+    IonSpinner,
+    IonList,
+    IonCardContent,
+    IonIcon,
+    IonButton,
+    IonText,
+    IonLabel,
+    IonItem,
+    IonCheckbox,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonAvatar,
+    IonCard,
+    IonCol,
+    IonGrid,
+    IonContent,
+    IonTextarea,
+    IonTitle,
+    IonToolbar,
+    IonRow,
+    IonInput,
+    IonHeader,
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    IonicModule,
     NoteComponent,
     FileUploaderComponent,
     BytesPipe,
-    AvatarPipe
+    AvatarPipe,
+    ImageContainerComponent
   ],
   templateUrl: './join.component.html',
   styleUrls: ['./join.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class JoinComponent implements OnInit, OnDestroy {
+export class JoinComponent implements OnInit {
+  private readonly fb = inject(NonNullableFormBuilder)
+  private readonly store = inject(Store)
+  public readonly clipboard = inject(ClipboardService)
+
   public readonly rules = [
     $localize`:@@rule-a:Be respectful toward other members of the community, any verbal abuse or sign of harassment will be sanctioned accordingly`,
     $localize`:@@rule-b:Take care of the environment in the server (not leaving floating trees, when chopping trees down placing saplings on the
@@ -53,81 +107,101 @@ export class JoinComponent implements OnInit, OnDestroy {
     chats and the minecraft server`
   ]
 
-  public readonly form: FormGroup<ApplicationForm>
-  public readonly profile$: Observable<Profile | undefined>
-  public readonly media$: Observable<SafeMedia[]>
-  public readonly filesSize$: Observable<number>
-  public readonly filesSizeWithinLimit$: Observable<boolean>
-  public readonly filesSizeExceedsLimit$: Observable<boolean>
-  private readonly watchFormChanges: Subject<void>
+  public readonly form: FormGroup<ApplicationForm> = this.fb.group({
+    age: this.fb.control('', [Validators.required]),
+    experience: this.fb.control('', [Validators.required]),
+    reasons: this.fb.control('', [Validators.required]),
+    rules: this.fb.control(false, [Validators.requiredTrue])
+  })
 
-  public constructor(
-    private readonly fb: NonNullableFormBuilder,
-    private readonly store: Store,
-    private readonly sanitizer: DomSanitizer
-  ) {
-    this.form = this.fb.group({
-      forename: this.fb.control('', [Validators.required, Validators.maxLength(12)]),
-      age: this.fb.control(0, [Validators.required]),
-      experience: this.fb.control('', [Validators.required]),
-      reasons: this.fb.control('', [Validators.required]),
-      rules: this.fb.control(false, [Validators.requiredTrue])
+  public readonly verification = this.fb.control<string>('')
+
+  private readonly formChanges = toSignal(this.form.valueChanges)
+
+  public readonly profile = this.store.selectSignal(appFeature.selectProfile)
+  public readonly player = this.store.selectSignal(appFeature.selectPlayer)
+  public readonly verificationLoading = this.store.selectSignal(appFeature.selectLoadingVerification)
+  public readonly verificationError = this.store.selectSignal(appFeature.selectErrorVerification)
+
+  public readonly media = this.store.selectSignal(mediaFeature.selectEntityMedia(MEDIA_ENTITY.APPLICATIONS))
+  public readonly filesSize = this.store.selectSignal(mediaFeature.selectEntityMediaSize(MEDIA_ENTITY.APPLICATIONS))
+
+  public readonly filesSizeWithinLimit = computed(() => {
+    const filesSize = this.filesSize()
+    return filesSize <= ENROLLMENT_MAX_UPLOAD_SIZE
+  })
+
+  public readonly filesSizeExceedsLimit = computed(() => !this.filesSizeWithinLimit())
+
+  public constructor() {
+    addIcons({ cubeOutline, cubeSharp, copyOutline })
+    effect(() => {
+      const form = this.formChanges()
+      if (!form) return
+      localStorage.setItem('application', JSON.stringify(form))
     })
-    this.profile$ = this.store.select(appFeature.selectProfile)
-    this.media$ = this.store.select(applicationFeature.selectApplicationMedia).pipe(
-      map(media => media.map(m => ({ ...m, blob: m.blob ? this.sanitizer.bypassSecurityTrustUrl(m.blob) : undefined })))
-    )
-    this.filesSize$ = this.store.select(applicationFeature.selectApplicationMediaSize)
-    this.filesSizeWithinLimit$ = this.filesSize$.pipe(
-      map(size => size <= MAX_UPLOAD_SIZE)
-    )
-    this.filesSizeExceedsLimit$ = this.filesSizeWithinLimit$.pipe(
-      map(bool => !bool)
-    )
-    this.watchFormChanges = new Subject()
-    this.form.valueChanges.pipe(
-      takeUntil(this.watchFormChanges)
-    ).subscribe(value => {
-      localStorage.setItem('application', JSON.stringify(value))
+    effect(() => {
+      const verifying = this.verificationLoading()
+      if (verifying) this.verification.disable()
+      else this.verification.enable()
     })
   }
 
   public ngOnInit(): void {
-    this.store.dispatch(ApplicationActions.getMedia())
+    this.store.dispatch(mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.APPLICATIONS, ids: [] } }))
     const applicationString = localStorage.getItem('application')
-    const application = applicationString ? JSON.parse(applicationString) : undefined
-    if (!application) return
-    this.form.setValue(application)
-    Object.keys(this.form.controls).forEach(k => {
-      if (application[k]) this.form.get(k)?.markAsDirty()
-    })
+    const applicationFromStorage = applicationString ? (JSON.parse(applicationString) as EnrollmentApplication) : undefined
+    if (!applicationFromStorage) return
+    const { age, experience, reasons, rules } = applicationFromStorage
+    this.form.setValue({ age: age.toString(), experience, reasons, rules })
   }
 
-  public ngOnDestroy(): void {
-    this.watchFormChanges.next()
-    this.watchFormChanges.complete()
+  public numbersOnly(control: FormControl<string>, max: number): void {
+    const val = Array.from(control.value.toString())
+      .filter(v => REGEXP.DIGITS_ONLY.test(v))
+      .slice(0, max)
+      .join('')
+    control.setValue(val)
   }
 
-  public numbersOnly(): void {
-    const age = Array.from(this.form.controls.age.value.toString()).filter(v => REGEXP.DIGITS_ONLY.test(v)).slice(0, 2).join('')
-    this.form.controls.age.setValue(
-      Number(age)
-    )
-  }
-
-  public linkMinecraftAccount(): void {
-    this.store.dispatch(AppActions.linkMinecraftAccount())
+  public verificationCodeChange(): void {
+    this.numbersOnly(this.verification, 6)
+    const code = this.verification.getRawValue()
+    if (code.length !== 6) return
+    this.verification.reset()
+    this.store.dispatch(appActions.minecraftAccountVerification({ code: Number(code) }))
   }
 
   public droppedFiles(files: File[]): void {
-    this.store.dispatch(ApplicationActions.uploadMediaResources({ files }))
+    const profile = this.profile()
+    if (!profile) return
+    const request = {
+      entity: MEDIA_ENTITY.APPLICATIONS,
+      files,
+      maxUploadSize: ENROLLMENT_MAX_UPLOAD_SIZE,
+      fileIds: Array.from(Array(files.length)).map(() => ID.unique()),
+      ids: []
+    }
+    this.store.dispatch(mediaActions.uploadMediaResources({ request }))
   }
 
-  public deleteImage(key: string): void {
-    this.store.dispatch(ApplicationActions.deleteMediaResource({ key }))
+  public deleteImage(id: string): void {
+    const profile = this.profile()
+    if (!profile) return
+    this.store.dispatch(mediaActions.deleteMediaResource({ request: { entity: MEDIA_ENTITY.APPLICATIONS, id } }))
   }
 
   public submit(): void {
-    this.store.dispatch(ApplicationActions.submit({ application: { ...this.form.getRawValue() } }))
+    const profile = this.profile()
+    if (!profile) return
+    const application = this.form.getRawValue()
+    const media = this.media().map(m => m.$id) || []
+    this.store.dispatch(
+      applicationActions.submit({ application: { ...application, age: Number(application.age), media, profile: profile.$id } })
+    )
+  }
+
+  public dismissError(): void {
+    this.store.dispatch(appActions.dismissError({ key: 'verification' }))
   }
 }

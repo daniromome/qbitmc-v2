@@ -5,6 +5,7 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -12,7 +13,6 @@
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
@@ -36,9 +36,9 @@
       "@constants/*": ["src/app/constants/*"],
       "@utils": ["src/app/utils"],
       "@guards/*": ["src/app/guards/*"],
+      "@resolvers/*": ["src/app/resolvers/*"],
       "@directives/*": ["src/app/directives/*"],
-      "@selectors/application": ["src/app/store/application/application.selectors"],
-      "@selectors/shop": ["src/app/store/shop/shop.selectors"]
+      "@qbitmc/common": ["node_modules/@qbitmc/common/_dist/mod"]
     }
   },
   "angularCompilerOptions": {

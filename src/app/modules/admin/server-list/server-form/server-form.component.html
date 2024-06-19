@@ -1,0 +1,73 @@
+<ion-content>
+  <ion-card [formGroup]="form">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-input formControlName="name"></ion-input>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-no-padding">
+      <ion-list lines="full">
+        <ion-list-header>Details</ion-list-header>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Description" formControlName="description"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Game" formControlName="game"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="IP Address" formControlName="ip"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Version" formControlName="version"></ion-input>
+        </ion-item>
+        <ion-list-header>Images</ion-list-header>
+        <ion-grid>
+          @if (media(); as files) {
+            <ion-row>
+              @for (file of files; track $index) {
+                @if (file) {
+                  <ion-col size="12" size-md="6" size-xl="4">
+                    <qbit-image-container
+                      [src]="file.url"
+                      [size]="file.sizeOriginal"
+                      (delete)="deleteImage(file.$id)"></qbit-image-container>
+                  </ion-col>
+                }
+              }
+              <ion-col size="12">
+                <qbit-file-uploader type="image" (droppedFiles)="droppedFiles($event)"> </qbit-file-uploader>
+              </ion-col>
+            </ion-row>
+          }
+        </ion-grid>
+        <ion-list-header>Visibility</ion-list-header>
+        <ion-radio-group formControlName="visibility">
+          @for (v of visibility; track $index) {
+            @if (form.controls.visibility.value === v.value) {
+              <ion-item color="secondary" lines="none">
+                <ion-icon [name]="v.icon" slot="start"></ion-icon>
+                <ion-radio [value]="v.value" color="light">{{ v.value | titlecase }}</ion-radio>
+              </ion-item>
+            } @else {
+              <ion-item>
+                <ion-icon [name]="v.icon" slot="start"></ion-icon>
+                <ion-radio [value]="v.value">{{ v.value | titlecase }}</ion-radio>
+              </ion-item>
+            }
+          }
+        </ion-radio-group>
+      </ion-list>
+    </ion-card-content>
+    <div class="ion-card-footer">
+      @if (form.controls.visibility.value !== 'draft') {
+        <ion-button fill="clear" (click)="updateServer()">
+          @if (server()?.visibility === 'draft') {
+            Publish
+          } @else {
+            Update Server
+          }
+        </ion-button>
+      }
+    </div>
+  </ion-card>
+</ion-content>

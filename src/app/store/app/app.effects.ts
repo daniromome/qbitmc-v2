@@ -1,201 +1,284 @@
-import { Injectable } from '@angular/core'
-import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects'
-import { catchError, map, of, from, Observable } from 'rxjs'
-import { AppActions, appFeature } from '@store/app'
-import { filter, repeat, switchMap, tap } from 'rxjs/operators'
+import { inject } from '@angular/core'
+import { Actions, createEffect, ofType } from '@ngrx/effects'
+import { concatLatestFrom } from '@ngrx/operators'
+import { catchError, map, of, from } from 'rxjs'
+import { appActions, appFeature } from '@store/app'
+import { exhaustMap, filter, repeat, switchMap } from 'rxjs/operators'
 import { NavController, AlertController, ToastController } from '@ionic/angular'
 import { AuthService } from '@services/auth'
-import { ApplicationActions } from '@store/application'
 import { QbitmcService } from '@services/qbitmc'
 import { Store } from '@ngrx/store'
-import { Router } from '@angular/router'
-import { TypedAction } from '@ngrx/store/src/models'
-import { OidcSecurityService } from 'angular-auth-oidc-client'
-import { ROLE } from '@models/role'
+import { USER_LABEL } from '@qbitmc/common'
+import { ServerService } from '@services/server'
+import { applicationActions } from '@store/application'
+import { selectUrl } from '@store/router'
+import { mediaActions } from '@store/media'
+import { MEDIA_ENTITY } from '@models/media'
+import { translationActions } from '@store/translation'
 
-@Injectable()
-export class AppEffects {
-  public initialize$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.initialize),
-    switchMap(() => this.oidc.checkAuth()),
-    filter(({ isAuthenticated }) => isAuthenticated),
-    map(() => AppActions.getProfile())
-  ))
+export const initialize$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(appActions.initialize),
+      map(() => appActions.getSession())
+    ),
+  { functional: true }
+)
 
-  public getProfile$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.getProfile),
-    switchMap(() => this.auth.getProfile()),
-    map(profile => AppActions.getProfileSuccess({ profile })),
-    catchError(error => of(AppActions.getProfileFailure({ error })))
-  ))
+export const getSession$ = createEffect(
+  (actions$ = inject(Actions), auth = inject(AuthService)) =>
+    actions$.pipe(
+      ofType(appActions.getSession),
+      switchMap(() => auth.getSession()),
+      map(session => appActions.getSessionSuccess({ session })),
+      catchError(error => of(appActions.getSessionFailure({ error })))
+    ),
+  { functional: true }
+)
 
-  public getProfileSuccess$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.getProfileSuccess),
-    filter(({ profile }) => profile.disabled),
-    switchMap(() => this.alert.create({
-      header: $localize`:@@account-disabled-title:Account Disabled`,
-      message: $localize`:@@account-disabled-message:Your account has been deactivated, get in touch with an administrator to get it restored`,
-      buttons: ['OK']
-    })),
-    switchMap(alert => alert.present())
-  ), { dispatch: false })
+export const getSessionSuccessEmitGetUser$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(appActions.getSessionSuccess),
+      map(() => appActions.getUser())
+    ),
+  { functional: true }
+)
 
-  // public getProfileFailure$ = createEffect(() => this.actions$.pipe(
-  //   ofType(AppActions.getProfileFailure),
-  //   switchMap(() => from(this.alert.create({
-  //     header: $localize`:@@unexpected-error-title:Unexpected Error`,
-  //     message: $localize`:@@unexpected-error-message:Please contact an administrator if this issue persists`
-  //   })).pipe(
-  //     switchMap(alert => from(alert.present()))
-  //   ))
-  // ), { dispatch: false })
+export const getUser$ = createEffect(
+  (actions$ = inject(Actions), auth = inject(AuthService)) =>
+    actions$.pipe(
+      ofType(appActions.getUser),
+      exhaustMap(() => auth.getUser()),
+      map(user => appActions.getUserSuccess({ user })),
+      catchError(error => of(appActions.getUserFailure({ error })))
+    ),
+  { functional: true }
+)
 
-  public login$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.login),
-    tap(() => this.oidc.authorize())
-  ), { dispatch: false })
+export const getUserSuccess$ = createEffect(
+  (actions$ = inject(Actions), alert = inject(AlertController)) =>
+    actions$.pipe(
+      ofType(appActions.getUserSuccess),
+      filter(({ user }) => user.labels.includes(USER_LABEL.DISABLED)),
+      switchMap(() =>
+        alert.create({
+          header: $localize`:@@account-disabled-title:Account Disabled`,
+          message: $localize`:@@account-disabled-message:Your account has been deactivated, get in touch with an administrator to get it restored`,
+          buttons: ['OK']
+        })
+      ),
+      switchMap(alert => alert.present())
+    ),
+  { functional: true, dispatch: false }
+)
 
-  public linkMinecraftAccount$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.linkMinecraftAccount),
-    switchMap(() => this.oidc.getAccessToken()),
-    filter(token => !!token),
-    switchMap(token => this.auth.linkMcAccount(token))
-  ), { dispatch: false })
+export const getSessionSuccessEmitGetProfile$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(appActions.getSessionSuccess),
+      filter(({ session }) => session.provider === 'discord'),
+      map(({ session }) => appActions.getProfile({ id: session.userId }))
+    ),
+  { functional: true }
+)
 
-  public logout$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.logout),
-    switchMap(() => this.oidc.logoffAndRevokeTokens()),
-    map(() => AppActions.logoutDone())
-  ))
+export const getProfile$ = createEffect(
+  (actions$ = inject(Actions), auth = inject(AuthService)) =>
+    actions$.pipe(
+      ofType(appActions.getProfile),
+      switchMap(({ id }) => auth.getProfile(id)),
+      map(profile => appActions.getProfileSuccess({ profile })),
+      catchError(error => of(appActions.getProfileFailure({ error })))
+    ),
+  { functional: true }
+)
 
-  public logoutDone$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.logoutDone),
-    switchMap(() => this.nav.navigateRoot(['tabs', 'home']))
-  ), { dispatch: false })
+export const getProfileSuccessEmitGetApplication$ = createEffect(
+  (actions$ = inject(Actions), store = inject(Store)) =>
+    actions$.pipe(
+      ofType(appActions.getProfileSuccess),
+      concatLatestFrom(() => store.select(selectUrl)),
+      filter(([_, url]) => url.includes('join')),
+      map(() => applicationActions.get())
+    ),
+  { functional: true }
+)
 
-  public applicationSubmit$ = createEffect(() => this.actions$.pipe(
-    ofType(ApplicationActions.submitSuccess),
-    map(action => AppActions.submittedApplication({ application: action.application }))
-  ))
+export const getProfileFailure$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(appActions.getProfileFailure),
+      map(() => appActions.createProfile())
+    ),
+  { functional: true }
+)
 
-  public submittedApplication$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.submittedApplication),
-    switchMap(() => this.nav.navigateForward(['tabs', 'join', 'status']))
-  ), { dispatch: false })
+export const createProfile$ = createEffect(
+  (actions$ = inject(Actions), store = inject(Store), auth = inject(AuthService)) =>
+    actions$.pipe(
+      ofType(appActions.createProfile),
+      concatLatestFrom(() => store.select(appFeature.selectSession)),
+      exhaustMap(([_, session]) => auth.createProfile(session!.providerAccessToken)),
+      map(profile => appActions.createProfileSuccess({ profile }))
+    ),
+  { functional: true }
+)
 
-  // public getLeaderboards$ = createEffect(() => this.actions$.pipe(
-  //   ofType(AppActions.getLeaderboards),
-  //   switchMap(() => this.qbitmc.leaderboards()),
-  //   map(leaderboards => AppActions.getLeaderboardsSuccess({ leaderboards })),
-  //   catchError(error => of(AppActions.getLeaderboardsFailure({ error })))
-  // ))
+export const login$ = createEffect(
+  (actions$ = inject(Actions), auth = inject(AuthService)) =>
+    actions$.pipe(
+      ofType(appActions.login),
+      exhaustMap(() => auth.authenticate())
+    ),
+  { functional: true, dispatch: false }
+)
 
-  // public getLeaderboardsFailure$ = createEffect(() => this.actions$.pipe(
-  //   ofType(AppActions.getLeaderboardsFailure),
-  //   switchMap(() => this.toast.create({
-  //     message: $localize`There was an error loading leaderboards, please try again later`,
-  //     buttons: ['OK'],
-  //     duration: 3000
-  //   })),
-  //   switchMap(toast => toast.present())
-  // ), { dispatch: false })
+export const minecraftAccountVerification$ = createEffect(
+  (actions$ = inject(Actions), auth = inject(AuthService)) =>
+    actions$.pipe(
+      ofType(appActions.minecraftAccountVerification),
+      switchMap(({ code }) => auth.minecraftAccountVerification(code)),
+      map(player => appActions.minecraftAccountVerificationSuccess({ player })),
+      catchError(error => of(appActions.minecraftAccountVerificationFailure({ error }))),
+      repeat()
+    ),
+  { functional: true }
+)
 
-  public getSupporters$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.initialize),
-    switchMap(() => this.qbitmc.supporters()),
-    map(supporters => AppActions.getSupportersSuccess({ supporters })),
-    catchError(error => of(AppActions.getSupportersFailure({ error })))
-  ))
+export const logout$ = createEffect(
+  (actions$ = inject(Actions), auth = inject(AuthService)) =>
+    actions$.pipe(
+      ofType(appActions.logout),
+      switchMap(() => auth.logout()),
+      map(() => appActions.logoutDone())
+    ),
+  { functional: true }
+)
 
-  public getSupportersFailure$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.getSupportersFailure),
-    switchMap(() => this.toast.create({
-      message: $localize`:@@list-supporters-error:There was an error loading supporters list, please try again later`,
-      buttons: ['OK'],
-      duration: 3000
-    })),
-    switchMap(toast => from(toast.present()))
-  ), { dispatch: false })
+export const logoutDone$ = createEffect(
+  (actions$ = inject(Actions), nav = inject(NavController)) =>
+    actions$.pipe(
+      ofType(appActions.logoutDone),
+      switchMap(() => nav.navigateRoot(['tabs', 'home']))
+    ),
+  { functional: true, dispatch: false }
+)
 
-  public getServers$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.initialize),
-    switchMap(() => this.qbitmc.servers()),
-    map(servers => AppActions.getServersSuccess({ servers })),
-    catchError(error => of(AppActions.getServersFailure({ error })))
-  ))
+// public getLeaderboards$ = createEffect(() => actions$.pipe(
+//   ofType(appActions.getLeaderboards),
+//   switchMap(() => qbitmc.leaderboards()),
+//   map(leaderboards => appActions.getLeaderboardsSuccess({ leaderboards })),
+//   catchError(error => of(appActions.getLeaderboardsFailure({ error })))
+// ))
 
-  public getServersFailure$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.getServersFailure),
-    switchMap(() => this.toast.create({
-      message: $localize`:@@list-servers-error:There was an error loading servers list, please try again later`,
-      buttons: ['OK'],
-      duration: 3000
-    })),
-    switchMap(toast => from(toast.present()))
-  ), { dispatch: false })
+// public getLeaderboardsFailure$ = createEffect(() => actions$.pipe(
+//   ofType(appActions.getLeaderboardsFailure),
+//   switchMap(() => toast.create({
+//     message: $localize`There was an error loading leaderboards, please try again later`,
+//     buttons: ['OK'],
+//     duration: 3000
+//   })),
+//   switchMap(toast => toast.present())
+// ), { dispatch: false })
 
-  public navigateToNicknameEditor$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.navigateToNicknameEditor),
-    concatLatestFrom(() => this.store.select(appFeature.selectIsRole(ROLE.SUPPORTER))),
-    switchMap(([_, isSupporter]) => isSupporter
-      ? this.nav.navigateForward(['tabs', 'profile', 'nickname'])
-      : this.nav.navigateBack(['tabs', 'shop'])
-    )
-  ), { dispatch: false })
+export const getSupporters$ = createEffect(
+  (actions$ = inject(Actions), qbitmc = inject(QbitmcService)) =>
+    actions$.pipe(
+      ofType(appActions.initialize),
+      switchMap(() => qbitmc.supporters()),
+      map(supporters => appActions.getSupportersSuccess({ supporters })),
+      catchError(error => of(appActions.getSupportersFailure({ error })))
+    ),
+  { functional: true }
+)
 
-  public navigateBack$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.navigateBack),
-    concatLatestFrom(() => this.store.select(appFeature.selectChanges)),
-    switchMap(([_action, pendingChanges]) => {
-      if (pendingChanges) {
-        return from(
-          this.alert.create({
-            buttons: [{ text: 'Confirm', role: 'confirm' }, { text: 'Cancel', role: 'cancel' }],
-            header: 'Warning',
-            message: 'You have unsaved changes, are you sure you want to go back?'
-          })
-        ).pipe(
-          switchMap(alert => from(alert.present()).pipe(switchMap(() => alert.onWillDismiss()))),
-          switchMap(event => {
-            if (event.role === 'cancel') return of(AppActions.setUnsavedChanges({ changes: true }))
-            return this.navigateBack()
-          })
-        )
-      }
-      return this.navigateBack()
-    })
-  ))
+export const getSupportersFailure$ = createEffect(
+  (actions$ = inject(Actions), toast = inject(ToastController)) =>
+    actions$.pipe(
+      ofType(appActions.getSupportersFailure),
+      switchMap(() =>
+        toast.create({
+          message: $localize`:@@list-supporters-error:There was an error loading supporters list, please try again later`,
+          buttons: ['OK'],
+          duration: 3000
+        })
+      ),
+      switchMap(toast => from(toast.present()))
+    ),
+  { functional: true, dispatch: false }
+)
 
-  public updateNickname$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.updateNickname),
-    concatLatestFrom(() => this.store.select(appFeature.selectProfile)),
-    switchMap(([action, profile]) => {
-      return this.auth.updateProfile({ ...profile!, nickname: action.nickname })
-    }),
-    map(profile => AppActions.updateNicknameSuccess({ profile })),
-    catchError(error => of(AppActions.updateNicknameFailure({ error }))),
-    repeat()
-  ))
+export const getTranslations$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(appActions.getServersSuccess),
+      map(() => translationActions.getTranslations({ locale: true, namespace: 'server' }))
+    ),
+  { functional: true }
+)
 
-  public updateNicknameSuccess$ = createEffect(() => this.actions$.pipe(
-    ofType(AppActions.updateNicknameSuccess),
-    switchMap(() => this.navigateBack())
-  ))
+export const getServers$ = createEffect(
+  (actions$ = inject(Actions), serverService = inject(ServerService)) =>
+    actions$.pipe(
+      ofType(appActions.initialize),
+      switchMap(() => serverService.list()),
+      map(servers => appActions.getServersSuccess({ servers })),
+      catchError(error => of(appActions.getServersFailure({ error })))
+    ),
+  { functional: true }
+)
 
-  public constructor(
-    private readonly actions$: Actions,
-    private readonly auth: AuthService,
-    private readonly nav: NavController,
-    private readonly alert: AlertController,
-    private readonly qbitmc: QbitmcService,
-    private readonly toast: ToastController,
-    private readonly store: Store,
-    private readonly router: Router,
-    private readonly oidc: OidcSecurityService
-  ) {}
+export const getServersSuccess$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(appActions.getServersSuccess),
+      map(({ servers }) =>
+        mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.SERVER, ids: servers.flatMap(s => s.media) } })
+      )
+    ),
+  { functional: true }
+)
 
-  private navigateBack(): Observable<TypedAction<string>> {
-    const route = this.router.url.split('/').slice(1, -1)
-    return from(this.nav.navigateBack(route)).pipe(map(() => AppActions.setUnsavedChanges({ changes: false })))
-  }
-}
+export const getServersFailure$ = createEffect(
+  (actions$ = inject(Actions), toast = inject(ToastController)) =>
+    actions$.pipe(
+      ofType(appActions.getServersFailure),
+      switchMap(() =>
+        toast.create({
+          message: $localize`:@@list-servers-error:There was an error loading servers list, please try again later`,
+          buttons: ['OK'],
+          duration: 3000
+        })
+      ),
+      switchMap(toast => from(toast.present()))
+    ),
+  { functional: true, dispatch: false }
+)
+
+export const navigateToNicknameEditor$ = createEffect(
+  (actions$ = inject(Actions), nav = inject(NavController), store = inject(Store)) =>
+    actions$.pipe(
+      ofType(appActions.navigateToNicknameEditor),
+      concatLatestFrom(() => store.select(appFeature.selectIsRole(USER_LABEL.SUPPORTER))),
+      switchMap(([_, isSupporter]) =>
+        isSupporter ? nav.navigateForward(['tabs', 'profile', 'nickname']) : nav.navigateBack(['tabs', 'shop'])
+      )
+    ),
+  { functional: true, dispatch: false }
+)
+
+export const updateNickname$ = createEffect(
+  (actions$ = inject(Actions), auth = inject(AuthService), store = inject(Store)) =>
+    actions$.pipe(
+      ofType(appActions.updateNickname),
+      concatLatestFrom(() => store.select(appFeature.selectUser)),
+      switchMap(([action, user]) => {
+        return auth.updatePreferences({ ...user!.prefs, nickname: action.nickname })
+      }),
+      map(user => appActions.updateNicknameSuccess({ user })),
+      catchError(error => of(appActions.updateNicknameFailure({ error }))),
+      repeat()
+    ),
+  { functional: true }
+)

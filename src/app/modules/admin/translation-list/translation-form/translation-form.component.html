@@ -1,0 +1,30 @@
+<ion-content>
+  <ion-card>
+    <ion-card-content class="ion-no-padding">
+      <ion-list>
+        <ion-item>
+          <ion-select [formControl]="idControl" placeholder="Select Entity" (ionChange)="selectEntity()">
+            @for (entity of entities(); track $index) {
+              <ion-select-option [value]="entity.$id">{{ entity.name }}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+        @for (group of form.controls; track $index) {
+          <ng-container [formGroup]="group">
+            <ion-item [lines]="$last ? 'none' : ''">
+              <ion-input formControlName="message">
+                <div slot="label">
+                  <ion-chip color="primary">{{ group.controls.locale.value | uppercase }}</ion-chip>
+                  <ion-text color="medium">{{ group.controls.key.value.split('.').at(1) | titlecase }}</ion-text>
+                </div>
+              </ion-input>
+            </ion-item>
+          </ng-container>
+        }
+      </ion-list>
+    </ion-card-content>
+    <div class="ion-card-footer">
+      <ion-button (click)="save()" color="secondary">Save Translations</ion-button>
+    </div>
+  </ion-card>
+</ion-content>

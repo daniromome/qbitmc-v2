@@ -10,11 +10,11 @@ $slide-width-negative: calc(var(--slide-width-negative) - 1rem);
   overflow: hidden;
   &-track {
     animation: scroll var(--slide-animation-speed) linear infinite;
+    display: flex;
+		width: calc($slide-width * var(--slide-total-elements));
     &:hover {
       animation-play-state: paused;
     }
-		display: flex;
-		width: calc($slide-width * var(--slide-total-elements));
     & > * {
       width: var(--slide-width);
       margin: 1rem;

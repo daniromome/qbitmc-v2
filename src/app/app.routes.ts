@@ -1,22 +1,36 @@
 import { TitleCasePipe } from '@angular/common'
 import { Routes } from '@angular/router'
-import { appliedGuard } from '@guards/applied'
-import { applyGuard } from '@guards/apply'
 import { authGuard } from '@guards/auth'
 import { authenticatedGuard } from '@guards/authenticated'
 import { enabledGuard } from '@guards/enabled'
-import { qbitorGuard } from '@guards/qbitor'
+import { roleGuard } from '@guards/role'
+import { USER_LABEL } from '@qbitmc/common'
 import { provideEffects } from '@ngrx/effects'
 import { provideState } from '@ngrx/store'
 import { BytesPipe } from '@pipes/bytes'
-import { applicationFeature, ApplicationEffects } from '@store/application'
+import { applicationFeature, applicationEffects } from '@store/application'
 import { ShopEffects, shopFeature } from '@store/shop'
+import { mediaFeature, mediaEffects } from '@store/media'
+import { translationEffects, translationFeature } from '@store/translation'
+import { VisibilityPipe } from '@pipes/visibility'
 
 export const routes: Routes = [
   {
     path: 'tabs',
     loadComponent: () => import('./components/tabs').then(c => c.TabsComponent),
+    providers: [
+      VisibilityPipe,
+      BytesPipe,
+      provideState(mediaFeature),
+      provideEffects(mediaEffects),
+      provideState(translationFeature),
+      provideEffects(translationEffects)
+    ],
     children: [
+      {
+        path: 'admin',
+        loadChildren: () => import('./modules/admin/admin.routes').then(m => m.routes)
+      },
       {
         path: 'home',
         loadComponent: () => import('./modules/home/home.component').then(c => c.HomeComponent)
@@ -24,54 +38,35 @@ export const routes: Routes = [
       {
         path: 'join',
         canActivate: [authGuard, enabledGuard],
-        children: [
-          {
-            path: '',
-            loadComponent: () => import('./modules/join/join.component').then(c => c.JoinComponent),
-            canActivate: [applyGuard, enabledGuard]
-          },
-          {
-            path: 'status',
-            loadComponent: () => import('./modules/join/status/status.component').then(c => c.StatusComponent),
-            canActivate: [appliedGuard, enabledGuard]
-          }
-        ],
-        providers: [
-          provideState(applicationFeature),
-          provideEffects(ApplicationEffects),
-          BytesPipe
-        ]
+        loadChildren: () => import('./modules/join/join.routes').then(m => m.routes),
+        providers: [provideState(applicationFeature), provideEffects(applicationEffects), BytesPipe]
       },
       {
         path: 'shop',
         loadComponent: () => import('./modules/shop/shop.component').then(c => c.ShopComponent),
         canActivate: [enabledGuard],
-        providers: [
-          provideState(shopFeature),
-          provideEffects(ShopEffects)
-        ]
+        providers: [provideState(shopFeature), provideEffects(ShopEffects)]
       },
       {
-        path: 'map',
+        path: 'map/:id',
         loadComponent: () => import('./modules/map/map.component').then(c => c.MapComponent),
-        canActivate: [qbitorGuard, enabledGuard]
+        canActivate: [roleGuard(USER_LABEL.QBITOR), enabledGuard]
       },
       {
         path: 'profile',
-        canActivate: [qbitorGuard, enabledGuard],
-        providers: [
-          TitleCasePipe
-        ],
+        canActivate: [roleGuard(USER_LABEL.QBITOR), enabledGuard],
+        providers: [TitleCasePipe],
         children: [
           {
             path: '',
             loadComponent: () => import('./modules/profile/profile.component').then(c => c.ProfileComponent),
-            canActivate: [qbitorGuard, enabledGuard]
+            canActivate: [roleGuard(USER_LABEL.QBITOR), enabledGuard]
           },
           {
             path: 'nickname',
-            loadComponent: () => import('./modules/profile/nickname-editor/nickname-editor.component').then(c => c.NicknameEditorComponent),
-            canActivate: [qbitorGuard, enabledGuard]
+            loadComponent: () =>
+              import('./modules/profile/nickname-editor/nickname-editor.component').then(c => c.NicknameEditorComponent),
+            canActivate: [roleGuard(USER_LABEL.QBITOR), enabledGuard]
           }
         ]
       },

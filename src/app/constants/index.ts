@@ -1,2 +1,2 @@
-export const MAX_UPLOAD_SIZE = 26_214_400
+export const ENROLLMENT_MAX_UPLOAD_SIZE = 26_214_400
 export const TWENTY_FOUR_HOURS = 86_400_000
