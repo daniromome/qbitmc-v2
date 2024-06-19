@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Store } from '@ngrx/store'
 import { appActions } from '@store/app'
@@ -15,9 +15,9 @@ import { logoDiscord } from 'ionicons/icons'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthComponent {
-  public constructor(
-    private readonly store: Store
-  ) {
+  private readonly store = inject(Store)
+
+  public constructor() {
     addIcons({ logoDiscord })
   }
 

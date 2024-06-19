@@ -9,11 +9,12 @@ import { copyOutline, lockClosed, earth, ban, eyeOff } from 'ionicons/icons'
 import { ClipboardService } from '@services/clipboard'
 import { VISIBILITY_ICON } from '@models/visibility-icon'
 import { CommonModule } from '@angular/common'
+import { VisibilityPipe } from '@pipes/visibility'
 
 @Component({
   selector: 'qbit-server',
   standalone: true,
-  imports: [IonText, IonIcon, IonButton, IonChip, CommonModule],
+  imports: [IonText, IonIcon, IonButton, IonChip, CommonModule, VisibilityPipe],
   templateUrl: './server.component.html',
   styleUrl: './server.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

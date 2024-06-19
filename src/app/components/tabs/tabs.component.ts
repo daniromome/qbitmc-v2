@@ -83,11 +83,11 @@ export class TabsComponent {
       label: $localize`:@@home-tab-label:Home`,
       path: 'home'
     },
-    {
-      icon: 'storefront',
-      label: $localize`:@@shop-tab-label:Shop`,
-      path: 'shop'
-    },
+    // {
+    //   icon: 'storefront',
+    //   label: $localize`:@@shop-tab-label:Shop`,
+    //   path: 'shop'
+    // },
     {
       icon: 'person',
       label: $localize`:@@profile-tab-label:Profile`,
@@ -96,7 +96,7 @@ export class TabsComponent {
     },
     {
       icon: 'apps',
-      label: $localize`:@@profile-tab-label:Admin`,
+      label: $localize`:@@admin-tab-label:Admin`,
       path: 'admin',
       role: USER_LABEL.ADMIN
     }

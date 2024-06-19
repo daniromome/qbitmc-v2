@@ -52,7 +52,7 @@ export class AdminComponent {
     },
     {
       icon: 'pricetag',
-      label: $localize`:@@admin-panel-label-manage-server:Manage Products`,
+      label: $localize`:@@admin-panel-label-manage-products:Manage Products`,
       url: '/tabs/admin/product',
       disabled: true
     },

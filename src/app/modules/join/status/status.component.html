@@ -11,7 +11,7 @@
               @if (application()?.status?.approved === null) {
                 <ion-card-subtitle i18n="@@status-received">We received your request to join our community</ion-card-subtitle>
               } @else if (application()?.status?.approved) {
-                <ion-card-subtitle i18n="@@status-rejected">
+                <ion-card-subtitle i18n="@@status-approved">
                   Your application has been <ion-text color="success">accepted</ion-text>!
                 </ion-card-subtitle>
               } @else {
@@ -27,7 +27,7 @@
                   in mind that this process might take up to 24 hours.
                 </ion-text>
               } @else if (application()?.status?.approved) {
-                <ion-text class="ion-text-center" i18n="@@status-approved">
+                <ion-text class="ion-text-center" i18n="@@status-welcome">
                   Welcome to the community. If you're seeing this message, it means that your application is still processing.
                   Refresh the website in a few minutes and you'll have your access ready. If the issue persists please contact
                   us in discord.

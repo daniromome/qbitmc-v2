@@ -12,12 +12,14 @@ import { applicationFeature, applicationEffects } from '@store/application'
 import { ShopEffects, shopFeature } from '@store/shop'
 import { mediaFeature, mediaEffects } from '@store/media'
 import { translationEffects, translationFeature } from '@store/translation'
+import { VisibilityPipe } from '@pipes/visibility'
 
 export const routes: Routes = [
   {
     path: 'tabs',
     loadComponent: () => import('./components/tabs').then(c => c.TabsComponent),
     providers: [
+      VisibilityPipe,
       BytesPipe,
       provideState(mediaFeature),
       provideEffects(mediaEffects),

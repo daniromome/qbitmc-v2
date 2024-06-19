@@ -12,8 +12,8 @@
             <ion-col size="12" size-lg="6" size-xl="4">
               <qbit-bullet-point>
                 <ion-icon name="calendar-outline" size="large" bullet></ion-icon>
-                <div class="subtitle" title i18n="@@site-subtitle">Founded in 2015</div>
-                <ion-text class="content-container-description" description>
+                <div class="subtitle" title i18n="@@site-info-founded-title">Founded in 2015</div>
+                <ion-text class="content-container-description" description i18n="@@site-info-founded-description">
                   That's almost 10 years of playing together!
                 </ion-text>
               </qbit-bullet-point>
@@ -21,8 +21,8 @@
             <ion-col size="12" size-lg="6" size-xl="4">
               <qbit-bullet-point>
                 <ion-icon name="game-controller-outline" size="large" bullet></ion-icon>
-                <div class="subtitle" title>Game Servers</div>
-                <ion-text class="content-container-description" description>
+                <div class="subtitle" title i18n="@@site-info-servers-title">Game Servers</div>
+                <ion-text class="content-container-description" description i18n="@@site-info-servers-description">
                   Although our network is mostly compiled of minecraft servers, we may host other games from time to time
                 </ion-text>
               </qbit-bullet-point>
@@ -30,8 +30,8 @@
             <ion-col size="12" size-lg="6" size-xl="4">
               <qbit-bullet-point>
                 <ion-icon name="people-outline" size="large" bullet></ion-icon>
-                <div class="subtitle" title>Better Together</div>
-                <ion-text class="content-container-description" description>
+                <div class="subtitle" title i18n="@@site-info-together-title">Better Together</div>
+                <ion-text class="content-container-description" description i18n="@@site-info-together-description">
                   Have fun participating in a variety of cooperative projects and events
                 </ion-text>
               </qbit-bullet-point>
@@ -39,8 +39,8 @@
             <ion-col size="12" size-lg="6" size-xl="4">
               <qbit-bullet-point>
                 <ion-icon name="globe-outline" size="large" bullet></ion-icon>
-                <div class="subtitle" title>Custom Systems</div>
-                <ion-text class="content-container-description" description>
+                <div class="subtitle" title i18n="@@site-info-systems-title">Custom Systems</div>
+                <ion-text class="content-container-description" description i18n="@@site-info-systems-description">
                   These provide our community with an immersive experience across all of our platforms
                 </ion-text>
               </qbit-bullet-point>
@@ -48,8 +48,8 @@
             <ion-col size="12" size-lg="6" size-xl="4">
               <qbit-bullet-point>
                 <ion-icon name="hammer-outline" size="large" bullet></ion-icon>
-                <div class="subtitle" title>Built with ♥️</div>
-                <ion-text class="content-container-description" description>
+                <div class="subtitle" title i18n="@@site-info-love-title">Built with ♥️</div>
+                <ion-text class="content-container-description" description i18n="@@site-info-love-description">
                   It takes a lot of effort to run a community but we'll keep doing it because we love it
                 </ion-text>
               </qbit-bullet-point>
@@ -65,7 +65,7 @@
                   class="ion-text-center"
                   [style.border-radius]="'0.25rem'"
                   (click)="nav.navigateForward('/auth')">
-                  <ion-label>Join now!</ion-label>
+                  <ion-label i18n="@@join-button-label">Join now!</ion-label>
                 </ion-item>
               </ion-col>
             </ion-row>
