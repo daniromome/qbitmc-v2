@@ -1,8 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { environment } from '../../../environments/environment'
 import { Observable, of } from 'rxjs'
-import { Leaderboards } from '@models/leaderboards'
 import { PlayerDocument } from '@qbitmc/common'
 
 @Injectable({
@@ -11,10 +9,10 @@ import { PlayerDocument } from '@qbitmc/common'
 export class QbitmcService {
   private readonly http = inject(HttpClient)
 
-  public leaderboards(): Observable<Leaderboards> {
-    const url = new URL(`${environment.API_URL}/stats/leaderboards`)
-    return this.http.get<Leaderboards>(url.toString())
-  }
+  // public leaderboards(): Observable<Leaderboards> {
+  //   const url = new URL(`${environment.API_URL}/stats/leaderboards`)
+  //   return this.http.get<Leaderboards>(url.toString())
+  // }
 
   public supporters(): Observable<PlayerDocument[]> {
     // const url = new URL(`${environment.API_URL}/supporters`)
