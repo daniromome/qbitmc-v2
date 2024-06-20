@@ -43,7 +43,4 @@ Thumbs.db
 
 # Secrets
 src/environments/*
-.env
-
-# Local Netlify folder
-.netlify
+.env*

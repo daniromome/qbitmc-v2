@@ -185,7 +185,7 @@
             <ion-button
               expand="block"
               color="secondary"
-              [disabled]="filesSizeExceedsLimit() || form.invalid || !player"
+              [disabled]="filesSizeExceedsLimit() || form.invalid || !player()"
               (click)="submit()"
               i18n="@@submit">
               Submit
