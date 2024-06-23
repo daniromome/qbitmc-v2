@@ -53,6 +53,6 @@ export class MapComponent {
     this.renderer.setAttribute(iframe, 'src', url)
     this.renderer.setAttribute(iframe, 'frameBorder', '0')
     this.renderer.setAttribute(iframe, 'load', 'lazy')
-    this.renderer.appendChild(container, iframe)
+    this.renderer.appendChild(container.nativeElement, iframe)
   }
 }
