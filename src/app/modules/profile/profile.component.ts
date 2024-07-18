@@ -6,14 +6,32 @@ import { StyledTextComponent } from '@components/styled-text/styled-text.compone
 import { StyledRolePipe } from '@pipes/styled-role'
 import { AvatarPipe } from '@pipes/avatar'
 import { ViewPortService } from '@services/view-port'
-import { IonContent, IonGrid, IonRow, IonCol, IonItem, IonIcon, IonLabel, IonChip } from '@ionic/angular/standalone'
+import {
+  IonContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonItem,
+  IonIcon,
+  IonLabel,
+  IonChip,
+  IonList,
+  IonSplitPane,
+  IonMenu,
+  IonRouterOutlet
+} from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { colorPalette } from 'ionicons/icons'
+import { selectUrl } from '@store/router'
 
 @Component({
   selector: 'qbit-profile',
   standalone: true,
   imports: [
+    IonRouterOutlet,
+    IonMenu,
+    IonSplitPane,
+    IonList,
     IonChip,
     IonLabel,
     IonIcon,
@@ -37,6 +55,7 @@ export class ProfileComponent {
   public readonly nickname = this.store.selectSignal(appFeature.selectNickname)
   public readonly user = this.store.selectSignal(appFeature.selectUser)
   public readonly player = this.store.selectSignal(appFeature.selectPlayer)
+  public readonly url = this.store.selectSignal(selectUrl)
 
   public constructor() {
     addIcons({ colorPalette })

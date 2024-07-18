@@ -5,7 +5,7 @@ import { DeleteMediaRequest, UploadMediaRequest } from '@models/media'
 export const serverActions = createActionGroup({
   source: 'Server',
   events: {
-    'Get Servers': emptyProps(),
+    'Get Servers': props<{ includeDrafts: boolean }>(),
     'Get Servers Success': props<{ servers: ServerDocument[] }>(),
     'Get Servers Failure': props<{ error: Error }>(),
     'Update Server': props<{ $id: string; server: Partial<Server> }>(),

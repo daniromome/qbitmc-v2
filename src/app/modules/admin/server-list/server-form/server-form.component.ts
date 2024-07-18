@@ -127,7 +127,7 @@ export class ServerFormComponent implements OnInit {
   public ngOnInit(): void {
     this.changes$.subscribe()
     if (this.server()) return
-    this.store.dispatch(serverActions.getServers())
+    this.store.dispatch(serverActions.getServers({ includeDrafts: true }))
   }
 
   public updateServer(): void {

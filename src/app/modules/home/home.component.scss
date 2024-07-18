@@ -7,9 +7,7 @@ ion-content.background {
 
 .supporters-list {
   width: 100%;
-  position: absolute;
-  z-index: 1;
-  bottom: 0;
+  bottom: 5rem;
   &-item {
     border-radius: 0.25rem;
     transition: 0.3s;
@@ -18,22 +16,21 @@ ion-content.background {
     }
   }
   qbit-slider {
-    width: 100%;
+    width: inherit;
   }
 }
 
 .content-container {
-  &-parent {
-    @include mixins.md {
-      max-height: calc(100dvh - 112px);
-      overflow-y: scroll;
-    }
+  @include mixins.lg {
+    min-height: 100%;
+    margin: 0rem 15%;
   }
-  padding-bottom: 5.5rem;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 0rem 1rem;
+  padding-bottom: 10.5rem;
   &-description {
     color: white;
     font-size: 1.15rem;
@@ -41,9 +38,6 @@ ion-content.background {
 }
 
 .server-list {
-  qbit-server {
-    min-height: max(calc((100dvh - 112px) / 3), 15rem);
-  }
   @include mixins.md {
     max-height: calc(100dvh - 112px);
     overflow-y: scroll;
@@ -52,9 +46,6 @@ ion-content.background {
     @include mixins.md {
       max-height: calc(100dvh - 88px);
       overflow-y: scroll;
-    }
-    qbit-server {
-      min-height: max(calc((100dvh - 88px) / 3), 15rem);
     }
   }
   position: relative;

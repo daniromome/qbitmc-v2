@@ -34,7 +34,7 @@ export class MediaService {
         if (result.total === 0) return []
         return result.files.map(file => ({
           ...file,
-          url: this.appwrite.storage.getFileView(bucket, file.$id).toString()
+          url: this.appwrite.storage.getFilePreview(bucket, file.$id, request.width, request.height, undefined, 25).toString()
         }))
       })
     )

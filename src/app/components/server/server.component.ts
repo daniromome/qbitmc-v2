@@ -1,25 +1,28 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { Media } from '@models/media'
-import { ServerDocument } from '@qbitmc/common'
+import { ServerDocument, USER_LABEL } from '@qbitmc/common'
 import { interval, tap } from 'rxjs'
-import { IonChip, IonButton, IonIcon, IonText, NavController } from '@ionic/angular/standalone'
+import { IonChip, IonButton, IonIcon, IonText, NavController, IonLabel } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
-import { copyOutline, lockClosed, earth, ban, eyeOff } from 'ionicons/icons'
+import { copyOutline, lockClosed, earth, ban, eyeOff, map } from 'ionicons/icons'
 import { ClipboardService } from '@services/clipboard'
 import { VISIBILITY_ICON } from '@models/visibility-icon'
 import { CommonModule } from '@angular/common'
 import { VisibilityPipe } from '@pipes/visibility'
+import { Store } from '@ngrx/store'
+import { appFeature } from '@store/app'
 
 @Component({
   selector: 'qbit-server',
   standalone: true,
-  imports: [IonText, IonIcon, IonButton, IonChip, CommonModule, VisibilityPipe],
+  imports: [IonLabel, IonText, IonIcon, IonButton, IonChip, CommonModule, VisibilityPipe],
   templateUrl: './server.component.html',
   styleUrl: './server.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ServerComponent {
+export class ServerTileComponent {
+  public readonly store = inject(Store)
   public readonly nav = inject(NavController)
   public readonly clipboard = inject(ClipboardService)
   public server = input.required<ServerDocument>()
@@ -48,14 +51,15 @@ export class ServerComponent {
     const server = this.server()
     return server.metadata.find(data => data.key === 'map')?.value
   })
+  public readonly isQbitor = this.store.selectSignal(appFeature.selectIsRole(USER_LABEL.QBITOR))
 
   public constructor() {
-    addIcons({ copyOutline, lockClosed, earth, ban, eyeOff })
+    addIcons({ copyOutline, lockClosed, earth, ban, eyeOff, map })
     this.timer.subscribe()
   }
 
   public navigateToMap(): void {
     const server = this.server()
-    this.nav.navigateForward('/tabs/map/' + server.$id)
+    this.nav.navigateForward(`/tabs/server/${server.$id}/map`)
   }
 }

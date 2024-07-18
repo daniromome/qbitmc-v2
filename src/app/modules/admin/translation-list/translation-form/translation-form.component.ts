@@ -82,7 +82,7 @@ export class TranslationFormComponent {
     effect(
       () => {
         const entity = this.entity()
-        if (entity === 'server') this.store.dispatch(serverActions.getServers())
+        if (entity === 'server') this.store.dispatch(serverActions.getServers({ includeDrafts: true }))
       },
       { allowSignalWrites: true }
     )

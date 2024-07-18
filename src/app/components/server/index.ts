@@ -1,1 +1,1 @@
-export { ServerComponent } from './server.component'
+export { ServerTileComponent } from './server.component'

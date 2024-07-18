@@ -8,3 +8,55 @@
   height: 1.5rem;
   padding-inline-start: 1.25rem;
 }
+
+.tab-selected {
+  ion-icon {
+    margin-top: 0.375rem;
+    margin-bottom: 0.125rem;
+    fill: url('/assets/logo.svg#d');
+  }
+  ion-label {
+    background: var(--ion-color-secondary);
+    background-clip: text;
+  }
+}
+
+ion-tab {
+  &s {
+    position: relative;
+  }
+  &-bar {
+    border-radius: 0.25rem;
+    position: absolute;
+    border-top: none;
+    padding: 0 1rem;
+    bottom: 1rem;
+    left: calc(50dvw - (3rem * var(--tab-count)) - 1rem);
+    min-width: calc((6rem * var(--tab-count)));
+  }
+  &-button {
+    --color-selected: var(--ion-color-dark);
+    --background: transparent;
+    max-height: 4rem;
+    img {
+      margin-top: 0.375rem;
+      margin-bottom: 0.125rem;
+      max-height: 1.375rem;
+    }
+    ion-label {
+      margin-bottom: 0.375rem;
+      background: var(--ion-color-medium);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      &.ios {
+        font-size: 0.625rem;
+      }
+    }
+  }
+}
+
+qbit-header {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}

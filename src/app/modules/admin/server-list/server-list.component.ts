@@ -21,7 +21,6 @@ import { addIcons } from 'ionicons'
 import { sync } from 'ionicons/icons'
 import { Store } from '@ngrx/store'
 import { serverActions, serverFeature } from '@store/server'
-import { appFeature } from '@store/app'
 
 @Component({
   selector: 'qbit-server',
@@ -51,7 +50,7 @@ export class ServerListComponent implements OnInit {
   private readonly store = inject(Store)
   public readonly nav = inject(NavController)
   public readonly skeleton = Array.from(Array(8)).map((_, i) => i)
-  public readonly registeredServers = this.store.selectSignal(appFeature.selectServers)
+  public readonly registeredServers = this.store.selectSignal(serverFeature.selectServers)
   public readonly servers = this.store.selectSignal(serverFeature.selectDrafts)
   public readonly serversLoading = this.store.selectSignal(serverFeature.selectLoadingServers)
   public readonly syncing = this.store.selectSignal(serverFeature.selectSyncing)
@@ -61,7 +60,7 @@ export class ServerListComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.store.dispatch(serverActions.getServers())
+    this.store.dispatch(serverActions.getServers({ includeDrafts: true }))
   }
 
   public sync(): void {
