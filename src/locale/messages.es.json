@@ -82,7 +82,7 @@
         "admin-panel-label-manage-server": "Gestionar Servidores",
         "admin-panel-label-manage-products": "Gestionar Productos",
         "admin-panel-label-manage-translation": "Gestionar Traducciones",
-        "site-title": "Nuestra Comunidad",
+        "site-title": "Inicio - QbitMC",
         "site-info-founded-title": "Fundada en 2015",
         "site-info-founded-description": " Eso es casi 10 años de jugar juntos! ",
         "site-info-servers-title": "Servidores",
@@ -100,6 +100,11 @@
         "guest": "invitado",
         "visibility-private": "Privado",
         "visibility-public": "Público",
-        "visibility-restricted": "Restringido"
+        "visibility-restricted": "Restringido",
+        "site-description-servers": "Aquí encontrarás la lista de servidores de nuestra comunidad",
+        "site-keywords": "Minecraft, Servidor de Minecraft, Minecraft Supervivencia, Comunidad de Minecraft, Minecraft SMP",
+        "server-tab-label": "Servidores",
+        "site-title-servers": "Servidores - QbitMC",
+        "site-keywords-server": "Servidores de Minecraft, Servidores de la Comunidad, SMPs"
     }
 }
