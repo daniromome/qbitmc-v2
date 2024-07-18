@@ -1,35 +1,16 @@
 import { Component, ChangeDetectionStrategy, inject, computed } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import {
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonButton,
-  IonIcon,
-  IonTitle,
-  IonPopover,
-  IonContent,
-  IonItem,
-  IonLabel,
-  IonTabBar,
-  IonTabs,
-  IonTabButton,
-  IonAvatar,
-  IonText,
-  IonList,
-  IonListHeader,
-  IonBackButton
-} from '@ionic/angular/standalone'
+import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonPopover, IonContent, IonItem } from '@ionic/angular/standalone'
 import { Store } from '@ngrx/store'
-import { USER_LABEL, UserLabel, Locale } from '@qbitmc/common'
-import { LocaleService } from '@services/locale'
+import { USER_LABEL, UserLabel } from '@qbitmc/common'
 import { AvatarPipe } from '@pipes/avatar'
 import { RolePipe } from '@pipes/role'
 import { RoleColorPipe } from '@pipes/role-color'
 import { appActions, appFeature } from '@store/app'
 import { RouterLinkWithHref } from '@angular/router'
 import { addIcons } from 'ionicons'
-import { chevronBack, person, logOut, home, storefront, compass, people, apps } from 'ionicons/icons'
+import { person, logOut, home, storefront, people, apps, server } from 'ionicons/icons'
+import { HeaderComponent } from '@components/header'
 
 interface Tab {
   icon: string
@@ -42,29 +23,20 @@ interface Tab {
   selector: 'qbit-tabs',
   standalone: true,
   imports: [
-    IonBackButton,
-    IonListHeader,
-    IonList,
-    IonText,
-    IonAvatar,
-    IonTabButton,
-    IonTabs,
-    IonTabBar,
-    IonLabel,
     IonItem,
     IonContent,
     IonPopover,
-    IonTitle,
+    IonLabel,
     IonIcon,
-    IonButton,
-    IonButtons,
-    IonToolbar,
-    IonHeader,
+    IonTabButton,
+    IonTabBar,
+    IonTabs,
     CommonModule,
     AvatarPipe,
     RolePipe,
     RoleColorPipe,
-    RouterLinkWithHref
+    RouterLinkWithHref,
+    HeaderComponent
   ],
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
@@ -72,7 +44,6 @@ interface Tab {
 })
 export class TabsComponent {
   private readonly store = inject(Store)
-  public readonly localeService = inject(LocaleService)
   public readonly disabled = this.store.selectSignal(appFeature.selectIsDisabled)
   public readonly user = this.store.selectSignal(appFeature.selectUser)
   public readonly profile = this.store.selectSignal(appFeature.selectProfile)
@@ -82,6 +53,11 @@ export class TabsComponent {
       icon: 'home',
       label: $localize`:@@home-tab-label:Home`,
       path: 'home'
+    },
+    {
+      icon: 'server',
+      label: $localize`:@@server-tab-label:Servers`,
+      path: 'server'
     },
     // {
     //   icon: 'storefront',
@@ -100,7 +76,7 @@ export class TabsComponent {
       path: 'admin',
       role: USER_LABEL.ADMIN
     }
-  ]
+  ] as const
 
   public readonly tabs = computed(() => {
     const user = this.user()
@@ -113,11 +89,7 @@ export class TabsComponent {
   })
 
   public constructor() {
-    addIcons({ chevronBack, person, logOut, home, storefront, compass, people, apps })
-  }
-
-  public changeLocale(locale: Locale): void {
-    this.localeService.navigateToLocale(locale)
+    addIcons({ person, logOut, home, storefront, people, apps, server })
   }
 
   public logout(): void {

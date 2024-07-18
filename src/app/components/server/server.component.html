@@ -4,29 +4,14 @@
       <div class="server-container-content light-blur ion-padding">
         <div class="title">{{ server.name }}</div>
         <div>{{ server.description }}</div>
-        <span class="server-container-content-separator"></span>
-        <div class="server-container-content-footer">
-          <div>
-            <ion-button fill="none" color="light" size="small">
-              <ion-icon slot="start" [name]="icon()"></ion-icon>
-              {{ server.visibility | visibility | uppercase }}
-            </ion-button>
-          </div>
-          <div>
-            <ion-button color="primary" fill="outline" size="small">{{ server.game }} {{ server.version }}</ion-button>
-          </div>
-          <div>
-            <ion-button color="secondary" size="small" (click)="clipboard.copyToClipboard(server.ip)">
-              {{ server.ip }}
-              <ion-icon name="copy-outline" slot="end"></ion-icon>
-            </ion-button>
-          </div>
-        </div>
-        <div class="server-container-content-sidebar">
-          @if (map()) {
-            <img src="assets/map.webp" (click)="navigateToMap()" alt="Map Icon" />
-          }
-        </div>
+      </div>
+      <div class="server-container-sidebar">
+        @if (map() && isQbitor()) {
+          <button class="server-container-sidebar-button">
+            <img src="assets/map2.webp" (click)="navigateToMap()" alt="Map Icon" />
+            <ion-label color="dark">Map</ion-label>
+          </button>
+        }
       </div>
     </div>
   }

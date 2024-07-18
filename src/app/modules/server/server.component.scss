@@ -1,0 +1,10 @@
+ion-content {
+  qbit-server {
+    min-height: max(calc(100dvh / 3), 15rem);
+  }
+  &.ios {
+    qbit-server {
+      min-height: max(calc(100dvh / 3), 15rem);
+    }
+  }
+}

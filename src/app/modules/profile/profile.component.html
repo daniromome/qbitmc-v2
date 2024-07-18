@@ -1,36 +1,50 @@
-<ion-content class="background">
-  <ion-grid>
-    @if (player(); as player) {
-      <ion-row>
-        @if (view.isLG()) {
-          <ion-col size="0" sizeLg="3"></ion-col>
-        }
-        <ion-col size="12" sizeLg="6" class="profile">
-          <div>
-            <img [src]="player.$id | avatar: 'body'" alt="Minecraft skin render" class="body-render" />
-          </div>
-          <div class="profile-nickname">
-            @if (user(); as user) {
-              @for (label of user.labels | styledRole; track $index) {
-                <qbit-styled-text [text]="label"></qbit-styled-text>
-              }
-            }
-            @for (nick of nickname(); track $index) {
-              <qbit-styled-text [text]="nick"></qbit-styled-text>&nbsp;
-            }
-          </div>
-          <div class="rounded-ion-items">
-            <ion-item lines="none" detail="false" button (click)="navigateToNicknameEditor()">
-              <ion-icon name="color-palette" slot="start"></ion-icon>
-              <ion-label i18n="@@profile-customize-nickname">Customize nickname</ion-label>
-              <ion-chip color="warning" slot="end">Qbitor+</ion-chip>
-            </ion-item>
-          </div>
-        </ion-col>
-        @if (view.isLG()) {
-          <ion-col size="0" sizeLg="3"></ion-col>
-        }
-      </ion-row>
-    }
-  </ion-grid>
+<ion-content>
+  <ion-split-pane when="md" contentId="profile-outlet">
+    <ion-menu menuId="profile-menu" contentId="profile-outlet">
+      <ion-content class="background">
+        <ion-grid class="ion-no-padding">
+          @if (player(); as player) {
+            <ion-row>
+              <ion-col class="profile">
+                <div>
+                  <img [src]="player.$id | avatar: 'body' : 8" alt="Minecraft skin render" class="body-render" />
+                </div>
+                <div class="profile-nickname">
+                  @if (user(); as user) {
+                    @for (label of user.labels | styledRole; track $index) {
+                      <qbit-styled-text [text]="label"></qbit-styled-text>
+                    }
+                  }
+                  @for (nick of nickname(); track $index) {
+                    <qbit-styled-text [text]="nick"></qbit-styled-text>&nbsp;
+                  }
+                </div>
+              </ion-col>
+            </ion-row>
+            <ion-row class="ion-align-items-end">
+              <ion-col>
+                <ion-list class="ion-no-padding">
+                  <ion-item lines="none" detail="false" button disabled (click)="navigateToNicknameEditor()">
+                    <ion-icon name="color-palette" slot="start"></ion-icon>
+                    <ion-label i18n="@@profile-customize-nickname">Customize nickname</ion-label>
+                    <ion-chip color="warning" slot="end">Qbitor+</ion-chip>
+                  </ion-item>
+                  <ion-item lines="none" button color="danger" (click)="logout()">
+                    <ion-icon name="log-out" slot="start"></ion-icon>
+                    <ion-label i18n="@@logout-button-label">Logout</ion-label>
+                  </ion-item>
+                </ion-list>
+              </ion-col>
+            </ion-row>
+          }
+        </ion-grid>
+      </ion-content>
+    </ion-menu>
+    <ion-content id="profile-outlet">
+      @if (url() === '/tabs/profile') {
+      } @else {
+        <ion-router-outlet></ion-router-outlet>
+      }
+    </ion-content>
+  </ion-split-pane>
 </ion-content>

@@ -9,12 +9,8 @@ import { AuthService } from '@services/auth'
 import { QbitmcService } from '@services/qbitmc'
 import { Store } from '@ngrx/store'
 import { USER_LABEL } from '@qbitmc/common'
-import { ServerService } from '@services/server'
 import { applicationActions } from '@store/application'
 import { selectUrl } from '@store/router'
-import { mediaActions } from '@store/media'
-import { MEDIA_ENTITY } from '@models/media'
-import { translationActions } from '@store/translation'
 
 export const initialize$ = createEffect(
   (actions$ = inject(Actions)) =>
@@ -165,23 +161,6 @@ export const logoutDone$ = createEffect(
   { functional: true, dispatch: false }
 )
 
-// public getLeaderboards$ = createEffect(() => actions$.pipe(
-//   ofType(appActions.getLeaderboards),
-//   switchMap(() => qbitmc.leaderboards()),
-//   map(leaderboards => appActions.getLeaderboardsSuccess({ leaderboards })),
-//   catchError(error => of(appActions.getLeaderboardsFailure({ error })))
-// ))
-
-// public getLeaderboardsFailure$ = createEffect(() => actions$.pipe(
-//   ofType(appActions.getLeaderboardsFailure),
-//   switchMap(() => toast.create({
-//     message: $localize`There was an error loading leaderboards, please try again later`,
-//     buttons: ['OK'],
-//     duration: 3000
-//   })),
-//   switchMap(toast => toast.present())
-// ), { dispatch: false })
-
 export const getSupporters$ = createEffect(
   (actions$ = inject(Actions), qbitmc = inject(QbitmcService)) =>
     actions$.pipe(
@@ -200,53 +179,6 @@ export const getSupportersFailure$ = createEffect(
       switchMap(() =>
         toast.create({
           message: $localize`:@@list-supporters-error:There was an error loading supporters list, please try again later`,
-          buttons: ['OK'],
-          duration: 3000
-        })
-      ),
-      switchMap(toast => from(toast.present()))
-    ),
-  { functional: true, dispatch: false }
-)
-
-export const getTranslations$ = createEffect(
-  (actions$ = inject(Actions)) =>
-    actions$.pipe(
-      ofType(appActions.getServersSuccess),
-      map(() => translationActions.getTranslations({ locale: true, namespace: 'server' }))
-    ),
-  { functional: true }
-)
-
-export const getServers$ = createEffect(
-  (actions$ = inject(Actions), serverService = inject(ServerService)) =>
-    actions$.pipe(
-      ofType(appActions.initialize),
-      switchMap(() => serverService.list()),
-      map(servers => appActions.getServersSuccess({ servers })),
-      catchError(error => of(appActions.getServersFailure({ error })))
-    ),
-  { functional: true }
-)
-
-export const getServersSuccess$ = createEffect(
-  (actions$ = inject(Actions)) =>
-    actions$.pipe(
-      ofType(appActions.getServersSuccess),
-      map(({ servers }) =>
-        mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.SERVER, ids: servers.flatMap(s => s.media) } })
-      )
-    ),
-  { functional: true }
-)
-
-export const getServersFailure$ = createEffect(
-  (actions$ = inject(Actions), toast = inject(ToastController)) =>
-    actions$.pipe(
-      ofType(appActions.getServersFailure),
-      switchMap(() =>
-        toast.create({
-          message: $localize`:@@list-servers-error:There was an error loading servers list, please try again later`,
           buttons: ['OK'],
           duration: 3000
         })

@@ -1,0 +1,19 @@
+<ion-content>
+  <ion-split-pane [when]="true" contentId="server-outlet" #pane>
+    <ion-menu menuId="server-menu" contentId="server-outlet" #menu>
+      <ion-content>
+        @if (serversWithTranslations(); as servers) {
+          @for (server of servers; track $index) {
+            <qbit-server [server]="server" [media]="serverMedia(server)()"></qbit-server>
+          }
+        }
+      </ion-content>
+    </ion-menu>
+    <ion-content id="server-outlet">
+      @if (url() === '/tabs/server') {
+      } @else {
+        <ion-router-outlet></ion-router-outlet>
+      }
+    </ion-content>
+  </ion-split-pane>
+</ion-content>

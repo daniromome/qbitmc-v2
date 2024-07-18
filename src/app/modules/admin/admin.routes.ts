@@ -5,6 +5,8 @@ import { provideEffects } from '@ngrx/effects'
 import { provideState } from '@ngrx/store'
 import { serverEffects, serverFeature } from '@store/server'
 import { translationEffects, translationFeature } from '@store/translation'
+import { BytesPipe } from '@pipes/bytes'
+import { mediaFeature, mediaEffects } from '@store/media'
 
 export const routes: Route[] = [
   {
@@ -15,7 +17,13 @@ export const routes: Route[] = [
     children: [
       {
         path: 'server',
-        providers: [provideState(serverFeature), provideEffects(serverEffects)],
+        providers: [
+          BytesPipe,
+          provideState(mediaFeature),
+          provideEffects(mediaEffects),
+          provideState(serverFeature),
+          provideEffects(serverEffects)
+        ],
         children: [
           {
             path: '',

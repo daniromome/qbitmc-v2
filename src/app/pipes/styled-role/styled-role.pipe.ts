@@ -31,7 +31,7 @@ export class StyledRolePipe implements PipeTransform {
     text[1].style = { colors: ['#5555FF', '#55FFFF'], style: TextStyle.GRADIENT }
     if (roles.some(r => r === USER_LABEL.ADMIN)) {
       text[1].content = this.titleCase.transform(USER_LABEL.ADMIN)
-      text[1].style = { colors: ['#FF5555', '#55FFFF'], style: TextStyle.GRADIENT }
+      text[1].style = { colors: ['#FF5555', '#FFAA00'], style: TextStyle.GRADIENT }
       return text
     }
     if (roles.some(r => r === USER_LABEL.MOD)) {

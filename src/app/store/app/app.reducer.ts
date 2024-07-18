@@ -1,10 +1,9 @@
 import { MemoizedSelector, createFeature, createReducer, createSelector, on } from '@ngrx/store'
 import { appActions } from '@store/app'
-import { Leaderboards } from '@models/leaderboards'
 import { StyledText } from '@models/styled-text'
 import { shuffleArray } from '@utils'
 import { Models } from 'appwrite'
-import { USER_LABEL, UserLabel, ServerDocument, Profile, PlayerDocument } from '@qbitmc/common'
+import { USER_LABEL, UserLabel, Profile, PlayerDocument } from '@qbitmc/common'
 import { User } from '@models/user'
 
 export const appFeatureKey = 'app'
@@ -13,9 +12,7 @@ export interface AppState {
   session: Models.Session | undefined
   user: User | undefined
   profile: Profile | undefined
-  leaderboards: Leaderboards | undefined
   supporters: PlayerDocument[]
-  servers: ServerDocument[]
   initialized: boolean
   nickname: StyledText[]
   changes: boolean
@@ -27,9 +24,7 @@ export const initialState: AppState = {
   session: undefined,
   user: undefined,
   profile: undefined,
-  leaderboards: undefined,
   supporters: [],
-  servers: [],
   initialized: false,
   nickname: [],
   changes: false,
@@ -63,9 +58,7 @@ export const reducer = createReducer(
   on(appActions.getSessionSuccess, appActions.getSessionFailure, (state): AppState => ({ ...state, initialized: true })),
   on(appActions.getUserSuccess, (state, { user }): AppState => ({ ...state, user })),
   on(appActions.getProfileSuccess, appActions.createProfileSuccess, (state, { profile }): AppState => ({ ...state, profile })),
-  on(appActions.getLeaderboardsSuccess, (state, action): AppState => ({ ...state, leaderboards: action.leaderboards })),
   on(appActions.getSupportersSuccess, (state, action): AppState => ({ ...state, supporters: action.supporters })),
-  on(appActions.getServersSuccess, (state, action): AppState => ({ ...state, servers: action.servers })),
   on(appActions.setUnsavedChanges, (state, action): AppState => ({ ...state, changes: action.changes })),
   on(
     appActions.minecraftAccountVerification,
@@ -99,15 +92,7 @@ export const reducer = createReducer(
 export const appFeature = createFeature({
   name: appFeatureKey,
   reducer,
-  extraSelectors: ({
-    selectProfile,
-    selectAppState,
-    selectServers,
-    selectSession,
-    selectUser,
-    selectLoading,
-    selectError
-  }) => ({
+  extraSelectors: ({ selectProfile, selectAppState, selectSession, selectUser, selectLoading, selectError }) => ({
     selectIsSignedIn: createSelector(selectAppState, state => !!state.session && state.initialized),
     selectIsDisabled: createSelector(selectUser, user => user?.labels.includes(USER_LABEL.DISABLED)),
     selectUserId: createSelector(selectSession, session => session?.$id || ''),
@@ -117,12 +102,10 @@ export const appFeature = createFeature({
     }),
     selectIsRole: (...labels: UserLabel[]): MemoizedSelector<Record<string, any>, boolean, (s1: AppState) => boolean> =>
       createSelector(selectAppState, state => !!state.user?.labels.some(l => labels.includes(l))),
-    selectLeaderboards: createSelector(selectAppState, state => (state.leaderboards ? Object.entries(state.leaderboards) : [])),
     selectSupporters: createSelector(selectAppState, state => {
       return shuffleArray<PlayerDocument>(state.supporters)
     }),
     selectCustomer: createSelector(selectProfile, profile => profile?.customer),
-    selectServer: (id: string) => createSelector(selectServers, servers => servers.find(server => server.$id === id)),
     selectLoadingVerification: createSelector(selectLoading, loading => loading['verification']),
     selectErrorVerification: createSelector(selectError, error => error['verification'])
   })

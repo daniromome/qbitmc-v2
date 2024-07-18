@@ -32,6 +32,9 @@ export interface MediaRequest {
 }
 export interface GetMediaRequest extends MediaRequest {
   ids: string[]
+  height?: number
+  width?: number
+  quality?: number
 }
 
 export interface UploadMediaRequest extends GetMediaRequest {

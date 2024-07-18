@@ -6,11 +6,10 @@ describe('MapComponent', () => {
   let component: MapComponent
   let fixture: ComponentFixture<MapComponent>
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MapComponent]
-    })
-      .compileComponents()
+    }).compileComponents()
 
     fixture = TestBed.createComponent(MapComponent)
     component = fixture.componentInstance

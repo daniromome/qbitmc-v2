@@ -1,22 +1,18 @@
 import { inject, isDevMode } from '@angular/core'
 import { MEDIA_ENTITY } from '@models/media'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
-import { concatLatestFrom } from '@ngrx/operators'
-import { Store } from '@ngrx/store'
 import { ServerService } from '@services/server'
-import { appFeature } from '@store/app'
 import { mediaActions } from '@store/media'
 import { serverActions } from '@store/server'
 import { translationActions } from '@store/translation'
 import { switchMap, map, catchError, of, repeat } from 'rxjs'
 
 export const getServers$ = createEffect(
-  (actions$ = inject(Actions), serverService = inject(ServerService), store = inject(Store)) =>
+  (actions$ = inject(Actions), serverService = inject(ServerService)) =>
     actions$.pipe(
       ofType(serverActions.getServers),
-      switchMap(() => serverService.list(true)),
-      concatLatestFrom(() => store.select(appFeature.selectServers)),
-      map(([drafts, servers]) => serverActions.getServersSuccess({ servers: [...drafts, ...servers] })),
+      switchMap(({ includeDrafts }) => serverService.list(includeDrafts)),
+      map(servers => serverActions.getServersSuccess({ servers })),
       catchError(error => {
         console.error(error)
         return of(serverActions.getServersFailure({ error }))
@@ -31,7 +27,9 @@ export const getServersSuccessEmitGetMedia$ = createEffect(
     actions$.pipe(
       ofType(serverActions.getServersSuccess),
       map(({ servers }) =>
-        mediaActions.getMedia({ request: { entity: MEDIA_ENTITY.SERVER, ids: servers.flatMap(s => s.media) } })
+        mediaActions.getMedia({
+          request: { entity: MEDIA_ENTITY.SERVER, ids: servers.flatMap(s => s.media), height: 360, quality: 25 }
+        })
       )
     ),
   { functional: true }

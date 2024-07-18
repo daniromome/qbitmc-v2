@@ -1,0 +1,16 @@
+@if (!url().includes('map')) {
+  <button id="select-locale">{{ localeService.locale | uppercase }}</button>
+
+  <ion-popover trigger="select-locale" showBackdrop="false" #locale>
+    <ng-template>
+      <ion-content>
+        <ion-item lines="none" button (click)="changeLocale('es')" [style.--background]="'transparent'" [detail]="false">
+          ES
+        </ion-item>
+        <ion-item lines="none" button (click)="changeLocale('en')" [style.--background]="'transparent'" [detail]="false">
+          EN
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+}

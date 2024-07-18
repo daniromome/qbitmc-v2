@@ -11,25 +11,20 @@ import { BytesPipe } from '@pipes/bytes'
 import { applicationFeature, applicationEffects } from '@store/application'
 import { ShopEffects, shopFeature } from '@store/shop'
 import { mediaFeature, mediaEffects } from '@store/media'
-import { translationEffects, translationFeature } from '@store/translation'
-import { VisibilityPipe } from '@pipes/visibility'
 
 export const routes: Routes = [
   {
     path: 'tabs',
     loadComponent: () => import('./components/tabs').then(c => c.TabsComponent),
-    providers: [
-      VisibilityPipe,
-      BytesPipe,
-      provideState(mediaFeature),
-      provideEffects(mediaEffects),
-      provideState(translationFeature),
-      provideEffects(translationEffects)
-    ],
+    providers: [],
     children: [
       {
         path: 'admin',
         loadChildren: () => import('./modules/admin/admin.routes').then(m => m.routes)
+      },
+      {
+        path: 'server',
+        loadChildren: () => import('./modules/server/server.routes').then(m => m.routes)
       },
       {
         path: 'home',
@@ -39,18 +34,19 @@ export const routes: Routes = [
         path: 'join',
         canActivate: [authGuard, enabledGuard],
         loadChildren: () => import('./modules/join/join.routes').then(m => m.routes),
-        providers: [provideState(applicationFeature), provideEffects(applicationEffects), BytesPipe]
+        providers: [
+          provideState(applicationFeature),
+          provideEffects(applicationEffects),
+          BytesPipe,
+          provideState(mediaFeature),
+          provideEffects(mediaEffects)
+        ]
       },
       {
         path: 'shop',
         loadComponent: () => import('./modules/shop/shop.component').then(c => c.ShopComponent),
         canActivate: [enabledGuard],
         providers: [provideState(shopFeature), provideEffects(ShopEffects)]
-      },
-      {
-        path: 'map/:id',
-        loadComponent: () => import('./modules/map/map.component').then(c => c.MapComponent),
-        canActivate: [roleGuard(USER_LABEL.QBITOR), enabledGuard]
       },
       {
         path: 'profile',
