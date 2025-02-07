@@ -6,43 +6,14 @@ import { ServerDocument } from '@qbitmc/common/_dist/mod'
 import { LocaleService } from '@services/locale'
 import { mediaFeature } from '@store/media'
 import { translationFeature } from '@store/translation'
-import {
-  IonContent,
-  IonRow,
-  IonCol,
-  IonGrid,
-  IonList,
-  IonItem,
-  IonIcon,
-  IonLabel,
-  IonSplitPane,
-  IonRouterOutlet,
-  IonMenu,
-  IonFab,
-  IonFabButton
-} from '@ionic/angular/standalone'
+import { IonContent, IonSplitPane, IonRouterOutlet, IonMenu } from '@ionic/angular/standalone'
 import { selectUrl } from '@store/router'
 import { serverActions, serverFeature } from '@store/server'
 import { Title, Meta } from '@angular/platform-browser'
 
 @Component({
   standalone: true,
-  imports: [
-    IonFabButton,
-    IonFab,
-    IonRouterOutlet,
-    IonSplitPane,
-    IonLabel,
-    IonIcon,
-    IonItem,
-    IonList,
-    IonGrid,
-    IonCol,
-    IonRow,
-    IonContent,
-    IonMenu,
-    ServerTileComponent
-  ],
+  imports: [IonRouterOutlet, IonSplitPane, IonContent, IonMenu, ServerTileComponent],
   templateUrl: './server.component.html',
   styleUrl: './server.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

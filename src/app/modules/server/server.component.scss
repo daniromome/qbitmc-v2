@@ -1,10 +1,9 @@
 ion-content {
-  qbit-server {
-    min-height: max(calc(100dvh / 3), 15rem);
+  &::part(scroll) {
+    scroll-snap-type: y mandatory;
   }
-  &.ios {
-    qbit-server {
-      min-height: max(calc(100dvh / 3), 15rem);
-    }
+  qbit-server {
+    scroll-snap-align: start;
+    min-height: calc(100dvh);
   }
 }
