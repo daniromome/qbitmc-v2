@@ -21,7 +21,6 @@ import {
 import { addIcons } from 'ionicons'
 import { calendarOutline, gameControllerOutline, peopleOutline, globeOutline, hammerOutline } from 'ionicons/icons'
 import { BulletPointComponent } from '@components/bullet-point'
-import { RouterLinkWithHref } from '@angular/router'
 import { USER_LABEL } from '@qbitmc/common'
 
 @Component({
@@ -44,8 +43,7 @@ import { USER_LABEL } from '@qbitmc/common'
     CommonModule,
     AvatarPipe,
     SliderComponent,
-    BulletPointComponent,
-    RouterLinkWithHref
+    BulletPointComponent
   ]
 })
 export class HomeComponent {

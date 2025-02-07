@@ -1,5 +1,5 @@
 <ion-content>
-  <ion-split-pane when="md" contentId="profile-outlet">
+  <ion-split-pane [when]="true" contentId="profile-outlet">
     <ion-menu menuId="profile-menu" contentId="profile-outlet">
       <ion-content class="background">
         <ion-grid class="ion-no-padding">
@@ -7,7 +7,7 @@
             <ion-row>
               <ion-col class="profile">
                 <div>
-                  <img [src]="player.$id | avatar: 'body' : 8" alt="Minecraft skin render" class="body-render" />
+                  <img [src]="player.$id | avatar: 'body' : 6" alt="Minecraft skin render" class="body-render" />
                 </div>
                 <div class="profile-nickname">
                   @if (user(); as user) {
@@ -21,7 +21,7 @@
                 </div>
               </ion-col>
             </ion-row>
-            <ion-row class="ion-align-items-end">
+            <ion-row class="profile-buttons">
               <ion-col>
                 <ion-list class="ion-no-padding">
                   <ion-item lines="none" detail="false" button disabled (click)="navigateToNicknameEditor()">

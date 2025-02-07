@@ -7,7 +7,6 @@ import { AvatarPipe } from '@pipes/avatar'
 import { RolePipe } from '@pipes/role'
 import { RoleColorPipe } from '@pipes/role-color'
 import { appActions, appFeature } from '@store/app'
-import { RouterLinkWithHref } from '@angular/router'
 import { addIcons } from 'ionicons'
 import { person, logOut, home, storefront, people, apps, server } from 'ionicons/icons'
 import { HeaderComponent } from '@components/header'
@@ -35,7 +34,6 @@ interface Tab {
     AvatarPipe,
     RolePipe,
     RoleColorPipe,
-    RouterLinkWithHref,
     HeaderComponent
   ],
   templateUrl: './tabs.component.html',
