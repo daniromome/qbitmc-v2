@@ -29,23 +29,32 @@ export const parseUnstyledText = (text: string): StyledText => {
   const content = tags.pop()?.trim()
   const styleIndex = tags.findIndex(s => s.includes(':'))
   const styleString = styleIndex !== -1 ? tags.splice(styleIndex, 1)[0] : undefined
-  tags.forEach(name => { attributes[name] = true })
+  tags.forEach(name => {
+    attributes[name] = true
+  })
   const style = styleString ? parseStyleTag(styleString) : undefined
   return { ...attributes, content, style } as StyledText
 }
 
 const stringifyStyle = (style: Style): string => {
   switch (style.style) {
-    case TextStyle.COLOR: return `<${style.style}:${style.color}>`
-    case TextStyle.GRADIENT: return `<${style.style}:${style.colors.join(':')}>`
-    case TextStyle.RAINBOW: return `<${style.style}:${style.frequency}:${style.saturation}:${style.offset}>`
+    case TextStyle.COLOR:
+      return `<${style.style}:${style.color}>`
+    case TextStyle.GRADIENT:
+      return `<${style.style}:${style.colors.join(':')}>`
+    case TextStyle.RAINBOW:
+      return `<${style.style}:${style.frequency}:${style.saturation}:${style.offset}>`
   }
 }
 
 export const stringifyStyledText = (text: StyledText): string => {
-  return Object.entries(text).filter(([_, value]) => !!value).map(([key, value]) => {
-    if (typeof value === 'boolean') return `<${key}>`
-    if (typeof value === 'object') return stringifyStyle(value)
-    return `${value}`
-  }).reverse().join('')
+  return Object.entries(text)
+    .filter(([_, value]) => !!value)
+    .map(([key, value]) => {
+      if (typeof value === 'boolean') return `<${key}>`
+      if (typeof value === 'object') return stringifyStyle(value)
+      return `${value}`
+    })
+    .reverse()
+    .join('')
 }

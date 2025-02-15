@@ -5,7 +5,6 @@ import { appFeature } from '@store/app'
 import { AvatarPipe } from '@pipes/avatar'
 import {
   IonCard,
-  IonAvatar,
   IonCardHeader,
   IonCardTitle,
   IonCardSubtitle,
@@ -40,7 +39,6 @@ import { applicationFeature } from '@store/application'
     IonCardSubtitle,
     IonCardTitle,
     IonCardHeader,
-    IonAvatar,
     IonCard,
     CommonModule,
     AvatarPipe

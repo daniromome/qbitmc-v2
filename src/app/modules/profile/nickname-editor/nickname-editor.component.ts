@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { StyledTextComponent } from '@components/styled-text/styled-text.component'
-import { StyledRolePipe } from '@pipes/styled-role'
 import { Store } from '@ngrx/store'
 import { Observable, finalize, first, map } from 'rxjs'
 import { StyledText, StyledTextForm, TextStyle } from '@models/styled-text'
@@ -11,7 +10,29 @@ import { FormArray, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Va
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { stringifyStyledText } from '@utils'
 import { REGEXP } from '@constants/regexp'
-import { IonContent, IonGrid, IonRow, IonCol, IonSegmentButton, IonLabel, IonIcon, IonCard, IonCardContent, IonItem, IonAccordionGroup, IonAccordion, IonButtons, IonButton, IonInput, IonFab, IonFabButton, IonText, IonRange, IonSegment, IonCheckbox } from '@ionic/angular/standalone'
+import {
+  IonContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonSegmentButton,
+  IonLabel,
+  IonIcon,
+  IonCard,
+  IonCardContent,
+  IonItem,
+  IonAccordionGroup,
+  IonAccordion,
+  IonButtons,
+  IonButton,
+  IonInput,
+  IonFab,
+  IonFabButton,
+  IonText,
+  IonRange,
+  IonSegment,
+  IonCheckbox
+} from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { ban, sparkles, starHalf, star, add, trash, save } from 'ionicons/icons'
 
@@ -46,7 +67,6 @@ enum SliderLabel {
     IonRange,
     CommonModule,
     StyledTextComponent,
-    StyledRolePipe,
     StyledTextComponent,
     ReactiveFormsModule,
     FormsModule
@@ -55,25 +75,10 @@ enum SliderLabel {
   styleUrls: ['./nickname-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger(
-      'inOutAnimation',
-      [
-        transition(
-          ':enter',
-          [
-            style({ opacity: 0 }),
-            animate('250ms ease-out', style({ opacity: 1 }))
-          ]
-        ),
-        transition(
-          ':leave',
-          [
-            style({ opacity: 1 }),
-            animate('250ms ease-in', style({ opacity: 0 }))
-          ]
-        )
-      ]
-    )
+    trigger('inOutAnimation', [
+      transition(':enter', [style({ opacity: 0 }), animate('250ms ease-out', style({ opacity: 1 }))]),
+      transition(':leave', [style({ opacity: 1 }), animate('250ms ease-in', style({ opacity: 0 }))])
+    ])
   ]
 })
 export class NicknameEditorComponent implements OnInit {
@@ -88,10 +93,7 @@ export class NicknameEditorComponent implements OnInit {
   public constructor() {
     addIcons({ ban, sparkles, starHalf, star, add, trash, save })
     this.form = this.fb.array<StyledTextForm>([])
-    this.nickname$ = this.store.select(appFeature.selectNickname).pipe(
-      first(),
-      takeUntilDestroyed()
-    )
+    this.nickname$ = this.store.select(appFeature.selectNickname).pipe(first(), takeUntilDestroyed())
     this.firstChange$ = this.form.valueChanges.pipe(
       first(),
       takeUntilDestroyed(),
@@ -132,31 +134,27 @@ export class NicknameEditorComponent implements OnInit {
       }),
       style: this.fb.control<TextStyle | undefined>(text?.style?.style),
       color: this.fb.group({
-        color: this.fb.control<string>(text?.style?.style === TextStyle.COLOR
-          ? text.style.color
-          : '#ffffff'
-        )
+        color: this.fb.control<string>(text?.style?.style === TextStyle.COLOR ? text.style.color : '#ffffff')
       }),
       gradient: this.fb.group({
-        colors: this.fb.array(text?.style?.style === TextStyle.GRADIENT
-          ? text.style.colors.map(color => this.fb.control(color))
-          : [
-              this.fb.control('#ffffff'),
-              this.fb.control('#ffffff')
-            ]
+        colors: this.fb.array(
+          text?.style?.style === TextStyle.GRADIENT
+            ? text.style.colors.map(color => this.fb.control(color))
+            : [this.fb.control('#ffffff'), this.fb.control('#ffffff')]
         )
       }),
-      rainbow: this.fb.group(text?.style?.style === TextStyle.RAINBOW
-        ? {
-            frequency: this.fb.control(text.style.frequency * 100),
-            offset: this.fb.control(text.style.offset * 100),
-            saturation: this.fb.control(text.style.saturation * 100)
-          }
-        : {
-            frequency: this.fb.control(1),
-            offset: this.fb.control(0),
-            saturation: this.fb.control(30)
-          }
+      rainbow: this.fb.group(
+        text?.style?.style === TextStyle.RAINBOW
+          ? {
+              frequency: this.fb.control(text.style.frequency * 100),
+              offset: this.fb.control(text.style.offset * 100),
+              saturation: this.fb.control(text.style.saturation * 100)
+            }
+          : {
+              frequency: this.fb.control(1),
+              offset: this.fb.control(0),
+              saturation: this.fb.control(30)
+            }
       )
     })
   }
@@ -168,18 +166,22 @@ export class NicknameEditorComponent implements OnInit {
   public convertFormToStyledText(index: number): StyledText {
     const { attributes, style, color, gradient, rainbow } = this.form.at(index).getRawValue()
     switch (style) {
-      case TextStyle.COLOR: return { ...attributes, style: { color: color.color, style } } as StyledText
-      case TextStyle.GRADIENT: return { ...attributes, style: { colors: gradient.colors, style } } as StyledText
-      case TextStyle.RAINBOW: return {
-        ...attributes,
-        style: {
-          frequency: rainbow?.frequency / 100,
-          offset: rainbow?.offset / 100,
-          saturation: rainbow?.saturation / 100,
-          style
-        }
-      } as StyledText
-      default: return { ...attributes } as StyledText
+      case TextStyle.COLOR:
+        return { ...attributes, style: { color: color.color, style } } as StyledText
+      case TextStyle.GRADIENT:
+        return { ...attributes, style: { colors: gradient.colors, style } } as StyledText
+      case TextStyle.RAINBOW:
+        return {
+          ...attributes,
+          style: {
+            frequency: rainbow?.frequency / 100,
+            offset: rainbow?.offset / 100,
+            saturation: rainbow?.saturation / 100,
+            style
+          }
+        } as StyledText
+      default:
+        return { ...attributes } as StyledText
     }
   }
 

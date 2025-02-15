@@ -1,11 +1,9 @@
 import { Component, ChangeDetectionStrategy, inject, computed } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonPopover, IonContent, IonItem } from '@ionic/angular/standalone'
+import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone'
 import { Store } from '@ngrx/store'
 import { USER_LABEL, UserLabel } from '@qbitmc/common'
 import { AvatarPipe } from '@pipes/avatar'
-import { RolePipe } from '@pipes/role'
-import { RoleColorPipe } from '@pipes/role-color'
 import { appActions, appFeature } from '@store/app'
 import { addIcons } from 'ionicons'
 import { person, logOut, home, storefront, people, apps, server } from 'ionicons/icons'
@@ -21,21 +19,7 @@ interface Tab {
 @Component({
   selector: 'qbit-tabs',
   standalone: true,
-  imports: [
-    IonItem,
-    IonContent,
-    IonPopover,
-    IonLabel,
-    IonIcon,
-    IonTabButton,
-    IonTabBar,
-    IonTabs,
-    CommonModule,
-    AvatarPipe,
-    RolePipe,
-    RoleColorPipe,
-    HeaderComponent
-  ],
+  imports: [IonLabel, IonIcon, IonTabButton, IonTabBar, IonTabs, CommonModule, AvatarPipe, HeaderComponent],
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

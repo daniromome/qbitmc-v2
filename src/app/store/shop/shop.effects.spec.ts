@@ -10,10 +10,7 @@ describe('AppEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        ShopEffects,
-        provideMockActions(() => actions$)
-      ]
+      providers: [ShopEffects, provideMockActions(() => actions$)]
     })
 
     effects = TestBed.inject(ShopEffects)

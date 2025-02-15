@@ -35,7 +35,9 @@
                 <ng-container formGroupName="attributes">
                   <ion-item class="transparent" lines="full">
                     <ion-input formControlName="content" errorText="Nickname may not include <, > or :">
-                      <div slot="label"><ion-text i18n="@@text-style-input-label">Text</ion-text><ion-text color="danger"> *</ion-text></div>
+                      <div slot="label">
+                        <ion-text i18n="@@text-style-input-label">Text</ion-text><ion-text color="danger"> *</ion-text>
+                      </div>
                     </ion-input>
                   </ion-item>
                   <ion-accordion-group>
@@ -48,10 +50,14 @@
                           <ion-checkbox i18n="@@text-style-attribute-bold" formControlName="bold">Bold</ion-checkbox>
                         </ion-item>
                         <ion-item lines="full" class="transparent">
-                          <ion-checkbox i18n="@@text-style-attribute-strikethrough" formControlName="strikethrough">Strikethrough</ion-checkbox>
+                          <ion-checkbox i18n="@@text-style-attribute-strikethrough" formControlName="strikethrough"
+                            >Strikethrough</ion-checkbox
+                          >
                         </ion-item>
                         <ion-item lines="full" class="transparent">
-                          <ion-checkbox i18n="@@text-style-attribute-underline" formControlName="underline">Underline</ion-checkbox>
+                          <ion-checkbox i18n="@@text-style-attribute-underline" formControlName="underline"
+                            >Underline</ion-checkbox
+                          >
                         </ion-item>
                         <ion-item lines="full" class="transparent">
                           <ion-checkbox i18n="@@text-style-attribute-italic" formControlName="italic">Italic</ion-checkbox>
@@ -62,10 +68,18 @@
                 </ng-container>
 
                 @switch (group.controls.style.value) {
-                  @case (STYLE.RAINBOW) { <ng-container [ngTemplateOutlet]="rainbow"></ng-container> }
-                  @case (STYLE.GRADIENT) { <ng-container [ngTemplateOutlet]="gradient"></ng-container> }
-                  @case (STYLE.COLOR) { <ng-container [ngTemplateOutlet]="color"></ng-container> }
-                  @default { <ng-container [ngTemplateOutlet]="none"></ng-container> }
+                  @case (STYLE.RAINBOW) {
+                    <ng-container [ngTemplateOutlet]="rainbow"></ng-container>
+                  }
+                  @case (STYLE.GRADIENT) {
+                    <ng-container [ngTemplateOutlet]="gradient"></ng-container>
+                  }
+                  @case (STYLE.COLOR) {
+                    <ng-container [ngTemplateOutlet]="color"></ng-container>
+                  }
+                  @default {
+                    <ng-container [ngTemplateOutlet]="none"></ng-container>
+                  }
                 }
 
                 <ion-item lines="none" class="ion-no-padding transparent">
@@ -86,25 +100,20 @@
                 <ion-range
                   [label]="sliderLabel(SLIDER_LABEL.SATURATION, group.controls.rainbow.controls.saturation.value)"
                   [min]="1"
-                  formControlName="saturation"
-                ></ion-range>
+                  formControlName="saturation"></ion-range>
               </ion-item>
             </ng-template>
             <ng-template #gradient formGroupName="gradient">
               <ng-container formArrayName="colors">
                 @for (control of group.controls.gradient.controls.colors.controls; track i; let i = $index) {
-                  <ion-item
-                    button
-                    lines="full"
-                    class="transparent"
-                    (click)="gradientInput.click()">
+                  <ion-item button lines="full" class="transparent" (click)="gradientInput.click()">
                     <ion-input
                       readonly
                       label="Color {{ i + 1 }}"
                       [value]="group.controls.gradient.controls.colors.at(i).value"
                       [style.--color]="group.controls.gradient.controls.colors.at(i).value">
                     </ion-input>
-                    <input type="color" [formControlName]="i" [style.display]="'none'" #gradientInput>
+                    <input type="color" [formControlName]="i" [style.display]="'none'" #gradientInput />
                   </ion-item>
                 }
                 <ion-item class="transparent" button lines="full" (click)="newGradientColor(index)">
@@ -122,11 +131,10 @@
                   [value]="group.controls.color.controls.color.value"
                   [style.--color]="group.controls.color.controls.color.value">
                 </ion-input>
-                <input type="color" formControlName="color" [style.display]="'none'" #colorInput>
+                <input type="color" formControlName="color" [style.display]="'none'" #colorInput />
               </ion-item>
             </ng-template>
-            <ng-template #none>
-            </ng-template>
+            <ng-template #none> </ng-template>
           }
         </ion-col>
       }

@@ -1,4 +1,17 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Renderer2, ViewEncapsulation, computed, effect, inject, input, signal, viewChild } from '@angular/core'
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Renderer2,
+  ViewEncapsulation,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  viewChild
+} from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Platform } from '@ionic/angular'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
@@ -32,13 +45,16 @@ export class SliderComponent implements AfterViewInit {
   public readonly speed = input(4.5)
   public readonly slideWidth = computed(() => `${this.sliderWidth() / this.elementsInView()}px`)
 
-  public readonly slideAnimationSpeed = computed(() => (this.elementsCount() * this.speed()) + 's')
+  public readonly slideAnimationSpeed = computed(() => this.elementsCount() * this.speed() + 's')
 
   public constructor() {
-    this.platform.resize.asObservable().pipe(
-      map(() => this.slider().nativeElement.clientWidth),
-      takeUntilDestroyed()
-    ).subscribe((width) => this.sliderWidth.set(width))
+    this.platform.resize
+      .asObservable()
+      .pipe(
+        map(() => this.slider().nativeElement.clientWidth),
+        takeUntilDestroyed()
+      )
+      .subscribe(width => this.sliderWidth.set(width))
     effect(() => {
       const track = this.track()
       const elementsInTrack = this.elementsInView() * 2

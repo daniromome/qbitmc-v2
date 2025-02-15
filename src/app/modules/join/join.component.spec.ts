@@ -6,11 +6,10 @@ describe('JoinComponent', () => {
   let component: JoinComponent
   let fixture: ComponentFixture<JoinComponent>
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [JoinComponent]
-    })
-      .compileComponents()
+    }).compileComponents()
 
     fixture = TestBed.createComponent(JoinComponent)
     component = fixture.componentInstance

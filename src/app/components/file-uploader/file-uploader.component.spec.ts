@@ -6,11 +6,10 @@ describe('FileUploaderComponent', () => {
   let component: FileUploaderComponent
   let fixture: ComponentFixture<FileUploaderComponent>
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [FileUploaderComponent]
-    })
-      .compileComponents()
+    }).compileComponents()
 
     fixture = TestBed.createComponent(FileUploaderComponent)
     component = fixture.componentInstance

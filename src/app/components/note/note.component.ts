@@ -14,6 +14,7 @@ export class NoteComponent {
   @Input() public dirty!: boolean
   @Input() public helper!: string
   @Input() public error?: string
+
   public get slot(): string {
     return this.invalid || !this.dirty ? 'error' : 'helper'
   }

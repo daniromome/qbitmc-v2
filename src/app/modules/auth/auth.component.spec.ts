@@ -6,11 +6,10 @@ describe('AuthComponent', () => {
   let component: AuthComponent
   let fixture: ComponentFixture<AuthComponent>
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AuthComponent]
-    })
-      .compileComponents()
+    }).compileComponents()
 
     fixture = TestBed.createComponent(AuthComponent)
     component = fixture.componentInstance

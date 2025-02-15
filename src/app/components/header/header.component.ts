@@ -1,19 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { Component, inject } from '@angular/core'
-import {
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonBackButton,
-  IonTitle,
-  IonButton,
-  IonIcon,
-  IonPopover,
-  IonList,
-  IonItem,
-  IonContent,
-  IonLabel
-} from '@ionic/angular/standalone'
+import { IonPopover, IonItem, IonContent } from '@ionic/angular/standalone'
 import { Store } from '@ngrx/store'
 import { Locale } from '@qbitmc/common'
 import { LocaleService } from '@services/locale'
@@ -22,21 +9,7 @@ import { selectUrl } from '@store/router'
 @Component({
   selector: 'qbit-header',
   standalone: true,
-  imports: [
-    CommonModule,
-    IonLabel,
-    IonContent,
-    IonItem,
-    IonList,
-    IonPopover,
-    IonIcon,
-    IonButton,
-    IonTitle,
-    IonBackButton,
-    IonButtons,
-    IonToolbar,
-    IonHeader
-  ],
+  imports: [CommonModule, IonContent, IonItem, IonPopover],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })

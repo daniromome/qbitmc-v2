@@ -4,7 +4,6 @@ import {
   IonItem,
   IonList,
   IonSpinner,
-  IonListHeader,
   IonCol,
   IonGrid,
   IonRow,
@@ -14,11 +13,8 @@ import {
   IonCard,
   IonCardTitle,
   IonCardHeader,
-  IonButton,
-  IonIcon
+  IonButton
 } from '@ionic/angular/standalone'
-import { addIcons } from 'ionicons'
-import { sync } from 'ionicons/icons'
 import { Store } from '@ngrx/store'
 import { serverActions, serverFeature } from '@store/server'
 
@@ -26,7 +22,6 @@ import { serverActions, serverFeature } from '@store/server'
   selector: 'qbit-server',
   standalone: true,
   imports: [
-    IonIcon,
     IonButton,
     IonCardHeader,
     IonCardTitle,
@@ -36,7 +31,6 @@ import { serverActions, serverFeature } from '@store/server'
     IonRow,
     IonGrid,
     IonCol,
-    IonListHeader,
     IonSpinner,
     IonList,
     IonItem,
@@ -55,9 +49,7 @@ export class ServerListComponent implements OnInit {
   public readonly serversLoading = this.store.selectSignal(serverFeature.selectLoadingServers)
   public readonly syncing = this.store.selectSignal(serverFeature.selectSyncing)
 
-  public constructor() {
-    addIcons({ sync })
-  }
+  public constructor() {}
 
   public ngOnInit(): void {
     this.store.dispatch(serverActions.getServers({ includeDrafts: true }))

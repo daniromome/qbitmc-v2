@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Va
 import { FormFrom } from '../../utils/form-from'
 import { EnrollmentApplication } from '@qbitmc/common'
 import { REGEXP } from '@constants/regexp'
-import { NoteComponent } from '@components/note'
 import { FileUploaderComponent } from '@components/file-uploader'
 import { Store } from '@ngrx/store'
 import { applicationActions } from '@store/application'
@@ -82,7 +81,6 @@ interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age' | '
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    NoteComponent,
     FileUploaderComponent,
     BytesPipe,
     AvatarPipe,

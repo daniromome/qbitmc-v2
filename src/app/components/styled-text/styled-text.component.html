@@ -1,4 +1,5 @@
-<span *ngIf="text"
+<span
+  *ngIf="text"
   [style.--font-weight]="weight"
   [style.--font-style]="style"
   [style.--text-color]="color"
@@ -10,4 +11,5 @@
     strikethrough: text.strikethrough,
     underline: text.underline
   }"
->{{ text.content }}</span>
+  >{{ text.content }}</span
+>

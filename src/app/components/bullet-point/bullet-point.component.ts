@@ -8,6 +8,4 @@ import { IonGrid, IonCol, IonRow } from '@ionic/angular/standalone'
   templateUrl: './bullet-point.component.html',
   styleUrl: './bullet-point.component.scss'
 })
-export class BulletPointComponent {
-
-}
+export class BulletPointComponent {}

@@ -6,11 +6,10 @@ describe('StatusComponent', () => {
   let component: StatusComponent
   let fixture: ComponentFixture<StatusComponent>
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [StatusComponent]
-    })
-      .compileComponents()
+    }).compileComponents()
 
     fixture = TestBed.createComponent(StatusComponent)
     component = fixture.componentInstance

@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { Media } from '@models/media'
 import { ServerDocument, USER_LABEL } from '@qbitmc/common'
 import { interval, tap } from 'rxjs'
-import { NavController, IonLabel, IonButton } from '@ionic/angular/standalone'
+import { NavController, IonLabel } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { copyOutline, lockClosed, earth, ban, eyeOff, map } from 'ionicons/icons'
 import { ClipboardService } from '@services/clipboard'
@@ -15,7 +15,7 @@ import { appFeature } from '@store/app'
 @Component({
   selector: 'qbit-server',
   standalone: true,
-  imports: [IonButton, IonLabel, CommonModule],
+  imports: [IonLabel, CommonModule],
   templateUrl: './server.component.html',
   styleUrl: './server.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

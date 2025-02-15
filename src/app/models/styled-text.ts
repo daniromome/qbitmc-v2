@@ -35,10 +35,11 @@ export interface StyledText {
   style?: Style
 }
 
-export interface StyledTextForm extends FormGroup<{
-  attributes: FormGroup<FormFrom<Omit<StyledText, 'style'>>>
-  style: FormControl<TextStyle | undefined>
-  color: FormGroup<FormFrom<Omit<ColorTextStyle, 'style'>>>
-  gradient: FormGroup<FormFrom<Omit<GradientTextStyle, 'style'>>>
-  rainbow: FormGroup<FormFrom<Omit<RainbowTextStyle, 'style'>>>
-}> {}
+export interface StyledTextForm
+  extends FormGroup<{
+    attributes: FormGroup<FormFrom<Omit<StyledText, 'style'>>>
+    style: FormControl<TextStyle | undefined>
+    color: FormGroup<FormFrom<Omit<ColorTextStyle, 'style'>>>
+    gradient: FormGroup<FormFrom<Omit<GradientTextStyle, 'style'>>>
+    rainbow: FormGroup<FormFrom<Omit<RainbowTextStyle, 'style'>>>
+  }> {}

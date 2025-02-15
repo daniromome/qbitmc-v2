@@ -4,9 +4,6 @@ import {
   IonContent,
   IonRouterOutlet,
   IonItem,
-  IonGrid,
-  IonRow,
-  IonCol,
   IonList,
   IonLabel,
   IonIcon,
@@ -22,20 +19,7 @@ import { language, server, pricetag } from 'ionicons/icons'
 @Component({
   selector: 'qbit-admin',
   standalone: true,
-  imports: [
-    IonMenu,
-    IonSplitPane,
-    IonIcon,
-    IonLabel,
-    CommonModule,
-    IonList,
-    IonCol,
-    IonRow,
-    IonGrid,
-    IonItem,
-    IonRouterOutlet,
-    IonContent
-  ],
+  imports: [IonMenu, IonSplitPane, IonIcon, IonLabel, CommonModule, IonList, IonItem, IonRouterOutlet, IonContent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })

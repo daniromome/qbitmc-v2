@@ -10,10 +10,7 @@ describe('CalendarEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        ApplicationEffects,
-        provideMockActions(() => actions$)
-      ]
+      providers: [ApplicationEffects, provideMockActions(() => actions$)]
     })
 
     effects = TestBed.inject(ApplicationEffects)

@@ -2,8 +2,6 @@ import { Component, OnInit, Signal, inject, signal } from '@angular/core'
 import {
   IonCardContent,
   IonRow,
-  IonSpinner,
-  IonButton,
   IonCol,
   IonCard,
   IonCardHeader,
@@ -46,8 +44,6 @@ import { serverFeature } from '@store/server'
     IonCardHeader,
     IonCard,
     IonCol,
-    IonButton,
-    IonSpinner,
     IonRow,
     IonCardContent,
     CommonModule
