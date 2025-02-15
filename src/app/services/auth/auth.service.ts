@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { Preferences, Profile, PlayerDocument } from '@qbitmc/common'
-import { Observable, from, map, of } from 'rxjs'
+import { Observable, from, map } from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { AppwriteService } from '@services/appwrite'
 import { Models, OAuthProvider } from 'appwrite'
@@ -17,8 +17,8 @@ export class AuthService {
     return from(this.appwrite.account.getSession('current'))
   }
 
-  public authenticate(): Observable<void | URL> {
-    return of(
+  public authenticate(): Observable<void | string> {
+    return from(
       this.appwrite.account.createOAuth2Session(OAuthProvider.Discord, environment.SITE_URL, environment.SITE_URL, [
         'guilds.join'
       ])

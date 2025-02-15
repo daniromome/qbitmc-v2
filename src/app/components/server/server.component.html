@@ -5,9 +5,9 @@
         <div class="title">{{ server.name }}</div>
         <div>{{ server.description }}</div>
       </div>
-      <div class="server-container-sidebar">
+      <div class="server-container-menu">
         @if (map() && isQbitor()) {
-          <button class="server-container-sidebar-button">
+          <button class="server-container-menu-button">
             <img src="assets/map2.webp" (click)="navigateToMap()" alt="Map Icon" />
             <ion-label color="dark">Map</ion-label>
           </button>

@@ -9,6 +9,7 @@ import { provideState, provideStore } from '@ngrx/store'
 import { provideStoreDevtools } from '@ngrx/store-devtools'
 import { appEffects, appFeature } from '@store/app'
 import { provideRouterStore, routerReducer } from '@ngrx/router-store'
+import { provideLottieOptions } from 'ngx-lottie'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,6 +22,9 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
     provideRouter(routes, withComponentInputBinding()),
-    provideRouterStore()
+    provideRouterStore(),
+    provideLottieOptions({
+      player: () => import('lottie-web')
+    })
   ]
 }

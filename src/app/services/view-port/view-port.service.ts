@@ -13,6 +13,10 @@ export class ViewPortService {
     initialValue: this.platform.width()
   })
 
+  public readonly height = toSignal(this.platform.resize.asObservable().pipe(map(() => this.platform.height())), {
+    initialValue: this.platform.height()
+  })
+
   public readonly isXL = computed(() => this.width() >= 1200)
   public readonly isLG = computed(() => this.width() >= 992)
   public readonly isMD = computed(() => this.width() >= 768)

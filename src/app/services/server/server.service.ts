@@ -1,6 +1,8 @@
-import { Injectable, inject } from '@angular/core'
+import { Injectable, inject, signal } from '@angular/core'
+import { Store } from '@ngrx/store'
 import { Server, ServerDocument, VISIBILITY } from '@qbitmc/common'
 import { AppwriteService } from '@services/appwrite'
+import { serverActions } from '@store/server'
 import { Query } from 'appwrite'
 import { Observable, from, map } from 'rxjs'
 import { environment } from 'src/environments/environment'
@@ -9,7 +11,15 @@ import { environment } from 'src/environments/environment'
   providedIn: 'root'
 })
 export class ServerService {
+  private readonly initialized = signal<boolean>(false)
   private readonly appwrite = inject(AppwriteService)
+  private readonly store = inject(Store)
+
+  public init(): void {
+    if (this.initialized()) return
+    this.initialized.set(true)
+    this.store.dispatch(serverActions.getServers({ includeDrafts: false }))
+  }
 
   public list(drafts: boolean = false): Observable<ServerDocument[]> {
     const queries = drafts

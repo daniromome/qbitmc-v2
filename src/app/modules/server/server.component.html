@@ -1,11 +1,17 @@
-<ion-content>
+<ion-content [scrollEvents]="true" (ionScroll)="onScroll($event)">
   @if (url() === '/tabs/server') {
     @if (serversWithTranslations(); as servers) {
       @for (server of servers; track $index) {
-        <qbit-server [server]="server" [media]="serverMedia(server)()"></qbit-server>
+        <qbit-server [server]="server" [media]="serverMedia(server)()" [id]="server.name"></qbit-server>
       }
     }
   } @else {
     <ion-router-outlet></ion-router-outlet>
   }
+  <ng-lottie
+    slot="fixed"
+    class="scrolldown-container"
+    [style.transform]="this.currentServer() === this.serversWithTranslations().length - 1 ? 'rotate(180deg)' : ''"
+    [options]="scrollDownOptions()">
+  </ng-lottie>
 </ion-content>

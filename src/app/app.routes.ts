@@ -11,6 +11,9 @@ import { BytesPipe } from '@pipes/bytes'
 import { applicationFeature, applicationEffects } from '@store/application'
 import { ShopEffects, shopFeature } from '@store/shop'
 import { mediaFeature, mediaEffects } from '@store/media'
+import { VisibilityPipe } from '@pipes/visibility'
+import { serverFeature, serverEffects } from '@store/server'
+import { translationFeature, translationEffects } from '@store/translation'
 
 export const routes: Routes = [
   {
@@ -24,7 +27,17 @@ export const routes: Routes = [
       },
       {
         path: 'server',
-        loadChildren: () => import('./modules/server/server.routes').then(m => m.routes)
+        loadChildren: () => import('./modules/server/server.routes').then(m => m.routes),
+        providers: [
+          VisibilityPipe,
+          BytesPipe,
+          provideState(mediaFeature),
+          provideEffects(mediaEffects),
+          provideState(translationFeature),
+          provideEffects(translationEffects),
+          provideState(serverFeature),
+          provideEffects(serverEffects)
+        ]
       },
       {
         path: 'home',

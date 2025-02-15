@@ -6,4 +6,8 @@ ion-content {
     scroll-snap-align: start;
     min-height: calc(100dvh);
   }
+  .scrolldown-container {
+    left: calc(50dvw - 50px);
+    bottom: 5rem;
+  }
 }

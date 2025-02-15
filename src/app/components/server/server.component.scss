@@ -2,30 +2,34 @@
   display: flex;
   min-height: inherit;
   &-content {
+    padding: 5dvw;
     position: relative;
     flex-direction: column;
     display: flex;
-    width: 75%;
+    width: 100%;
     min-height: inherit;
     font-size: 1.15rem;
   }
-  &-sidebar {
-    width: 4rem;
+  &-menu {
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
     min-height: inherit;
     position: absolute;
-    bottom: 1rem;
-    right: 2rem;
     padding: 1rem 0;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
     &-button {
       background-color: var(--ion-card-background);
       border-radius: 0.25rem;
-      padding: 0.5rem;
+      padding: 1rem 1.5rem 1rem 1rem;
       display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      font-size: 0.75rem;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      font-size: x-large;
       img {
         width: 4rem;
         filter: drop-shadow(rgba(0, 0, 0, 0.3) -2px 2px 2px);
