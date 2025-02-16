@@ -21,16 +21,16 @@ ion-content.background {
 }
 
 .content-container {
-  @include mixins.lg {
-    min-height: 100%;
-    margin: 0rem 15%;
-  }
   min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 0rem 1rem;
   padding-bottom: 10.5rem;
+  @include mixins.lg {
+    min-height: 100%;
+    margin: 0rem 15%;
+  }
   &-description {
     color: white;
     font-size: 1.15rem;
@@ -38,6 +38,8 @@ ion-content.background {
 }
 
 .server-list {
+  position: relative;
+  isolation: isolate;
   @include mixins.md {
     max-height: calc(100dvh - 112px);
     overflow-y: scroll;
@@ -48,8 +50,6 @@ ion-content.background {
       overflow-y: scroll;
     }
   }
-  position: relative;
-  isolation: isolate;
   &-title {
     text-align: center;
     @include mixins.md {

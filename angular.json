@@ -81,7 +81,10 @@
                 "input": "src/theme/variables.css"
               }
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "lottie-web"
+            ]
           },
           "configurations": {
             "production": {

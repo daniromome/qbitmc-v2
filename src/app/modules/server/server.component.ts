@@ -53,7 +53,7 @@ export class ServerComponent implements OnInit {
   public readonly scrollDownOptions: Signal<AnimationOptions> = computed(() => {
     const mode = this.darkMode() ? 'dark' : 'light'
     return {
-      path: `/assets/scrolldown-${mode}.json`,
+      path: `./assets/scrolldown-${mode}.json`,
       loop: true
     }
   })

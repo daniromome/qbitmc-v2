@@ -62,12 +62,6 @@ export class HomeComponent {
   public readonly supportersCount = computed(() => this.supporters().length)
 
   public constructor() {
-    addIcons({
-      calendarOutline,
-      gameControllerOutline,
-      peopleOutline,
-      globeOutline,
-      hammerOutline
-    })
+    addIcons({ calendarOutline, gameControllerOutline, peopleOutline, globeOutline, hammerOutline })
   }
 }
