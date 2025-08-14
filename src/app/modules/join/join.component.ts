@@ -36,10 +36,11 @@ import {
   IonCheckbox,
   IonList,
   IonSpinner,
-  IonToast
+  IonToast,
+  IonFooter
 } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
-import { cubeOutline, cubeSharp, copyOutline } from 'ionicons/icons'
+import { cubeOutline, cubeSharp, logOutOutline, copyOutline } from 'ionicons/icons'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { mediaActions, mediaFeature } from '@store/media'
 import { ClipboardService } from '@services/clipboard/clipboard.service'
@@ -54,6 +55,7 @@ interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age' | '
   selector: 'qbit-join',
   standalone: true,
   imports: [
+    IonFooter,
     IonToast,
     IonSpinner,
     IonList,
@@ -132,7 +134,7 @@ export class JoinComponent implements OnInit {
   public readonly filesSizeExceedsLimit = computed(() => !this.filesSizeWithinLimit())
 
   public constructor() {
-    addIcons({ cubeOutline, cubeSharp, copyOutline })
+    addIcons({ copyOutline, logOutOutline, cubeOutline, cubeSharp })
     effect(() => {
       const form = this.formChanges()
       if (!form) return
@@ -201,5 +203,9 @@ export class JoinComponent implements OnInit {
 
   public dismissError(): void {
     this.store.dispatch(appActions.dismissError({ key: 'verification' }))
+  }
+
+  public logout(): void {
+    this.store.dispatch(appActions.logout())
   }
 }

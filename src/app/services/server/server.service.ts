@@ -29,7 +29,7 @@ export class ServerService {
       this.appwrite.databases.listDocuments<ServerDocument>(
         environment.APPWRITE_DATABASE,
         environment.APPWRITE_COLLECTION_SERVER,
-        queries
+        queries.concat([Query.orderDesc('order')])
       )
     ).pipe(map(list => list.documents))
   }

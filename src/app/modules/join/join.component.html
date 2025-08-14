@@ -197,6 +197,13 @@
   }
 </ion-content>
 
+<ion-footer class="ion-padding join-footer">
+  <ion-button expand="block" fill="outline" color="danger" (click)="logout()">
+    <ion-icon name="log-out-outline" slot="start"></ion-icon>
+    Logout
+  </ion-button>
+</ion-footer>
+
 <ion-toast
   i18n-message="@@verification-invalid"
   message="Invalid verification code, please try again"
