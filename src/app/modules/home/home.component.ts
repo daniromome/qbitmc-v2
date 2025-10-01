@@ -60,6 +60,13 @@ export class HomeComponent {
   public readonly hasApplied = this.store.selectSignal(appFeature.selectIsRole(USER_LABEL.APPLICANT))
   public readonly supporters = this.store.selectSignal(appFeature.selectSupporters)
   public readonly supportersCount = computed(() => this.supporters().length)
+  public readonly background = computed(() => {
+    const darkMode = this.view.darkMode()
+    const url = darkMode
+      ? 'https://appwrite.qbitmc.com/v1/storage/buckets/68dca88d0013bb1cffea/files/68dca936000aa15132fd/preview?height=360&project=66649e96000758b8ebdb'
+      : 'https://appwrite.qbitmc.com/v1/storage/buckets/68dca88d0013bb1cffea/files/68dca9300035c62dabdf/preview?height=360&project=66649e96000758b8ebdb'
+    return `url(${url}) no-repeat center center`
+  })
 
   public constructor() {
     addIcons({ calendarOutline, gameControllerOutline, peopleOutline, globeOutline, hammerOutline })

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core'
+import { Component, ChangeDetectionStrategy, inject, OnInit, computed } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { StyledTextComponent } from '@components/styled-text/styled-text.component'
 import { Store } from '@ngrx/store'
@@ -35,6 +35,7 @@ import {
 } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { ban, sparkles, starHalf, star, add, trash, save } from 'ionicons/icons'
+import { ViewPortService } from '@services/view-port'
 
 enum SliderLabel {
   SATURATION = 'saturation'
@@ -87,8 +88,16 @@ export class NicknameEditorComponent implements OnInit {
   public readonly form: FormArray<StyledTextForm>
   private readonly store = inject(Store)
   private readonly fb = inject(NonNullableFormBuilder)
+  private readonly view = inject(ViewPortService)
   private readonly nickname$: Observable<StyledText[]>
   private readonly firstChange$: Observable<void>
+  public readonly background = computed(() => {
+    const darkMode = this.view.darkMode()
+    const url = darkMode
+      ? 'https://appwrite.qbitmc.com/v1/storage/buckets/68dca88d0013bb1cffea/files/68dda9e8002df7db3578/preview?height=360&project=66649e96000758b8ebdb'
+      : 'https://appwrite.qbitmc.com/v1/storage/buckets/68dca88d0013bb1cffea/files/68dda9df0028c003fffd/preview?height=360&project=66649e96000758b8ebdb'
+    return `url(${url}) no-repeat center center`
+  })
 
   public constructor() {
     addIcons({ ban, sparkles, starHalf, star, add, trash, save })

@@ -1,7 +1,7 @@
 <ion-content>
   <ion-split-pane [when]="true" contentId="profile-outlet">
     <ion-menu menuId="profile-menu" contentId="profile-outlet">
-      <ion-content class="background">
+      <ion-content class="background" [style.--content-background]="background()">
         <ion-grid class="ion-no-padding">
           @if (player(); as player) {
             <ion-row>

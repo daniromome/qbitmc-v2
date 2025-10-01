@@ -1,6 +1,6 @@
 import { appFeature } from '@store/app'
 import { CommonModule } from '@angular/common'
-import { Component, OnInit } from '@angular/core'
+import { Component, computed, inject, OnInit } from '@angular/core'
 import { Observable } from 'rxjs'
 import { Store } from '@ngrx/store'
 import { ShopActions, shopFeature } from '@store/shop'
@@ -18,6 +18,7 @@ import {
   IonRow,
   IonText
 } from '@ionic/angular/standalone'
+import { ViewPortService } from '@services/view-port'
 
 @Component({
   selector: 'qbit-shop',
@@ -40,8 +41,16 @@ import {
   standalone: true
 })
 export class ShopComponent implements OnInit {
+  public readonly view = inject(ViewPortService)
   public products$?: Observable<Product[]>
   public readonly isSupporter$: Observable<boolean>
+  public readonly background = computed(() => {
+    const darkMode = this.view.darkMode()
+    const url = darkMode
+      ? 'https://appwrite.qbitmc.com/v1/storage/buckets/68dca88d0013bb1cffea/files/68dca912001f985f5c4e/preview?height=360&project=66649e96000758b8ebdb'
+      : 'https://appwrite.qbitmc.com/v1/storage/buckets/68dca88d0013bb1cffea/files/68dca90e0033533c3864/preview?height=360&project=66649e96000758b8ebdb'
+    return `url(${url}) no-repeat 60% center`
+  })
 
   public constructor(private readonly store: Store) {
     this.isSupporter$ = this.store.select(appFeature.selectIsRole(USER_LABEL.SUPPORTER))

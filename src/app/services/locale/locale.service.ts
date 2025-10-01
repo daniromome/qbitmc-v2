@@ -25,7 +25,7 @@ export class LocaleService {
   }
 
   public navigateToLocale(locale: Locale): void {
-    window.open(`${environment.SITE_URL}/${locale}`, '_self')
+    window.open(`${window.location.href}/${locale}`, '_self')
   }
 
   public get(request: { locale: boolean; namespace?: string }): Observable<TranslationDocument[]> {

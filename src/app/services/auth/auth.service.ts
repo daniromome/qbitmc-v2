@@ -19,7 +19,7 @@ export class AuthService {
 
   public authenticate(): Observable<void | string> {
     return from(
-      this.appwrite.account.createOAuth2Session(OAuthProvider.Discord, environment.SITE_URL, environment.SITE_URL, [
+      this.appwrite.account.createOAuth2Session(OAuthProvider.Discord, window.location.href, window.location.href, [
         'guilds.join'
       ])
     )

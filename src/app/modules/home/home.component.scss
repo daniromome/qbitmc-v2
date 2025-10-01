@@ -1,7 +1,6 @@
 @use 'src/theme/mixins.scss' as mixins;
 
 ion-content.background {
-  --content-background: url('https://i.imgur.com/5B9ygAM.png') no-repeat center center;
   --offset-bottom: 4rem !important;
 }
 
@@ -32,8 +31,8 @@ ion-content.background {
     margin: 0rem 15%;
   }
   &-description {
-    color: white;
     font-size: 1.15rem;
+    color: white;
   }
 }
 
@@ -69,4 +68,8 @@ ion-content.background {
 
 .subtitle {
   padding-top: 0.75rem;
+}
+
+ion-icon {
+  color: white;
 }

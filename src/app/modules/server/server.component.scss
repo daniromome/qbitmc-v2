@@ -5,6 +5,7 @@ ion-content {
   qbit-server {
     scroll-snap-align: start;
     min-height: calc(100dvh);
+    color: white;
   }
   .scrolldown-container {
     left: calc(50dvw - 50px);

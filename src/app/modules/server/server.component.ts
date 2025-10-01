@@ -27,11 +27,12 @@ export class ServerComponent implements OnInit {
   private readonly locale = inject(LocaleService)
   private readonly title = inject(Title)
   private readonly meta = inject(Meta)
-  private readonly height = inject(ViewPortService).height
+  private readonly viewPortService = inject(ViewPortService)
   private readonly server = inject(ServerService)
   private readonly scrollPosition = signal<number>(0)
   public readonly currentServer = computed(() => this.scrollPosition() / this.height())
-  private readonly darkMode = signal<boolean>(window.matchMedia('(prefers-color-scheme: dark)').matches)
+  private readonly darkMode = this.viewPortService.darkMode
+  private readonly height = this.viewPortService.height
 
   public readonly url = this.store.selectSignal(selectUrl)
 
@@ -60,7 +61,6 @@ export class ServerComponent implements OnInit {
 
   public ngOnInit(): void {
     this.server.init()
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => this.darkMode.set(event.matches))
     this.title.setTitle($localize`:@@site-title-servers:Servers - QbitMC`)
     this.meta.addTag({
       name: 'description',

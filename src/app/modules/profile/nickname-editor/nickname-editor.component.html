@@ -1,4 +1,4 @@
-<ion-content class="background">
+<ion-content class="background" [style.--content-background]="background()">
   <ion-grid>
     <ion-row>
       @for (group of form.controls; track index; let index = $index) {
