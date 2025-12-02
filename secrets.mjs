@@ -11,7 +11,7 @@ async function createEnv() {
 
 async function readEnv() {
   try {
-    const env = await readFile('.env')
+    const env = await readFile(`.env ${process.env.NODE_ENV}`)
     const vars = {};
     const lines = env.toString().split('\n')
     lines.pop()
