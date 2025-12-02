@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { FormsModule, ReactiveFormsModule, FormGroup, NonNullableFormBuilder, Validators, FormControl } from '@angular/forms'
 import { FormFrom } from '../../utils/form-from'
 import { EnrollmentApplication } from '@qbitmc/common'
@@ -80,7 +80,6 @@ interface ApplicationForm extends FormFrom<Omit<EnrollmentApplication, 'age' | '
     IonRow,
     IonInput,
     IonHeader,
-    CommonModule,
     ReactiveFormsModule,
     FormsModule,
     FileUploaderComponent,

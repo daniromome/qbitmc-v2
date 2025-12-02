@@ -12,7 +12,7 @@ import {
   signal,
   viewChild
 } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { Platform } from '@ionic/angular'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { map } from 'rxjs'
@@ -20,7 +20,7 @@ import { map } from 'rxjs'
 @Component({
   selector: 'qbit-slider',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
   encapsulation: ViewEncapsulation.None,

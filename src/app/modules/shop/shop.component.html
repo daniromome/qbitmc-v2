@@ -2,42 +2,46 @@
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-no-padding">
       <ion-col size="0" size-md="2" size-lg="3" size-xl="4"></ion-col>
-      <ion-col *ngFor="let product of products$ | async" class="ion-no-padding center-items-container">
-        <ion-card>
-          <ion-avatar>
-            <img [src]="product.media[0]" />
-          </ion-avatar>
-          <ion-card-header>
-            <ion-card-title>{{ product.name }}</ion-card-title>
-            <!-- <ion-card-subtitle>{{ product.price.amount / 100 | currency:'MXN' }}</ion-card-subtitle> -->
-          </ion-card-header>
-          <ion-card-content class="ion-no-padding">
-            <ion-item lines="none" class="transparent"
-              ><ion-text class="ion-text-wrap"
-                ><h2>{{ product.description }}</h2></ion-text
-              ></ion-item
-            >
-            <ion-item
-              *ngIf="isSupporter$ | async"
-              (click)="subscription(product.price)"
-              color="secondary"
-              lines="none"
-              button
-              i18n="@@subscription-button-label-manage"
-              >Manage Subscription</ion-item
-            >
-            <ion-item
-              *ngIf="(isSupporter$ | async) === false"
-              (click)="subscription(product.price)"
-              color="secondary"
-              lines="none"
-              button
-              i18n="@@subscription-button-label-subscribe"
-              >Subscribe</ion-item
-            >
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
+      @for (product of products$ | async; track product) {
+        <ion-col class="ion-no-padding center-items-container">
+          <ion-card>
+            <ion-avatar>
+              <img [src]="product.media[0]" />
+            </ion-avatar>
+            <ion-card-header>
+              <ion-card-title>{{ product.name }}</ion-card-title>
+              <!-- <ion-card-subtitle>{{ product.price.amount / 100 | currency:'MXN' }}</ion-card-subtitle> -->
+            </ion-card-header>
+            <ion-card-content class="ion-no-padding">
+              <ion-item lines="none" class="transparent"
+                ><ion-text class="ion-text-wrap"
+                  ><h2>{{ product.description }}</h2></ion-text
+                ></ion-item
+              >
+              @if (isSupporter$ | async) {
+                <ion-item
+                  (click)="subscription(product.price)"
+                  color="secondary"
+                  lines="none"
+                  button
+                  i18n="@@subscription-button-label-manage"
+                  >Manage Subscription</ion-item
+                >
+              }
+              @if ((isSupporter$ | async) === false) {
+                <ion-item
+                  (click)="subscription(product.price)"
+                  color="secondary"
+                  lines="none"
+                  button
+                  i18n="@@subscription-button-label-subscribe"
+                  >Subscribe</ion-item
+                >
+              }
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      }
       <ion-col size="0" size-md="2" size-lg="3" size-xl="4"></ion-col>
     </ion-row>
   </ion-grid>

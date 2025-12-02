@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, computed } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone'
 import { Store } from '@ngrx/store'
 import { USER_LABEL, UserLabel } from '@qbitmc/common'
@@ -19,7 +19,7 @@ interface Tab {
 @Component({
   selector: 'qbit-tabs',
   standalone: true,
-  imports: [IonLabel, IonIcon, IonTabButton, IonTabBar, IonTabs, CommonModule, AvatarPipe, HeaderComponent],
+  imports: [IonLabel, IonIcon, IonTabButton, IonTabBar, IonTabs, AvatarPipe, HeaderComponent],
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -12,12 +12,12 @@ import { serverFeature } from '@store/server'
 import { Title, Meta } from '@angular/platform-browser'
 import { AnimationOptions, LottieComponent } from 'ngx-lottie'
 import { ViewPortService } from '@services/view-port'
-import { CommonModule } from '@angular/common'
+
 import { ServerService } from '@services/server'
 
 @Component({
   standalone: true,
-  imports: [IonRouterOutlet, IonContent, ServerTileComponent, LottieComponent, CommonModule],
+  imports: [IonRouterOutlet, IonContent, ServerTileComponent, LottieComponent],
   templateUrl: './server.component.html',
   styleUrl: './server.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, Renderer2, computed, effect, inject, viewChild } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { DomSanitizer } from '@angular/platform-browser'
 import { IonContent, IonFab, IonFabButton, IonIcon, NavController } from '@ionic/angular/standalone'
 import { Store } from '@ngrx/store'
@@ -12,7 +12,7 @@ import { ServerService } from '@services/server'
 @Component({
   selector: 'qbit-map',
   standalone: true,
-  imports: [IonIcon, IonFabButton, IonFab, IonContent, CommonModule],
+  imports: [IonIcon, IonFabButton, IonFab, IonContent],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })

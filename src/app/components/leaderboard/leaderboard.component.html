@@ -1,20 +1,19 @@
 <ion-card>
-  <ion-select
-    *ngIf="isPlaytime && control"
-    interface="popover"
-    [formControl]="control"
-    [interfaceOptions]="{ alignment: 'end' }"
-    labelPlacement="end">
-    <ion-select-option value="hours" i18n="@@hours">Hours</ion-select-option>
-    <ion-select-option value="minutes" i18n="@@minutes">Minutes</ion-select-option>
-    <ion-select-option value="seconds" i18n="@@seconds">Seconds</ion-select-option>
-    <ion-select-option value="ticks">Ticks</ion-select-option>
-  </ion-select>
+  @if (isPlaytime && control) {
+    <ion-select interface="popover" [formControl]="control" [interfaceOptions]="{ alignment: 'end' }" labelPlacement="end">
+      <ion-select-option value="hours" i18n="@@hours">Hours</ion-select-option>
+      <ion-select-option value="minutes" i18n="@@minutes">Minutes</ion-select-option>
+      <ion-select-option value="seconds" i18n="@@seconds">Seconds</ion-select-option>
+      <ion-select-option value="ticks">Ticks</ion-select-option>
+    </ion-select>
+  }
   <ion-card-header>
-    <ion-card-title *ngIf="title">{{ title | stat }}</ion-card-title>
+    @if (title) {
+      <ion-card-title>{{ title | stat }}</ion-card-title>
+    }
   </ion-card-header>
   <ion-card-content class="ion-no-padding">
-    <ng-container *ngFor="let record of leaderboard; last as last">
+    @for (record of leaderboard; track record; let last = $last) {
       <ion-item [lines]="last ? 'none' : 'full'" class="transparent padding">
         <ion-avatar slot="start">
           <img [src]="record.player | avatar" />
@@ -24,6 +23,6 @@
           isPlaytime ? (record.value | ticks: control?.value) : (record.value | number)
         }}</ion-chip>
       </ion-item>
-    </ng-container>
+    }
   </ion-card-content>
 </ion-card>

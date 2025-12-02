@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { Component, inject } from '@angular/core'
 import {
   IonContent,
@@ -19,7 +18,7 @@ import { language, server, pricetag } from 'ionicons/icons'
 @Component({
   selector: 'qbit-admin',
   standalone: true,
-  imports: [IonMenu, IonSplitPane, IonIcon, IonLabel, CommonModule, IonList, IonItem, IonRouterOutlet, IonContent],
+  imports: [IonMenu, IonSplitPane, IonIcon, IonLabel, IonList, IonItem, IonRouterOutlet, IonContent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })

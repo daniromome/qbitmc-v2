@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { IonText } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'qbit-note',
   standalone: true,
-  imports: [IonText, CommonModule],
+  imports: [IonText],
   templateUrl: './note.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

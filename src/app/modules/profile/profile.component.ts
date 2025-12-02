@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { Store } from '@ngrx/store'
 import { appActions, appFeature } from '@store/app'
 import { StyledTextComponent } from '@components/styled-text/styled-text.component'
@@ -37,7 +37,6 @@ import { selectUrl } from '@store/router'
     IonIcon,
     IonItem,
     IonCol,
-    CommonModule,
     StyledTextComponent,
     StyledRolePipe,
     AvatarPipe,

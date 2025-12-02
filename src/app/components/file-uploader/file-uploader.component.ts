@@ -10,7 +10,7 @@ import {
   output,
   signal
 } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { DropzoneDirective } from '@directives/dropzone'
 import { Platform, IonRippleEffect, IonIcon, IonText, IonButton, IonAlert } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
@@ -20,7 +20,7 @@ type FileType = 'image' | 'any'
 @Component({
   selector: 'qbit-file-uploader',
   standalone: true,
-  imports: [IonAlert, IonButton, IonText, IonIcon, IonRippleEffect, CommonModule, DropzoneDirective],
+  imports: [IonAlert, IonButton, IonText, IonIcon, IonRippleEffect, DropzoneDirective],
   templateUrl: './file-uploader.component.html',
   styleUrls: ['./file-uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

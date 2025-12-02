@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { Store } from '@ngrx/store'
 import { appFeature } from '@store/app'
 import { AvatarPipe } from '@pipes/avatar'
@@ -41,7 +41,6 @@ import { ViewPortService } from '@services/view-port'
     IonCardTitle,
     IonCardHeader,
     IonCard,
-    CommonModule,
     AvatarPipe
   ],
   templateUrl: './status.component.html',

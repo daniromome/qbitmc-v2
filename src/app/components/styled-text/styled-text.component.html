@@ -1,15 +1,16 @@
-<span
-  *ngIf="text"
-  [style.--font-weight]="weight"
-  [style.--font-style]="style"
-  [style.--text-color]="color"
-  [style.--rainbow-saturation]="saturation"
-  [ngClass]="{
-    rainbow: text.style?.style === 'rainbow',
-    gradient: text.style?.style === 'gradient',
-    color: text.style?.style === 'color',
-    strikethrough: text.strikethrough,
-    underline: text.underline
-  }"
-  >{{ text.content }}</span
->
+@if (text) {
+  <span
+    [style.--font-weight]="weight"
+    [style.--font-style]="style"
+    [style.--text-color]="color"
+    [style.--rainbow-saturation]="saturation"
+    [ngClass]="{
+      rainbow: text.style?.style === 'rainbow',
+      gradient: text.style?.style === 'gradient',
+      color: text.style?.style === 'color',
+      strikethrough: text.strikethrough,
+      underline: text.underline
+    }"
+    >{{ text.content }}</span
+  >
+}

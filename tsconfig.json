@@ -23,10 +23,6 @@
       "@angular/localize",
       "@types/jasmine"
     ],
-    "lib": [
-      "ES2022",
-      "dom"
-    ],
     "paths": {
       "@models/*": [
         "src/app/models/*"

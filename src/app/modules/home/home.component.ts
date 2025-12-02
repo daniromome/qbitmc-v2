@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, computed } from '@angular/core'
-import { CommonModule } from '@angular/common'
+
 import { Store } from '@ngrx/store'
 import { appFeature } from '@store/app'
 import { AvatarPipe } from '@pipes/avatar'
@@ -40,7 +40,6 @@ import { USER_LABEL } from '@qbitmc/common'
     IonRow,
     IonGrid,
     IonContent,
-    CommonModule,
     AvatarPipe,
     SliderComponent,
     BulletPointComponent
