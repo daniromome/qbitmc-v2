@@ -17,11 +17,10 @@ export class AuthService {
     return from(this.appwrite.account.getSession('current'))
   }
 
-  public authenticate(): Observable<void | string> {
-    return from(
-      this.appwrite.account.createOAuth2Session(OAuthProvider.Discord, window.location.href, window.location.href, [
-        'guilds.join'
-      ])
+  public authenticate(): void | string {
+    const href = window.location.href
+    return this.appwrite.account.createOAuth2Session(
+      { provider: OAuthProvider.Discord, success: href, failure: href, scopes: ['guilds.join'] }
     )
   }
 

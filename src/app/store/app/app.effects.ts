@@ -125,7 +125,7 @@ export const login$ = createEffect(
   (actions$ = inject(Actions), auth = inject(AuthService)) =>
     actions$.pipe(
       ofType(appActions.login),
-      exhaustMap(() => auth.authenticate())
+      map(() => auth.authenticate())
     ),
   { functional: true, dispatch: false }
 )

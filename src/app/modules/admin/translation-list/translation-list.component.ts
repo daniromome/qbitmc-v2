@@ -23,7 +23,7 @@ import { translationActions, translationFeature } from '@store/translation'
 import { add } from 'ionicons/icons'
 import { addIcons } from 'ionicons'
 import { CommonModule } from '@angular/common'
-import { ServerDocument } from '@qbitmc/common/_dist/mod'
+import { ServerDocument } from '@qbitmc/common'
 import { serverFeature } from '@store/server'
 
 @Component({

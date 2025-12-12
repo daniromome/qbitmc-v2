@@ -32,7 +32,7 @@ export class ApplicationService {
         environment.APPWRITE_DATABASE,
         environment.APPWRITE_COLLECTION_APPLICATION,
         ID.unique(),
-        application
+        application as unknown as EnrollmentApplicationDocument
       )
     )
   }

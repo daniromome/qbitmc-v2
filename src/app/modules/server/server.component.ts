@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, S
 import { ServerTileComponent } from '@components/server'
 import { Media } from '@models/media'
 import { Store } from '@ngrx/store'
-import { ServerDocument } from '@qbitmc/common/_dist/mod'
+import { ServerDocument } from '@qbitmc/common'
 import { LocaleService } from '@services/locale'
 import { mediaFeature } from '@store/media'
 import { translationFeature } from '@store/translation'
